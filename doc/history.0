@@ -10,7 +10,7 @@ CCOOPPYYRRIIGGHHTT
 DDEESSCCRRIIPPTTIIOONN
        Many  programs read input from the user a line at a time.  The GNU His-
        tory library is able to keep track of those lines, associate  arbitrary
-       data  with  each  line,  and utilize information from previous lines in
+       data  with  each line, and utilize information from previous lines when
        composing new ones.
 
        The History library provides functions that allow applications to their

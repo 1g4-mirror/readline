@@ -4,11 +4,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This document describes the GNU History library
-(version 8.3, 10 October 2024),
+(version 8.3, 15 October 2024),
 a programming tool that provides a consistent user interface for
 recalling lines of previously typed input.
 
-Copyright © 1988-2023 Free Software Foundation, Inc.
+Copyright © 1988-2024 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -451,7 +451,8 @@ Next: <a href="#GNU-Free-Documentation-License" accesskey="n" rel="next">GNU Fre
 <p>This chapter describes how to interface programs that you write
 with the <small class="sc">GNU</small> History Library.
 It should be considered a technical guide.
-For information on the interactive use of <small class="sc">GNU</small> History, see <a class="pxref" href="#Using-History-Interactively">Using History Interactively</a>.
+For information on the interactive use of <small class="sc">GNU</small> History,
+see <a class="pxref" href="#Using-History-Interactively">Using History Interactively</a>.
 </p>
 
 <ul class="mini-toc">
@@ -469,23 +470,27 @@ Next: <a href="#History-Storage" accesskey="n" rel="next">History Storage</a>, U
 </div>
 <h3 class="section" id="Introduction-to-History-1"><span>2.1 Introduction to History<a class="copiable-link" href="#Introduction-to-History-1"> &para;</a></span></h3>
 
-<p>Many programs read input from the user a line at a time.  The <small class="sc">GNU</small>
-History library is able to keep track of those lines, associate arbitrary
-data with each line, and utilize information from previous lines in
-composing new ones. 
+<p>Many programs read input from the user a line at a time.
+The <small class="sc">GNU</small> History library is able to keep track of those lines,
+associate arbitrary data with each line, and utilize information from
+previous lines when composing new ones. 
 </p>
-<p>A programmer using the History library has available functions
-for remembering lines on a history list, associating arbitrary data
-with a line, removing lines from the list, searching through the list
-for a line containing an arbitrary text string, and referencing any line
-in the list directly.  In addition, a history <em class="dfn">expansion</em> function
+<p>A programmer using the History library can use functions
+to save commands on a history list,
+associate arbitrary data with history list entries,
+remove entries from the list,
+search through the list for a line containing an arbitrary text string,
+reference any entry in the list directly,
+and read and write the history list from and to a file.
+In addition, a history <em class="dfn">expansion</em> function
 is available which provides for a consistent user interface across
 different programs.
 </p>
-<p>The user using programs written with the History library has the
+<p>Someone using programs written with the History library has the
 benefit of a consistent user interface with a set of well-known
 commands for manipulating the text of previous lines and using that text
-in new commands.  The basic history manipulation commands are similar to
+in new commands.
+The basic history manipulation commands are similar to
 the history substitution provided by <code class="code">csh</code>.
 </p>
 <p>The programmer can also use the Readline library, which
@@ -495,9 +500,10 @@ advantage of command line editing.
 <p>Before declaring any functions using any functionality the History
 library provides in other code, an application writer should include
 the file <code class="code">&lt;readline/history.h&gt;</code> in any file that uses the
-History library&rsquo;s features.  It supplies extern declarations for all
-of the library&rsquo;s public functions and variables, and declares all of
-the public data structures.
+History library&rsquo;s features.
+It supplies declarations for all of the library&rsquo;s
+public functions and variables,
+and declares all of the public data structures.
 </p>
 <hr>
 </div>
@@ -508,8 +514,8 @@ Next: <a href="#History-Functions" accesskey="n" rel="next">History Functions</a
 </div>
 <h3 class="section" id="History-Storage-1"><span>2.2 History Storage<a class="copiable-link" href="#History-Storage-1"> &para;</a></span></h3>
 
-<p>The history list is an array of history entries.  A history entry is
-declared as follows:
+<p>The history list is an array of history entries.
+A history entry is declared as follows:
 </p>
 <div class="example">
 <pre class="example-preformatted">typedef void *histdata_t;
@@ -543,7 +549,7 @@ typedef struct _hist_state {
 </pre></div>
 
 <p>If the flags member includes <code class="code">HS_STIFLED</code>, the history has been
-stifled.
+stifled (limited to a maximum number of entries).
 </p>
 <hr>
 </div>
@@ -581,8 +587,8 @@ functions in your program.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-using_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">using_history</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-using_005fhistory"> &para;</a></span></dt>
-<dd><p>Begin a session in which the history functions might be used.  This
-initializes the interactive variables.
+<dd><p>Begin a session that will use the history functions.
+This initializes the interactive variables.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -609,11 +615,11 @@ parameters managing the list itself.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-add_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">add_history</strong> <code class="def-code-arguments">(const char *string)</code><a class="copiable-link" href="#index-add_005fhistory"> &para;</a></span></dt>
-<dd><p>Place <var class="var">string</var> at the end of the history list.  The associated data
-field (if any) is set to <code class="code">NULL</code>.
+<dd><p>Add <var class="var">string</var> to the end of the history list, and
+set the associated data field (if any) to <code class="code">NULL</code>.
 If the maximum number of history entries has been set using
-<code class="code">stifle_history()</code>, and the new number of history entries would exceed
-that maximum, the oldest history entry is removed.
+<code class="code">stifle_history()</code>, and the new number of history entries
+would exceed that maximum, this removes the oldest history entry.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -624,15 +630,18 @@ that maximum, the oldest history entry is removed.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-remove_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">HIST_ENTRY *</code> <strong class="def-name">remove_history</strong> <code class="def-code-arguments">(int which)</code><a class="copiable-link" href="#index-remove_005fhistory"> &para;</a></span></dt>
-<dd><p>Remove history entry at offset <var class="var">which</var> from the history.  The
-removed element is returned so you can free the line, data,
+<dd><p>Remove the history entry at offset <var class="var">which</var> from the history list.
+This returns the removed element so you can free the line, data,
 and containing structure.
+Since the data is private to your application, the History library
+doesn&rsquo;t know how to free it, if necessary.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-free_005fhistory_005fentry"><span class="category-def">Function: </span><span><code class="def-type">histdata_t</code> <strong class="def-name">free_history_entry</strong> <code class="def-code-arguments">(HIST_ENTRY *histent)</code><a class="copiable-link" href="#index-free_005fhistory_005fentry"> &para;</a></span></dt>
 <dd><p>Free the history entry <var class="var">histent</var> and any history library private
-data associated with it.  Returns the application-specific data
+data associated with it.
+Returns the application-specific data
 so the caller can dispose of it.
 </p></dd></dl>
 
@@ -640,8 +649,8 @@ so the caller can dispose of it.
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-replace_005fhistory_005fentry"><span class="category-def">Function: </span><span><code class="def-type">HIST_ENTRY *</code> <strong class="def-name">replace_history_entry</strong> <code class="def-code-arguments">(int which, const char *line, histdata_t data)</code><a class="copiable-link" href="#index-replace_005fhistory_005fentry"> &para;</a></span></dt>
 <dd><p>Make the history entry at offset <var class="var">which</var> have <var class="var">line</var> and <var class="var">data</var>.
 This returns the old entry so the caller can dispose of any
-application-specific data.  In the case
-of an invalid <var class="var">which</var>, a <code class="code">NULL</code> pointer is returned.
+application-specific data.
+In the case of an invalid <var class="var">which</var>, this returns <code class="code">NULL</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -657,10 +666,10 @@ The history list will contain only <var class="var">max</var> entries at a time.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-unstifle_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">unstifle_history</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-unstifle_005fhistory"> &para;</a></span></dt>
-<dd><p>Stop stifling the history.  This returns the previously-set
-maximum number of history entries (as set by <code class="code">stifle_history()</code>).
-The value is positive if the history was
-stifled, negative if it wasn&rsquo;t.
+<dd><p>Stop stifling the history.
+This returns the previously-set maximum number of history
+entries (as set by <code class="code">stifle_history()</code>).
+The value is positive if the history was stifled, negative if it wasn&rsquo;t.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -683,20 +692,21 @@ individual list entries.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005flist"><span class="category-def">Function: </span><span><code class="def-type">HIST_ENTRY **</code> <strong class="def-name">history_list</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-history_005flist"> &para;</a></span></dt>
 <dd><p>Return a <code class="code">NULL</code> terminated array of <code class="code">HIST_ENTRY *</code> which is the
-current input history.  Element 0 of this list is the beginning of time.
-If there is no history, return <code class="code">NULL</code>.
+current input history.
+Element 0 of this list is the beginning of time.
+Return <code class="code">NULL</code> if there is no history.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-where_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">where_history</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-where_005fhistory"> &para;</a></span></dt>
-<dd><p>Returns the offset of the current history element.
+<dd><p>Return the offset of the current history entry.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-current_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">HIST_ENTRY *</code> <strong class="def-name">current_history</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-current_005fhistory"> &para;</a></span></dt>
 <dd><p>Return the history entry at the current position, as determined by
-<code class="code">where_history()</code>.  If there is no entry there, return a <code class="code">NULL</code>
-pointer.
+<code class="code">where_history()</code>.
+If there is no entry there, return <code class="code">NULL</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -706,7 +716,7 @@ The range of valid
 values of <var class="var">offset</var> starts at <code class="code">history_base</code> and ends at
 <var class="var">history_length</var> - 1 (see <a class="pxref" href="#History-Variables">History Variables</a>).
 If there is no entry there, or if <var class="var">offset</var> is outside the valid
-range, return a <code class="code">NULL</code> pointer.
+range, return <code class="code">NULL</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -745,8 +755,8 @@ than the number of history entries.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-previous_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">HIST_ENTRY *</code> <strong class="def-name">previous_history</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-previous_005fhistory"> &para;</a></span></dt>
 <dd><p>Back up the current history offset to the previous history entry, and
-return a pointer to that entry.  If there is no previous entry, return
-a <code class="code">NULL</code> pointer.
+return a pointer to that entry.
+If there is no previous entry, return <code class="code">NULL</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -755,7 +765,7 @@ a <code class="code">NULL</code> pointer.
 increment the current history offset.
 If the possibly-incremented history offset refers to a valid history
 entry, return a pointer to that entry;
-otherwise, return a <code class="code">BNULL</code> pointer.
+otherwise, return <code class="code">NULL</code>.
 </p></dd></dl>
 
 <hr>
@@ -768,10 +778,12 @@ Next: <a href="#Managing-the-History-File" accesskey="n" rel="next">Managing the
 <h4 class="subsection" id="Searching-the-History-List-1"><span>2.3.5 Searching the History List<a class="copiable-link" href="#Searching-the-History-List-1"> &para;</a></span></h4>
 <a class="index-entry-id" id="index-History-Searching"></a>
 
-<p>These functions allow searching of the history list for entries containing
-a specific string.  Searching may be performed both forward and backward
-from the current history position.  The search may be <em class="dfn">anchored</em>,
-meaning that the string must match at the beginning of the history entry.
+<p>These functions search the history list for entries containing
+a specific string.
+Searching may be performed both forward and backward
+from the current history position.
+The search may be <em class="dfn">anchored</em>,
+meaning that the string must match at the beginning of a history entry.
 <a class="index-entry-id" id="index-anchored-search"></a>
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -779,30 +791,34 @@ meaning that the string must match at the beginning of the history entry.
 <dd><p>Search the history for <var class="var">string</var>, starting at the current history offset.
 If <var class="var">direction</var> is less than 0, then the search is through
 previous entries, otherwise through subsequent entries.
-If <var class="var">string</var> is found, then
-the current history index is set to that history entry, and the value
-returned is the offset in the line of the entry where
-<var class="var">string</var> was found.  Otherwise, nothing is changed, and a -1 is
-returned.
+If <var class="var">string</var> is found, then the current history index is set to
+that history entry, and <code class="code">history_search</code>
+returns the offset in the line of the entry where
+<var class="var">string</var> was found.
+Otherwise, nothing is changed, and this returns -1.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005fsearch_005fprefix"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">history_search_prefix</strong> <code class="def-code-arguments">(const char *string, int direction)</code><a class="copiable-link" href="#index-history_005fsearch_005fprefix"> &para;</a></span></dt>
 <dd><p>Search the history for <var class="var">string</var>, starting at the current history
-offset.  The search is anchored: matching lines must begin with
-<var class="var">string</var>.  If <var class="var">direction</var> is less than 0, then the search is
+offset.
+The search is anchored: matching history entries must begin with <var class="var">string</var>.
+If <var class="var">direction</var> is less than 0, then the search is
 through previous entries, otherwise through subsequent entries.
-If <var class="var">string</var> is found, then the
-current history index is set to that entry, and the return value is 0. 
-Otherwise, nothing is changed, and a -1 is returned. 
+If <var class="var">string</var> is found, then the current history index is set to
+that entry, and the return value is 0. 
+Otherwise, nothing is changed, and this returns -1. 
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005fsearch_005fpos"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">history_search_pos</strong> <code class="def-code-arguments">(const char *string, int direction, int pos)</code><a class="copiable-link" href="#index-history_005fsearch_005fpos"> &para;</a></span></dt>
 <dd><p>Search for <var class="var">string</var> in the history list, starting at <var class="var">pos</var>, an
-absolute index into the list.  If <var class="var">direction</var> is negative, the search
-proceeds backward from <var class="var">pos</var>, otherwise forward.  Returns the absolute
-index of the history element where <var class="var">string</var> was found, or -1 otherwise.
+absolute index into the list.
+If <var class="var">direction</var> is negative, the search
+proceeds backward from <var class="var">pos</var>, otherwise forward.
+Returns the index in the history list
+of the history element where <var class="var">string</var> was
+found, or -1 otherwise.
 </p></dd></dl>
 
 <hr>
@@ -819,8 +835,13 @@ This section documents the functions for managing a history file.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-read_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">read_history</strong> <code class="def-code-arguments">(const char *filename)</code><a class="copiable-link" href="#index-read_005fhistory"> &para;</a></span></dt>
-<dd><p>Add the contents of <var class="var">filename</var> to the history list, a line at a time.
-If <var class="var">filename</var> is <code class="code">NULL</code>, then read from <samp class="file">~/.history</samp>.
+<dd><p>Add the contents of <var class="var">filename</var> to the history list, one entry
+at a time.
+If <var class="var">filename</var> is <code class="code">NULL</code>, this reads from <samp class="file">~/.history</samp>,
+if it exists.
+This attempts to determine whether the history file includes timestamp
+information, and assigns timestamps to the history entries it reads
+if so.
 Returns 0 if successful, or <code class="code">errno</code> if not.
 </p></dd></dl>
 
@@ -828,16 +849,22 @@ Returns 0 if successful, or <code class="code">errno</code> if not.
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-read_005fhistory_005frange"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">read_history_range</strong> <code class="def-code-arguments">(const char *filename, int from, int to)</code><a class="copiable-link" href="#index-read_005fhistory_005frange"> &para;</a></span></dt>
 <dd><p>Read a range of lines from <var class="var">filename</var>, adding them to the history list.
 Start reading at line <var class="var">from</var> and end at <var class="var">to</var>.
-If <var class="var">from</var> is zero, start at the beginning.  If <var class="var">to</var> is less than
-<var class="var">from</var>, then read until the end of the file.  If <var class="var">filename</var> is
-<code class="code">NULL</code>, then read from <samp class="file">~/.history</samp>.  Returns 0 if successful,
-or <code class="code">errno</code> if not.
+If <var class="var">from</var> is zero, start at the beginning.
+If <var class="var">to</var> is less than <var class="var">from</var>, this reads until the end of the file.
+This attempts to determine whether the history file includes timestamp
+information, and assigns timestamps to the history entries it reads
+if so.
+If <var class="var">filename</var> is <code class="code">NULL</code>, this reads from <samp class="file">~/.history</samp>,
+if it exists.
+Returns 0 if successful, or <code class="code">errno</code> if not.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-write_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">write_history</strong> <code class="def-code-arguments">(const char *filename)</code><a class="copiable-link" href="#index-write_005fhistory"> &para;</a></span></dt>
 <dd><p>Write the current history to <var class="var">filename</var>, overwriting <var class="var">filename</var>
 if necessary.
+This writes timestamp information if the
+<code class="code">history_write_timestamps</code> variable is set to a non-zero value.
 If <var class="var">filename</var> is <code class="code">NULL</code>, then write the history list to
 <samp class="file">~/.history</samp>.
 Returns 0 on success, or <code class="code">errno</code> on a read or write error.
@@ -846,6 +873,8 @@ Returns 0 on success, or <code class="code">errno</code> on a read or write erro
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-append_005fhistory"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">append_history</strong> <code class="def-code-arguments">(int nelements, const char *filename)</code><a class="copiable-link" href="#index-append_005fhistory"> &para;</a></span></dt>
 <dd><p>Append the last <var class="var">nelements</var> of the history list to <var class="var">filename</var>.
+This writes timestamp information if the
+<code class="code">history_write_timestamps</code> variable is set to a non-zero value.
 If <var class="var">filename</var> is <code class="code">NULL</code>, then append to <samp class="file">~/.history</samp>.
 Returns 0 on success, or <code class="code">errno</code> on a read or write error.
 </p></dd></dl>
@@ -854,7 +883,7 @@ Returns 0 on success, or <code class="code">errno</code> on a read or write erro
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005ftruncate_005ffile"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">history_truncate_file</strong> <code class="def-code-arguments">(const char *filename, int nlines)</code><a class="copiable-link" href="#index-history_005ftruncate_005ffile"> &para;</a></span></dt>
 <dd><p>Truncate the history file <var class="var">filename</var>, leaving only the last
 <var class="var">nlines</var> lines.
-If <var class="var">filename</var> is <code class="code">NULL</code>, then <samp class="file">~/.history</samp> is truncated.
+If <var class="var">filename</var> is <code class="code">NULL</code>, this truncates <samp class="file">~/.history</samp>.
 Returns 0 on success, or <code class="code">errno</code> on failure.
 </p></dd></dl>
 
@@ -872,7 +901,8 @@ Previous: <a href="#Managing-the-History-File" accesskey="p" rel="prev">Managing
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005fexpand"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">history_expand</strong> <code class="def-code-arguments">(const char *string, char **output)</code><a class="copiable-link" href="#index-history_005fexpand"> &para;</a></span></dt>
 <dd><p>Expand <var class="var">string</var>, placing the result into <var class="var">output</var>, a pointer
-to a string (see <a class="pxref" href="#History-Interaction">History Expansion</a>).  Returns:
+to a string (see <a class="pxref" href="#History-Interaction">History Expansion</a>).
+Returns:
 </p><dl class="table">
 <dt><code class="code">0</code></dt>
 <dd><p>If no expansions took place (or, if the only change in
@@ -891,16 +921,18 @@ as with the <code class="code">:p</code> modifier (see <a class="pxref" href="#M
 </p></dd>
 </dl>
 
-<p>If an error occurred in expansion, then <var class="var">output</var> contains a descriptive
-error message.
+<p>If an error occurred during expansion,
+then <var class="var">output</var> contains a descriptive error message.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-get_005fhistory_005fevent"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">get_history_event</strong> <code class="def-code-arguments">(const char *string, int *cindex, int qchar)</code><a class="copiable-link" href="#index-get_005fhistory_005fevent"> &para;</a></span></dt>
 <dd><p>Returns the text of the history event beginning at <var class="var">string</var> +
-<var class="var">*cindex</var>.  <var class="var">*cindex</var> is modified to point to after the event
-specifier.  At function entry, <var class="var">cindex</var> points to the index into
-<var class="var">string</var> where the history event specification begins.  <var class="var">qchar</var>
+<var class="var">*cindex</var>.
+Modifies <var class="var">*cindex</var> to point to after the event specifier.
+At function entry, <var class="var">cindex</var> points to the index into <var class="var">string</var>
+where the history event specification begins.
+<var class="var">qchar</var>
 is a character that is allowed to end the event specification in addition
 to the &ldquo;normal&rdquo; terminating characters.
 </p></dd></dl>
@@ -908,7 +940,8 @@ to the &ldquo;normal&rdquo; terminating characters.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005ftokenize"><span class="category-def">Function: </span><span><code class="def-type">char **</code> <strong class="def-name">history_tokenize</strong> <code class="def-code-arguments">(const char *string)</code><a class="copiable-link" href="#index-history_005ftokenize"> &para;</a></span></dt>
 <dd><p>Return an array of tokens parsed out of <var class="var">string</var>, much as the
-shell might.  The tokens are split on the characters in the
+shell might.
+The tokens are split on the characters in the
 <var class="var">history_word_delimiters</var> variable,
 and shell quoting conventions are obeyed as described below.
 </p></dd></dl>
@@ -916,8 +949,8 @@ and shell quoting conventions are obeyed as described below.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-history_005farg_005fextract"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">history_arg_extract</strong> <code class="def-code-arguments">(int first, int last, const char *string)</code><a class="copiable-link" href="#index-history_005farg_005fextract"> &para;</a></span></dt>
 <dd><p>Extract a string segment consisting of the <var class="var">first</var> through <var class="var">last</var>
-arguments present in <var class="var">string</var>.  Arguments are split using
-<code class="code">history_tokenize</code>.
+arguments present in <var class="var">string</var>.
+This splits <var class="var">string</var> into arguments using <code class="code">history_tokenize</code>.
 </p></dd></dl>
 
 <hr>
@@ -945,36 +978,39 @@ the <small class="sc">GNU</small> History Library.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fmax_005fentries"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">history_max_entries</strong><a class="copiable-link" href="#index-history_005fmax_005fentries"> &para;</a></span></dt>
-<dd><p>The maximum number of history entries.  This must be changed using
-<code class="code">stifle_history()</code>.
+<dd><p>The maximum number of history entries.
+This must be changed using <code class="code">stifle_history()</code>.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fwrite_005ftimestamps"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">history_write_timestamps</strong><a class="copiable-link" href="#index-history_005fwrite_005ftimestamps"> &para;</a></span></dt>
 <dd><p>If non-zero, timestamps are written to the history file, so they can be
-preserved between sessions.  The default value is 0, meaning that
-timestamps are not saved.
+preserved between sessions.
+The default value is 0, meaning that timestamps are not saved.
 </p>
 <p>The current timestamp format uses the value of <var class="var">history_comment_char</var>
-to delimit timestamp entries in the history file.  If that variable does
-not have a value (the default), timestamps will not be written.
+to delimit timestamp entries in the history file.
+If that variable does not have a value (the default), this will not
+write timestamps.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fexpansion_005fchar"><span class="category-def">Variable: </span><span><code class="def-type">char</code> <strong class="def-name">history_expansion_char</strong><a class="copiable-link" href="#index-history_005fexpansion_005fchar"> &para;</a></span></dt>
-<dd><p>The character that introduces a history event.  The default is &lsquo;<samp class="samp">!</samp>&rsquo;.
+<dd><p>The character that introduces a history event.
+The default is &lsquo;<samp class="samp">!</samp>&rsquo;.
 Setting this to 0 inhibits history expansion.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fsubst_005fchar"><span class="category-def">Variable: </span><span><code class="def-type">char</code> <strong class="def-name">history_subst_char</strong><a class="copiable-link" href="#index-history_005fsubst_005fchar"> &para;</a></span></dt>
 <dd><p>The character that invokes word substitution if found at the start of
-a line.  The default is &lsquo;<samp class="samp">^</samp>&rsquo;.
+a line.
+The default is &lsquo;<samp class="samp">^</samp>&rsquo;.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fcomment_005fchar"><span class="category-def">Variable: </span><span><code class="def-type">char</code> <strong class="def-name">history_comment_char</strong><a class="copiable-link" href="#index-history_005fcomment_005fchar"> &para;</a></span></dt>
-<dd><p>During tokenization, if this character is seen as the first character
+<dd><p>During tokenization, if this character appears as the first character
 of a word, then it and all subsequent characters up to a newline are
 ignored, suppressing history expansion for the remainder of the line.
 This is disabled by default.
@@ -990,14 +1026,15 @@ The default value is <code class="code">&quot; \t\n()&lt;&gt;;&amp;|&quot;</code
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fsearch_005fdelimiter_005fchars"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">history_search_delimiter_chars</strong><a class="copiable-link" href="#index-history_005fsearch_005fdelimiter_005fchars"> &para;</a></span></dt>
 <dd><p>The list of additional characters which can delimit a history search
 string, in addition to space, TAB, &lsquo;<samp class="samp">:</samp>&rsquo; and &lsquo;<samp class="samp">?</samp>&rsquo; in the case of
-a substring search.  The default is empty.
+a substring search.
+The default is empty.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fno_005fexpand_005fchars"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">history_no_expand_chars</strong><a class="copiable-link" href="#index-history_005fno_005fexpand_005fchars"> &para;</a></span></dt>
 <dd><p>The list of characters which inhibit history expansion if found immediately
-following <var class="var">history_expansion_char</var>.  The default is space, tab, newline,
-carriage return, and &lsquo;<samp class="samp">=</samp>&rsquo;.
+following <var class="var">history_expansion_char</var>.
+The default is space, tab, newline, carriage return, and &lsquo;<samp class="samp">=</samp>&rsquo;.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -1013,14 +1050,18 @@ The default value is 0.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fquoting_005fstate"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">history_quoting_state</strong><a class="copiable-link" href="#index-history_005fquoting_005fstate"> &para;</a></span></dt>
 <dd><p>An application may set this variable to indicate that the current line
-being expanded is subject to existing quoting. If set to &lsquo;<samp class="samp">'</samp>&rsquo;, the
+being expanded is subject to existing quoting.
+If set to &lsquo;<samp class="samp">'</samp>&rsquo;, the
 history expansion function will assume that the line is single-quoted and
-inhibit expansion until it reads an unquoted closing single quote; if set
-to &lsquo;<samp class="samp">&quot;</samp>&rsquo;, history expansion will assume the line is double quoted until
-it reads an unquoted closing double quote. If set to zero, the default,
+inhibit expansion until it reads an unquoted closing single quote;
+if set to &lsquo;<samp class="samp">&quot;</samp>&rsquo;, history expansion will assume the line is
+double quoted until it reads an unquoted closing double quote.
+If set to 0, the default,
 the history expansion function will assume the line is not quoted and
 treat quote characters within the line as described above.
 This is only effective if <var class="var">history_quotes_inhibit_expansion</var> is set.
+This is intended for use by applications like Bash which allow
+quoted strings to span multiple lines.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">

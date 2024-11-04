@@ -1,10 +1,10 @@
 This is readline.info, produced by makeinfo version 7.1 from rlman.texi.
 
-This manual describes the GNU Readline Library (version 8.3, 10 October
+This manual describes the GNU Readline Library (version 8.3, 15 October
 2024), a library which aids in the consistency of user interface across
 discrete programs which provide a command line interface.
 
-   Copyright © 1988-2022 Free Software Foundation, Inc.
+   Copyright © 1988-2024 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -63,27 +63,26 @@ File: readline.info,  Node: Introduction and Notation,  Next: Readline Interacti
 1.1 Introduction to Line Editing
 ================================
 
-The following paragraphs describe the notation used to represent
-keystrokes.
+The following paragraphs use Emacs style to describe the notation used
+to represent keystrokes.
 
    The text ‘C-k’ is read as 'Control-K' and describes the character
 produced when the <k> key is pressed while the Control key is depressed.
 
    The text ‘M-k’ is read as 'Meta-K' and describes the character
 produced when the Meta key (if you have one) is depressed, and the <k>
-key is pressed (a “meta character”).  The Meta key is labeled <ALT> on
-many keyboards.  On keyboards with two keys labeled <ALT> (usually to
-either side of the space bar), the <ALT> on the left side is generally
-set to work as a Meta key.  The <ALT> key on the right may also be
-configured to work as a Meta key or may be configured as some other
-modifier, such as a Compose key for typing accented characters.
+key is pressed (a “meta character”), then both are released.  The Meta
+key is labeled <ALT> or <Option> on many keyboards.  On keyboards with
+two keys labeled <ALT> (usually to either side of the space bar), the
+<ALT> on the left side is generally set to work as a Meta key.  One of
+the <ALT> keys may also be configured as some other modifier, such as a
+Compose key for typing accented characters.
 
-   On some keyboards, the Meta key modifier produces meta characters
-with the eighth bit (0200) set.  You can use the ‘enable-meta-key’
-variable to control whether or not it does this, if the keyboard allows
-it.  On many others, the terminal or terminal emulator converts the
-metafied key to a key sequence beginning with <ESC> as described in the
-next paragraph.
+   On some keyboards, the Meta key modifier produces characters with the
+eighth bit (0200) set.  You can use the ‘enable-meta-key’ variable to
+control whether or not it does this, if the keyboard allows it.  On many
+others, the terminal or terminal emulator converts the metafied key to a
+key sequence beginning with <ESC> as described in the next paragraph.
 
    If you do not have a Meta or <ALT> key, or another key working as a
 Meta key, you can generally achieve the latter effect by typing <ESC>
@@ -328,7 +327,7 @@ putting commands in an “inputrc” file, conventionally in their home
 directory.  The name of this file is taken from the value of the
 environment variable ‘INPUTRC’.  If that variable is unset, the default
 is ‘~/.inputrc’.  If that file does not exist or cannot be read,
-readline looks for ‘/etc/inputrc’.
+Readline looks for ‘/etc/inputrc’.
 
    When a program which uses the Readline library starts up, Readline
 reads the init file and sets any variables and key bindings it contains.
@@ -463,7 +462,7 @@ Variable Settings
      ‘completion-prefix-display-length’
           The maximum length in characters of the common prefix of a
           list of possible completions that is displayed without
-          modification.  When set to a value greater than zero, readline
+          modification.  When set to a value greater than zero, Readline
           replaces common prefixes longer than this value with an
           ellipsis when displaying possible completions.
 
@@ -562,7 +561,7 @@ Variable Settings
           key sequences containing ‘\M-’ or ‘Meta-’ (see ‘Key Bindings’
           in *note Readline Init File Syntax::) by converting a key
           sequence of the form ‘\M-’C or ‘Meta-’C to the two-character
-          sequence ‘ESC’C (adding the meta prefix).  If
+          sequence ‘ESC’ C (adding the meta prefix).  If
           ‘force-meta-prefix’ is set to ‘off’ (the default), Readline
           uses the value of the ‘convert-meta’ variable to determine
           whether to perform this conversion: if ‘convert-meta’ is ‘on’,
@@ -722,7 +721,7 @@ Variable Settings
           If set to ‘on’, this alters the default completion behavior
           when inserting a single match into the line.  It's only active
           when performing completion in the middle of a word.  If
-          enabled, readline does not insert characters from the
+          enabled, Readline does not insert characters from the
           completion that match characters after point in the word being
           completed, so portions of the word following the cursor are
           not duplicated.  For instance, if this is enabled, attempting
@@ -792,7 +791,7 @@ Key Bindings
 
           This key binding syntax recognizes a number of symbolic
           character names: DEL, ESC, ESCAPE, LFD, NEWLINE, RET, RETURN,
-          RUBOUT, SPACE, SPC, and TAB.
+          RUBOUT (a destructive backspace), SPACE, SPC, and TAB.
 
      "KEYSEQ": FUNCTION-NAME or MACRO
           KEYSEQ differs from KEYNAME above in that strings denoting an
@@ -1090,9 +1089,10 @@ unbound by default.
 position, and “mark” refers to a cursor position saved by the ‘set-mark’
 command.  The text between the point and mark is referred to as the
 “region”.  Readline has the concept of an _active region_: when the
-region is active, Readline redisplay uses the value of the
-‘active-region-start-color’ variable to denote the region.  Several
-commands set the region to active; those are noted below.
+region is active, Readline redisplay highlights the region using the
+value of the ‘active-region-start-color’ variable.  The
+‘enable-active-region’ variable turns this on and off.  Several commands
+set the region to active; those are noted below.
 
 
 File: readline.info,  Node: Commands For Moving,  Next: Commands For History,  Up: Bindable Readline Commands
@@ -1273,7 +1273,8 @@ File: readline.info,  Node: Commands For Text,  Next: Commands For Killing,  Pre
 ‘delete-char (C-d)’
      Delete the character at point.  If this function is bound to the
      same character as the tty EOF character, as ‘C-d’ commonly is, see
-     above for the effects.
+     above for the effects.  This may also be bound to the Delete key on
+     some keyboards.
 
 ‘backward-delete-char (Rubout)’
      Delete the character behind the cursor.  A numeric argument means
@@ -1591,7 +1592,7 @@ File: readline.info,  Node: Miscellaneous Commands,  Prev: Keyboard Macros,  Up:
      default.
 
 ‘execute-named-command (M-x)’
-     Read a bindable readline command name from the input and execute
+     Read a bindable Readline command name from the input and execute
      the function to which it's bound, as if the key sequence to which
      it was bound appeared in the input.  If this function is supplied
      with a numeric argument, it passes that argument to the function it
@@ -1631,7 +1632,7 @@ and subsequent lines with ‘j’, and so forth.
 aiding in the consistency of user interface across discrete programs
 that need to provide a command line interface.
 
-   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+   Copyright (C) 1988-2024 Free Software Foundation, Inc.
 
    Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice pare
@@ -1681,28 +1682,28 @@ File: readline.info,  Node: Basic Behavior,  Next: Custom Functions,  Up: Progra
 Many programs provide a command line interface, such as ‘mail’, ‘ftp’,
 and ‘sh’.  For such programs, the default behaviour of Readline is
 sufficient.  This section describes how to use Readline in the simplest
-way possible, perhaps to replace calls in your code to ‘gets()’ or
-‘fgets()’.
+way possible, perhaps to replace calls in your code to ‘fgets()’.
 
    The function ‘readline()’ prints a prompt PROMPT and then reads and
 returns a single line of text from the user.  Since it's possible to
 enter characters into the line while quoting them to disable any
 Readline editing function they might normally have, this line may
 include embedded newlines and other special characters.  If PROMPT is
-‘NULL’ or the empty string, no prompt is displayed.  The line ‘readline’
-returns is allocated with ‘malloc()’; the caller should ‘free()’ the
-line when it has finished with it.  The declaration for ‘readline’ in
-ANSI C is
+‘NULL’ or the empty string, ‘readline()’ does not display a prompt.  The
+line ‘readline()’ returns is allocated with ‘malloc()’; the caller
+should ‘free()’ the line when it has finished with it.  The declaration
+for ‘readline’ in ANSI C is
 
      char *readline (const char *PROMPT);
 
 So, one might say
      char *line = readline ("Enter a line: ");
 in order to read a line of text from the user.  The line returned has
-the final newline removed, so only the text remains.
+the final newline removed, so only the text remains.  This means that
+lines consisting of a newline return the empty string.
 
-   If ‘readline’ encounters an ‘EOF’ while reading the line, and the
-line is empty at that point, then ‘(char *)NULL’ is returned.
+   If Readline encounters an ‘EOF’ while reading the line, and the line
+is empty at that point, then ‘readline()’ returns ‘(char *)NULL’.
 Otherwise, the line is ended just as if a newline had been typed.
 
    Readline performs some expansion on the PROMPT before it is displayed
@@ -1751,8 +1752,8 @@ and has the advantage of no static buffer to overflow:
      }
 
    This function gives the user the default behaviour of <TAB>
-completion: completion on file names.  If you do not want Readline to
-complete on filenames, you can change the binding of the <TAB> key with
+completion: filename completion.  If you do not want Readline to
+complete filenames, you can change the binding of the <TAB> key with
 ‘rl_bind_key()’.
 
      int rl_bind_key (int KEY, rl_command_func_t *FUNCTION);
@@ -1780,15 +1781,15 @@ File: readline.info,  Node: Custom Functions,  Next: Readline Variables,  Prev: 
 Readline provides many functions for manipulating the text of the line,
 but it isn't possible to anticipate the needs of all programs.  This
 section describes the various functions and variables defined within the
-Readline library which allow a user program to add customized
-functionality to Readline.
+Readline library which allow a program to add customized functionality
+to Readline.
 
    Before declaring any functions that customize Readline's behavior, or
 using any functionality Readline provides in other code, an application
 writer should include the file ‘<readline/readline.h>’ in any file that
 uses Readline's features.  Since some of the definitions in ‘readline.h’
-use the ‘stdio’ library, the file ‘<stdio.h>’ should be included before
-‘readline.h’.
+use the ‘stdio’ library, the program should include the file ‘<stdio.h>’
+before ‘readline.h’.
 
    ‘readline.h’ defines a C preprocessor variable that should be treated
 as an integer, ‘RL_READLINE_VERSION’, which may be used to conditionally
@@ -1847,6 +1848,8 @@ we may write
 
 ‘typedef void rl_compdisp_func_t (char **, int, int);’
 
+‘typedef void rl_macro_print_func_t (const char *, const char *, int, const char *);’
+
 ‘typedef int rl_hook_func_t (void);’
 
 ‘typedef int rl_getc_func_t (FILE *);’
@@ -1862,6 +1865,8 @@ we may write
 ‘typedef void rl_vintfunc_t (int);’
 ‘typedef void rl_vcpfunc_t (char *);’
 ‘typedef void rl_vcppfunc_t (char **);’
+
+The ‘rltypedefs.h’ file has more documentation for these types.
 
 
 File: readline.info,  Node: Function Writing,  Prev: Readline Typedefs,  Up: Custom Functions
@@ -1890,9 +1895,8 @@ negative and positive arguments.  At the very least, it should be aware
 that it can be passed a negative argument.
 
    A command function should return 0 if its action completes
-successfully, and a value greater than zero if some error occurs.  This
-is the convention obeyed by all of the builtin Readline bindable command
-functions.
+successfully, and a value greater than zero if some error occurs.  All
+of the builtin Readline bindable command functions obey this convention.
 
 
 File: readline.info,  Node: Readline Variables,  Next: Readline Convenience Functions,  Prev: Custom Functions,  Up: Programming with GNU Readline
@@ -1905,8 +1909,8 @@ These variables are available to function writers.
  -- Variable: char * rl_line_buffer
      This is the line gathered so far.  You are welcome to modify the
      contents of the line, but see *note Allowing Undoing::.  The
-     function ‘rl_extend_line_buffer’ is available to increase the
-     memory allocated to ‘rl_line_buffer’.
+     function ‘rl_extend_line_buffer’ will increase the memory allocated
+     to ‘rl_line_buffer’.
 
  -- Variable: int rl_point
      The offset of the current cursor position in ‘rl_line_buffer’ (the
@@ -1919,7 +1923,8 @@ These variables are available to function writers.
 
  -- Variable: int rl_mark
      The MARK (saved position) in the current line.  If set, the mark
-     and point define a _region_.
+     and point define a _region_.  Some Readline commands set the mark
+     as part of operating; users can also set the mark explicitly.
 
  -- Variable: int rl_done
      Setting this to a non-zero value causes Readline to return the
@@ -1929,8 +1934,9 @@ These variables are available to function writers.
 
  -- Variable: int rl_eof_found
      Readline will set this variable when it has read an EOF character
-     (e.g., the stty ‘EOF’ character) on an empty line or encountered a
-     read error and is about to return a NULL line to the caller.
+     (e.g., the stty ‘EOF’ character) on an empty line or has
+     encountered a read error or EOF and is about to return a NULL line
+     to the caller.
 
  -- Variable: int rl_num_chars_to_read
      Setting this to a positive value before calling ‘readline()’ causes
@@ -1950,14 +1956,16 @@ These variables are available to function writers.
  -- Variable: int rl_erase_empty_line
      Setting this to a non-zero value causes Readline to completely
      erase the current line, including any prompt, any time a newline is
-     typed as the only character on an otherwise-empty line.  The cursor
-     is moved to the beginning of the newly-blank line.
+     typed as the only character on an otherwise-empty line.  This moves
+     the cursor to the beginning of the newly-blank line.
 
  -- Variable: char * rl_prompt
      The prompt Readline uses.  This is set from the argument to
      ‘readline()’, and should not be assigned to directly.  The
      ‘rl_set_prompt()’ function (*note Redisplay::) may be used to
-     modify the prompt string after calling ‘readline()’.
+     modify the prompt string after calling ‘readline()’.  Readline
+     performs some prompt expansions and analyzes the prompt for line
+     breaks, so ‘rl_set_prompt()’ is preferred.
 
  -- Variable: char * rl_display_prompt
      The string displayed as the prompt.  This is usually identical to
@@ -1974,7 +1982,8 @@ These variables are available to function writers.
      value; Readline never sets it.
 
  -- Variable: const char * rl_library_version
-     The version number of this revision of the library.
+     The version number of this revision of the Readline library, as a
+     string (e.g., "4.2").
 
  -- Variable: int rl_readline_version
      An integer encoding the current version of the library.  The
@@ -1990,7 +1999,9 @@ These variables are available to function writers.
  -- Variable: const char * rl_terminal_name
      The terminal type, used for initialization.  If not set by the
      application, Readline sets this to the value of the ‘TERM’
-     environment variable the first time it is called.
+     environment variable the first time it is called.  Readline uses
+     this to look up the terminal capabilities it needs in the terminfo
+     database.
 
  -- Variable: const char * rl_readline_name
      This variable is set to a unique name by each application using
@@ -2011,17 +2022,17 @@ These variables are available to function writers.
      fetched from the kernel when computing the screen dimensions.
 
  -- Variable: rl_command_func_t * rl_last_func
-     The address of the last command function Readline executed.  May be
-     used to test whether or not a function is being executed twice in
-     succession, for example.
+     The address of the last command function Readline executed.  This
+     may be used to test whether or not a function is being executed
+     twice in succession, for example.
 
  -- Variable: rl_hook_func_t * rl_startup_hook
      If non-zero, this is the address of a function to call just before
-     ‘readline’ prints the first prompt.
+     Readline prints the first prompt.
 
  -- Variable: rl_hook_func_t * rl_pre_input_hook
      If non-zero, this is the address of a function to call after the
-     first prompt has been printed and just before ‘readline’ starts
+     first prompt has been printed and just before Readline starts
      reading input characters.
 
  -- Variable: rl_hook_func_t * rl_event_hook
@@ -2032,14 +2043,14 @@ These variables are available to function writers.
  -- Variable: rl_getc_func_t * rl_getc_function
      If non-zero, Readline will call indirectly through this pointer to
      get a character from the input stream.  By default, it is set to
-     ‘rl_getc’, the default Readline character input function (*note
-     Character Input::).  In general, an application that sets
-     RL_GETC_FUNCTION should consider setting RL_INPUT_AVAILABLE_HOOK as
-     well.
+     ‘rl_getc’, the Readline character input function (*note Character
+     Input::).  In general, an application that sets RL_GETC_FUNCTION
+     should consider setting RL_INPUT_AVAILABLE_HOOK as well.
 
  -- Variable: rl_hook_func_t * rl_signal_event_hook
      If non-zero, this is the address of a function to call if a read
-     system call is interrupted when Readline is reading terminal input.
+     system call is interrupted by a signal when Readline is reading
+     terminal input.
 
  -- Variable: rl_hook_func_t * rl_timeout_event_hook
      If non-zero, this is the address of a function to call if Readline
@@ -2162,7 +2173,7 @@ These variables are available to function writers.
      ‘RL_STATE_COMPLETING’
           Readline is performing word completion.
      ‘RL_STATE_SIGHANDLER’
-          Readline is currently executing the readline signal handler.
+          Readline is currently executing the Readline signal handler.
      ‘RL_STATE_UNDOING’
           Readline is performing an undo.
      ‘RL_STATE_INPUTPENDING’
@@ -2192,22 +2203,24 @@ These variables are available to function writers.
           caller.
      ‘RL_STATE_EOF’
           Readline has read an EOF character (e.g., the stty ‘EOF’
-          character) or encountered a read error and is about to return
-          a NULL line to the caller.
+          character) or encountered a read error or EOF and is about to
+          return a NULL line to the caller.
 
  -- Variable: int rl_explicit_arg
      Set to a non-zero value if an explicit numeric argument was
-     specified by the user.  Only valid in a bindable command function.
+     specified by the user.  It is only valid in a bindable command
+     function.
 
  -- Variable: int rl_numeric_arg
      Set to the value of any numeric argument explicitly specified by
-     the user before executing the current Readline function.  Only
-     valid in a bindable command function.
+     the user before executing the current Readline function.  It is
+     only valid in a bindable command function.
 
  -- Variable: int rl_editing_mode
      Set to a value denoting Readline's current editing mode.  A value
      of 1 means Readline is currently in emacs mode; 0 means that vi
-     mode is active.
+     mode is active.  This determines the current keymap and key
+     bindings.
 
 
 File: readline.info,  Node: Readline Convenience Functions,  Next: Readline Signal Handling,  Prev: Readline Variables,  Up: Programming with GNU Readline
@@ -2239,23 +2252,24 @@ File: readline.info,  Node: Function Naming,  Next: Keymaps,  Up: Readline Conve
 2.4.1 Naming a Function
 -----------------------
 
-The user can dynamically change the bindings of keys while using
-Readline.  This is done by representing the function with a descriptive
-name.  The user is able to type the descriptive name when referring to
-the function.  Thus, in an init file, one might find
+Readline has a descriptive string name for every function a user can
+bind to a key sequence, so users can dynamically change the bindings
+associated with key sequences while using Readline, using the
+descriptive name when referring to the function.  Thus, in an init file,
+one might find
 
      Meta-Rubout:	backward-kill-word
 
    This binds the keystroke <Meta-Rubout> to the function
-_descriptively_ named ‘backward-kill-word’.  You, as the programmer,
+_descriptively_ named ‘backward-kill-word’.  As the programmer, you
 should bind the functions you write to descriptive names as well.
 Readline provides a function for doing that:
 
  -- Function: int rl_add_defun (const char *name, rl_command_func_t
           *function, int key)
      Add NAME to the list of named functions.  Make FUNCTION be the
-     function that gets called.  If KEY is not -1, then bind it to
-     FUNCTION using ‘rl_bind_key()’.
+     function that gets called by key sequences that bind to NAME.  If
+     KEY is not -1, then bind it to FUNCTION using ‘rl_bind_key()’.
 
    Using this function alone is sufficient for most applications.  It is
 the recommended way to add a few functions to the default functions that
@@ -2301,7 +2315,8 @@ which keymap to use.
      zero if there are any keys bound.
 
    Readline has several internal keymaps.  These functions allow you to
-change which keymap is active.
+change which keymap is active.  This is one way to switch editing modes,
+for example.
 
  -- Function: Keymap rl_get_keymap (void)
      Returns the currently active keymap.
@@ -2340,8 +2355,8 @@ File: readline.info,  Node: Binding Keys,  Next: Associating Function Names and 
 2.4.3 Binding Keys
 ------------------
 
-Key sequences are associate with functions through the keymap.  Readline
-has several internal keymaps: ‘emacs_standard_keymap’,
+Key sequences are associated with functions through the keymap.
+Readline has several internal keymaps: ‘emacs_standard_keymap’,
 ‘emacs_meta_keymap’, ‘emacs_ctlx_keymap’, ‘vi_movement_keymap’, and
 ‘vi_insertion_keymap’.  ‘emacs_standard_keymap’ is the default, and the
 examples in this manual assume that.
@@ -2349,9 +2364,9 @@ examples in this manual assume that.
    Since ‘readline()’ installs a set of default key bindings the first
 time it is called, there is always the danger that a custom binding
 installed before the first call to ‘readline()’ will be overridden.  An
-alternate mechanism is to install custom key bindings in an
-initialization function assigned to the ‘rl_startup_hook’ variable
-(*note Readline Variables::).
+alternate mechanism that can avoid this is to install custom key
+bindings in an initialization function assigned to the ‘rl_startup_hook’
+variable (*note Readline Variables::).
 
    These functions manage key bindings.
 
@@ -2376,12 +2391,13 @@ initialization function assigned to the ‘rl_startup_hook’ variable
      non-zero in the case of an invalid KEY or if KEY is already bound.
 
  -- Function: int rl_unbind_key (int key)
-     Bind KEY to the null function in the currently active keymap.
-     Returns non-zero in case of error.
+     Bind KEY to the null function in the currently active keymap.  This
+     is not the same as binding it to ‘self-insert’.  Returns non-zero
+     in case of error.
 
  -- Function: int rl_unbind_key_in_map (int key, Keymap map)
-     Bind KEY to the null function in MAP.  Returns non-zero in case of
-     error.
+     Bind KEY to the null function in MAP.  This is not the same as
+     binding it to ‘self-insert’.  Returns non-zero in case of error.
 
  -- Function: int rl_unbind_function_in_map (rl_command_func_t
           *function, Keymap map)
@@ -2401,9 +2417,9 @@ initialization function assigned to the ‘rl_startup_hook’ variable
  -- Function: int rl_bind_keyseq_in_map (const char *keyseq,
           rl_command_func_t *function, Keymap map)
      Bind the key sequence represented by the string KEYSEQ to the
-     function FUNCTION.  This makes new keymaps as necessary.  Initial
-     bindings are performed in MAP.  The return value is non-zero if
-     KEYSEQ is invalid.
+     function FUNCTION in MAP.  This makes new keymaps as necessary.
+     Initial bindings are performed in MAP.  The return value is
+     non-zero if KEYSEQ is invalid.
 
  -- Function: int rl_set_key (const char *keyseq, rl_command_func_t
           *function, Keymap map)
@@ -2427,7 +2443,8 @@ initialization function assigned to the ‘rl_startup_hook’ variable
      arbitrary pointer DATA.  TYPE says what kind of data is pointed to
      by DATA; this can be a function (‘ISFUNC’), a macro (‘ISMACR’), or
      a keymap (‘ISKMAP’).  This makes new keymaps as necessary.  The
-     initial keymap in which to do bindings is MAP.
+     initial keymap in which to do bindings is MAP.  Returns non-zero in
+     the case of an invalid KEYSEQ, zero otherwise.
 
  -- Function: int rl_parse_and_bind (char *line)
      Parse LINE as if it had been read from the ‘inputrc’ file and
@@ -2449,13 +2466,14 @@ and the functions invoked by a particular key sequence.  You may also
 associate a new function name with an arbitrary function.
 
  -- Function: rl_command_func_t * rl_named_function (const char *name)
-     Return the function with name NAME.
+     Return the function with name NAME.  NAME is a descriptive name
+     users might use in a key binding.
 
  -- Function: rl_command_func_t * rl_function_of_keyseq (const char
           *keyseq, Keymap map, int *type)
      Return the function invoked by KEYSEQ in keymap MAP.  If MAP is
-     ‘NULL’, the current keymap is used.  If TYPE is not ‘NULL’, the
-     type of the object is returned in the ‘int’ variable it points to
+     ‘NULL’, this uses the current keymap.  If TYPE is not ‘NULL’, this
+     returns the type of the object in the ‘int’ variable it points to
      (one of ‘ISFUNC’, ‘ISKMAP’, or ‘ISMACR’).  It takes a "translated"
      key sequence and should not be used if the key sequence can include
      NUL.
@@ -2472,7 +2490,7 @@ associate a new function name with an arbitrary function.
      If there is a numeric argument at the beginning of KEYSEQ, possibly
      including digits, return the index of the first character in KEYSEQ
      following the numeric argument.  This can be used to skip over the
-     numeric argument (which is available as ‘rl_numeric_arg’ while
+     numeric argument (which is available as ‘rl_numeric_arg’) while
      traversing the key sequence that invoked the current command.
 
  -- Function: char ** rl_invoking_keyseqs (rl_command_func_t *function)
@@ -2489,7 +2507,7 @@ associate a new function name with an arbitrary function.
      Print key sequences bound to Readline function name NAME in keymap
      MAP.  If MAP is NULL, this uses the current keymap.  If READABLE is
      non-zero, the list is formatted in such a way that it can be made
-     part of an ‘inputrc’ file and re-read.
+     part of an ‘inputrc’ file and re-read to recreate the key binding.
 
  -- Function: void rl_function_dumper (int readable)
      Print the Readline function names and the key sequences currently
@@ -2510,7 +2528,9 @@ associate a new function name with an arbitrary function.
  -- Function: int rl_add_funmap_entry (const char *name,
           rl_command_func_t *function)
      Add NAME to the list of bindable Readline command names, and make
-     FUNCTION the function to be called when NAME is invoked.
+     FUNCTION the function to be called when NAME is invoked.  This
+     returns the index of the newly-added NAME in the array of function
+     names.
 
 
 File: readline.info,  Node: Allowing Undoing,  Next: Redisplay,  Prev: Associating Function Names and Bindings,  Up: Readline Convenience Functions
@@ -2519,26 +2539,27 @@ File: readline.info,  Node: Allowing Undoing,  Next: Redisplay,  Prev: Associati
 ----------------------
 
 Supporting the undo command is a painless thing, and makes your
-functions much more useful.  It is certainly easy to try something if
+functions much more useful.  It is certainly easier to try something if
 you know you can undo it.
 
    If your function simply inserts text once, or deletes text once, and
-uses ‘rl_insert_text()’ or ‘rl_delete_text()’ to do it, then undoing is
-already done for you automatically.
+uses ‘rl_insert_text()’ or ‘rl_delete_text()’ to do it, then Readline
+does the undoing for you automatically.
 
    If you do multiple insertions or multiple deletions, or any
 combination of these operations, you should group them together into one
 operation.  This is done with ‘rl_begin_undo_group()’ and
 ‘rl_end_undo_group()’.
 
-   The types of events that can be undone are:
+   The types of events Readline can undo are:
 
      enum undo_code { UNDO_DELETE, UNDO_INSERT, UNDO_BEGIN, UNDO_END };
 
    Notice that ‘UNDO_DELETE’ means to insert some text, and
 ‘UNDO_INSERT’ means to delete some text.  That is, the undo code tells
 what to undo, not how to undo it.  ‘UNDO_BEGIN’ and ‘UNDO_END’ are tags
-added by ‘rl_begin_undo_group()’ and ‘rl_end_undo_group()’.
+added by ‘rl_begin_undo_group()’ and ‘rl_end_undo_group()’; they are how
+Readline delimits groups of commands that should be undone together.
 
  -- Function: int rl_begin_undo_group (void)
      Begins saving undo information in a group construct.  The undo
@@ -2547,9 +2568,9 @@ added by ‘rl_begin_undo_group()’ and ‘rl_end_undo_group()’.
      ‘rl_add_undo()’.
 
  -- Function: int rl_end_undo_group (void)
-     Closes the current undo group started with ‘rl_begin_undo_group
-     ()’.  There should be one call to ‘rl_end_undo_group()’ for each
-     call to ‘rl_begin_undo_group()’.
+     Closes the current undo group started with ‘rl_begin_undo_group()’.
+     There should be one call to ‘rl_end_undo_group()’ for each call to
+     ‘rl_begin_undo_group()’.
 
  -- Function: void rl_add_undo (enum undo_code what, int start, int end,
           char *text)
@@ -2566,7 +2587,8 @@ added by ‘rl_begin_undo_group()’ and ‘rl_end_undo_group()’.
    Finally, if you neither insert nor delete text, but directly modify
 the existing text (e.g., change its case), call ‘rl_modifying()’ once,
 just before you modify the text.  You must supply the indices of the
-text range that you are going to modify.
+text range that you are going to modify.  Readline will create an undo
+group for you.
 
  -- Function: int rl_modifying (int start, int end)
      Tell Readline to save the text between START and END as a single
@@ -2626,8 +2648,8 @@ File: readline.info,  Node: Redisplay,  Next: Modifying Text,  Prev: Allowing Un
 
  -- Function: int rl_clear_message (void)
      Clear the message in the echo area.  If the prompt was saved with a
-     call to ‘rl_save_prompt’ before the last call to ‘rl_message’, call
-     ‘rl_restore_prompt’ before calling this function.
+     call to ‘rl_save_prompt’ before the last call to ‘rl_message’, you
+     must call ‘rl_restore_prompt’ before calling this function.
 
  -- Function: void rl_save_prompt (void)
      Save the local Readline prompt display state in preparation for
@@ -2635,23 +2657,25 @@ File: readline.info,  Node: Redisplay,  Next: Modifying Text,  Prev: Allowing Un
 
  -- Function: void rl_restore_prompt (void)
      Restore the local Readline prompt display state saved by the most
-     recent call to ‘rl_save_prompt’.  if ‘rl_save_prompt’ was called to
-     save the prompt before a call to ‘rl_message’, this function should
-     be called before the corresponding call to ‘rl_clear_message’.
+     recent call to ‘rl_save_prompt’.  if you called ‘rl_save_prompt’ to
+     save the prompt before a call to ‘rl_message’, you should call this
+     function before the corresponding call to ‘rl_clear_message’.
 
  -- Function: int rl_expand_prompt (char *prompt)
      Expand any special character sequences in PROMPT and set up the
      local Readline prompt redisplay variables.  This function is called
      by ‘readline()’.  It may also be called to expand the primary
-     prompt if the ‘rl_on_new_line_with_prompt()’ function or
-     ‘rl_already_prompted’ variable is used.  It returns the number of
-     visible characters on the last line of the (possibly multi-line)
+     prompt if the application uses the ‘rl_on_new_line_with_prompt()’
+     function or ‘rl_already_prompted’ variable.  It returns the number
+     of visible characters on the last line of the (possibly multi-line)
      prompt.  Applications may indicate that the prompt contains
      characters that take up no physical screen space when displayed by
      bracketing a sequence of such characters with the special markers
      ‘RL_PROMPT_START_IGNORE’ and ‘RL_PROMPT_END_IGNORE’ (declared in
      ‘readline.h’ as ‘\001’ and ‘\002’, respectively).  This may be used
-     to embed terminal-specific escape sequences in prompts.
+     to embed terminal-specific escape sequences in prompts.  If you
+     don't use these indicators, redisplay will likely produce screen
+     contents that don't match the line buffer.
 
  -- Function: int rl_set_prompt (const char *prompt)
      Make Readline use PROMPT for subsequent redisplay.  This calls
@@ -2679,14 +2703,19 @@ File: readline.info,  Node: Modifying Text,  Next: Character Input,  Prev: Redis
  -- Function: int rl_kill_text (int start, int end)
      Copy the text between START and END in the current line to the kill
      ring, appending or prepending to the last kill if the last command
-     was a kill command.  The text is deleted.  If START is less than
-     END, the text is appended, otherwise prepended.  If the last
-     command was not a kill, a new kill ring slot is used.
+     was a kill command.  This deletes the text from the line.  If START
+     is less than END, the text is appended, otherwise it is prepended.
+     If the last command was not a kill, this uses a new kill ring slot.
+
+ -- Function: void rl_replace_line (const char *text, int clear_undo)
+     Replace the contents of ‘rl_line_buffer’ with TEXT.  This preserves
+     the point and mark, if possible.  If CLEAR_UNDO is non-zero, this
+     clears the undo list associated with the current line.
 
  -- Function: int rl_push_macro_input (char *macro)
-     Cause MACRO to be inserted into the line, as if it had been invoked
-     by a key bound to a macro.  Not especially useful; use
-     ‘rl_insert_text()’ instead.
+     Insert MACRO into the line, as if it had been invoked by a key
+     bound to a macro.  Not especially useful; use ‘rl_insert_text()’
+     instead.
 
 
 File: readline.info,  Node: Character Input,  Next: Terminal Management,  Prev: Modifying Text,  Up: Readline Convenience Functions
@@ -2709,7 +2738,7 @@ File: readline.info,  Node: Character Input,  Next: Terminal Management,  Prev: 
  -- Function: int rl_stuff_char (int c)
      Insert C into the Readline input stream.  It will be "read" before
      Readline attempts to read characters from the terminal with
-     ‘rl_read_key()’.  Up to 512 characters may be pushed back.
+     ‘rl_read_key()’.  Applications can push back up to 512 characters.
      ‘rl_stuff_char’ returns 1 if the character was successfully
      inserted; 0 otherwise.
 
@@ -2758,9 +2787,9 @@ File: readline.info,  Node: Terminal Management,  Next: Utility Functions,  Prev
 
  -- Function: void rl_prep_terminal (int meta_flag)
      Modify the terminal settings for Readline's use, so ‘readline()’
-     can read a single character at a time from the keyboard.  The
-     META_FLAG argument should be non-zero if Readline should read
-     eight-bit input.
+     can read a single character at a time from the keyboard and perform
+     redisplay.  The META_FLAG argument should be non-zero if Readline
+     should read eight-bit input.
 
  -- Function: void rl_deprep_terminal (void)
      Undo the effects of ‘rl_prep_terminal()’, leaving the terminal in
@@ -2786,9 +2815,9 @@ File: readline.info,  Node: Terminal Management,  Next: Utility Functions,  Prev
 
  -- Function: int rl_reset_terminal (const char *terminal_name)
      Reinitialize Readline's idea of the terminal settings using
-     TERMINAL_NAME as the terminal type (e.g., ‘vt100’).  If
-     TERMINAL_NAME is ‘NULL’, the value of the ‘TERM’ environment
-     variable is used.
+     TERMINAL_NAME as the terminal type (e.g., ‘xterm’).  If
+     TERMINAL_NAME is ‘NULL’, Readline uses the value of the ‘TERM’
+     environment variable.
 
 
 File: readline.info,  Node: Utility Functions,  Next: Miscellaneous Functions,  Prev: Terminal Management,  Up: Readline Convenience Functions
@@ -2811,14 +2840,9 @@ File: readline.info,  Node: Utility Functions,  Next: Miscellaneous Functions,  
      Deallocate the memory pointed to by MEM.  MEM must have been
      allocated by ‘malloc’.
 
- -- Function: void rl_replace_line (const char *text, int clear_undo)
-     Replace the contents of ‘rl_line_buffer’ with TEXT.  The point and
-     mark are preserved, if possible.  If CLEAR_UNDO is non-zero, the
-     undo list associated with the current line is cleared.
-
  -- Function: void rl_extend_line_buffer (int len)
      Ensure that ‘rl_line_buffer’ has enough space to hold LEN
-     characters, possibly reallocating it if necessary.
+     characters, reallocating it if necessary.
 
  -- Function: int rl_initialize (void)
      Initialize or re-initialize Readline's internal state.  It's not
@@ -2893,7 +2917,8 @@ File: readline.info,  Node: Miscellaneous Functions,  Next: Alternate Interface,
           *value)
      Make the Readline variable VARIABLE have VALUE.  This behaves as if
      the Readline command ‘set VARIABLE VALUE’ had been executed in an
-     ‘inputrc’ file (*note Readline Init File Syntax::).
+     ‘inputrc’ file (*note Readline Init File Syntax::) or by
+     ‘rl_parse_and_bind’.
 
  -- Function: char * rl_variable_value (const char *variable)
      Return a string representing the value of the Readline variable
@@ -2916,8 +2941,9 @@ File: readline.info,  Node: Miscellaneous Functions,  Next: Alternate Interface,
      fetches the termcap entry for the current terminal name and uses
      those capabilities to move around the screen line and perform other
      terminal-specific operations, like erasing a line.  Readline does
-     not use all of a terminal's capabilities, and this function will
-     return values for only those capabilities Readline uses.
+     not fetch or use all of a terminal's capabilities, and this
+     function will return values for only those capabilities Readline
+     fetches.
 
  -- Function: void rl_reparse_colors (void)
      Read or re-read color definitions from ‘LS_COLORS’.
@@ -2929,14 +2955,15 @@ File: readline.info,  Node: Miscellaneous Functions,  Next: Alternate Interface,
      saves in the history list.
 
  -- Function: void rl_activate_mark (void)
-     Enable an _active_ mark.  When this is enabled, the text between
-     point and mark (the REGION) is displayed in the terminal's standout
-     mode (a FACE).  This is called by various Readline functions that
-     set the mark and insert text, and is available for applications to
-     call.
+     Enable an _active_ region.  When this is enabled, the text between
+     point and mark (the REGION) is displayed using the color specified
+     by the value of the ‘active-region-start-color’ variable (a FACE).
+     The default face is the terminal's standout mode.  This is called
+     by various Readline functions that set the mark and insert text,
+     and is available for applications to call.
 
  -- Function: void rl_deactivate_mark (void)
-     Turn off the active mark.
+     Turn off the active region.
 
  -- Function: void rl_keep_mark_active (void)
      Indicate that the mark should remain active when the current
@@ -2954,18 +2981,19 @@ File: readline.info,  Node: Alternate Interface,  Next: A Readline Example,  Pre
 2.4.12 Alternate Interface
 --------------------------
 
-An alternate interface is available to plain ‘readline()’.  Some
-applications need to interleave keyboard I/O with file, device, or
-window system I/O, typically by using a main loop to ‘select()’ on
-various file descriptors.  To accommodate this need, Readline can also
-be invoked as a 'callback' function from an event loop.  There are
-functions available to make this easy.
+For applications that need more granular control than plain ‘readline()’
+provides, there is an alternate interface.  Some applications need to
+interleave keyboard I/O with file, device, or window system I/O,
+typically by using a main loop to ‘select()’ on various file
+descriptors.  To accommodate this use case, Readline can also be invoked
+as a 'callback' function from an event loop.  There are functions
+available to make this easy.
 
  -- Function: void rl_callback_handler_install (const char *prompt,
-          rl_vcpfunc_t *lhandler)
+          rl_vcpfunc_t *line_handler)
      Set up the terminal for Readline I/O and display the initial
-     expanded value of PROMPT.  Save the value of LHANDLER to use as a
-     handler function to call when a complete line of input has been
+     expanded value of PROMPT.  Save the value of LINE_HANDLER to use as
+     a handler function to call when a complete line of input has been
      entered.  The handler function receives the text of the line as an
      argument.  As with ‘readline()’, the handler function should ‘free’
      the line when it it finished with it.
@@ -2975,13 +3003,14 @@ functions available to make this easy.
      available, it should call ‘rl_callback_read_char()’, which will
      read the next character from the current input source.  If that
      character completes the line, ‘rl_callback_read_char’ will invoke
-     the LHANDLER function installed by ‘rl_callback_handler_install’ to
-     process the line.  Before calling the LHANDLER function, the
-     terminal settings are reset to the values they had before calling
-     ‘rl_callback_handler_install’.  If the LHANDLER function returns,
-     and the line handler remains installed, the terminal settings are
-     modified for Readline's use again.  ‘EOF’ is indicated by calling
-     LHANDLER with a ‘NULL’ line.
+     the LINE_HANDLER function installed by
+     ‘rl_callback_handler_install’ to process the line.  Before calling
+     the LINE_HANDLER function, Readline resets the terminal settings to
+     the values they had before calling ‘rl_callback_handler_install’.
+     If the LINE_HANDLER function returns, and the line handler remains
+     installed, Readline modifies the terminal settings for its use
+     again.  ‘EOF’ is indicated by calling LINE_HANDLER with a ‘NULL’
+     line.
 
  -- Function: void rl_callback_sigcleanup (void)
      Clean up any internal state the callback interface uses to maintain
@@ -2993,11 +3022,11 @@ functions available to make this easy.
  -- Function: void rl_callback_handler_remove (void)
      Restore the terminal to its initial state and remove the line
      handler.  You may call this function from within a callback as well
-     as independently.  If the LHANDLER installed by
-     ‘rl_callback_handler_install’ does not exit the program, either
-     this function or the function referred to by the value of
-     ‘rl_deprep_term_function’ should be called before the program exits
-     to reset the terminal settings.
+     as independently.  If the LINE_HANDLER installed by
+     ‘rl_callback_handler_install’ does not exit the program, your
+     program should call either this function or the function referred
+     to by the value of ‘rl_deprep_term_function’ before the program
+     exits to reset the terminal settings.
 
 
 File: readline.info,  Node: A Readline Example,  Next: Alternate Interface Example,  Prev: Alternate Interface,  Up: Readline Convenience Functions
@@ -3017,7 +3046,7 @@ changed.
      invert_case_line (count, key)
           int count, key;
      {
-       register int start, end, i;
+       int start, end, i;
 
        start = rl_point;
 
@@ -3203,16 +3232,16 @@ or a network connection being broken.  There is a class of signals that
 can be sent to the process currently reading input from the keyboard.
 Since Readline changes the terminal attributes when it is called, it
 needs to perform special processing when such a signal is received in
-order to restore the terminal to a sane state, or provide application
-writers with functions to do so manually.
+order to restore the terminal to a sane state, or provide applications
+using Readline with functions to do so manually.
 
    Readline contains an internal signal handler that is installed for a
 number of signals (‘SIGINT’, ‘SIGQUIT’, ‘SIGTERM’, ‘SIGHUP’, ‘SIGALRM’,
-‘SIGTSTP’, ‘SIGTTIN’, and ‘SIGTTOU’).  When one of these signals is
-received, the signal handler will reset the terminal attributes to those
-that were in effect before ‘readline()’ was called, reset the signal
-handling to what it was before ‘readline()’ was called, and resend the
-signal to the calling application.  If and when the calling
+‘SIGTSTP’, ‘SIGTTIN’, and ‘SIGTTOU’).  When Readline receives one of
+these signals, the signal handler will reset the terminal attributes to
+those that were in effect before ‘readline()’ was called, reset the
+signal handling to what it was before ‘readline()’ was called, and
+resend the signal to the calling application.  If and when the calling
 application's signal handler returns, Readline will reinitialize the
 terminal and continue to accept input.  When a ‘SIGINT’ is received, the
 Readline signal handler performs some additional work, which will cause
@@ -3251,7 +3280,7 @@ application calls ‘rl_callback_read_char’.  This can result in an
 application becoming less responsive to keyboard signals like SIGINT. If
 an application does not want or need to perform any signal handling, or
 does not need to do any processing between calls to
-‘rl_callback_read_char’, setting this variable may be desirable.
+‘rl_callback_read_char’, setting this variable may be appropriate.
 
    Readline provides two variables that allow application writers to
 control whether or not it will catch certain signals and act on them
@@ -3283,7 +3312,7 @@ signal handler, so Readline's internal signal state is not corrupted.
  -- Variable: int rl_change_environment
      If this variable is set to a non-zero value, and Readline is
      handling ‘SIGWINCH’, Readline will modify the LINES and COLUMNS
-     environment variables upon receipt of a ‘SIGWINCH’
+     environment variables upon receipt of a ‘SIGWINCH’.
 
      The default value of ‘rl_change_environment’ is 1.
 
@@ -3346,10 +3375,10 @@ to update its idea of the terminal size when it receives a ‘SIGWINCH’.
  -- Function: void rl_set_screen_size (int rows, int cols)
      Set Readline's idea of the terminal size to ROWS rows and COLS
      columns.  If either ROWS or COLUMNS is less than or equal to 0,
-     Readline's idea of that terminal dimension is unchanged.  This is
-     intended to tell Readline the physical dimensions of the terminal,
-     and is used internally to calculate the maximum number of
-     characters that may appear on a single line and on the screen.
+     Readline doesn't change that terminal dimension.  This is intended
+     to tell Readline the physical dimensions of the terminal, and is
+     used internally to calculate the maximum number of characters that
+     may appear on a single line and on the screen.
 
    If an application does not want to install a ‘SIGWINCH’ handler, but
 is still interested in the screen dimensions, it may query Readline's
@@ -3431,8 +3460,8 @@ functions must do, and provides an example.
      arguments to the generator function are TEXT and STATE.  TEXT is
      the partial word to be completed.  STATE is zero the first time the
      function is called, allowing the generator to perform any necessary
-     initialization, and a positive non-zero integer for each subsequent
-     call.  The generator function returns ‘(char *)NULL’ to inform
+     initialization, and a positive integer for each subsequent call.
+     The generator function returns ‘(char *)NULL’ to inform
      ‘rl_completion_matches()’ that there are no more possibilities
      left.  Usually the generator function computes the list of possible
      completions when STATE is zero, and returns them one at a time on
@@ -3450,11 +3479,12 @@ functions must do, and provides an example.
  -- Variable: rl_compentry_func_t * rl_completion_entry_function
      This is a pointer to the generator function for
      ‘rl_completion_matches()’.  If the value of
-     ‘rl_completion_entry_function’ is ‘NULL’ then the default filename
-     generator function, ‘rl_filename_completion_function()’, is used.
-     An “application-specific completion function” is a function whose
-     address is assigned to ‘rl_completion_entry_function’ and whose
-     return values are used to generate possible completions.
+     ‘rl_completion_entry_function’ is ‘NULL’ then Readline uses the
+     default filename generator function,
+     ‘rl_filename_completion_function()’.  An “application-specific
+     completion function” is a function whose address is assigned to
+     ‘rl_completion_entry_function’ and whose return values are used to
+     generate possible completions.
 
 
 File: readline.info,  Node: Completion Functions,  Next: Completion Variables,  Prev: How Completing Works,  Up: Custom Completers
@@ -3471,8 +3501,8 @@ Readline.
      completions.  ‘TAB’ means do standard completion.  ‘*’ means insert
      all of the possible completions.  ‘!’ means to display all of the
      possible completions, if there is more than one, as well as
-     performing partial completion.  ‘@’ is similar to ‘!’, but possible
-     completions are not listed if the possible completions share a
+     performing partial completion.  ‘@’ is similar to ‘!’, but does not
+     list possible completions if the possible completions share a
      common prefix.
 
  -- Function: int rl_complete (int ignore, int invoking_key)
@@ -3484,8 +3514,8 @@ Readline.
      INVOKING_KEY.
 
  -- Function: int rl_possible_completions (int count, int invoking_key)
-     List the possible completions.  See description of ‘rl_complete
-     ()’.  This calls ‘rl_complete_internal()’ with an argument of ‘?’.
+     List the possible completions.  See description of ‘rl_complete()’.
+     This calls ‘rl_complete_internal()’ with an argument of ‘?’.
 
  -- Function: int rl_insert_completions (int count, int invoking_key)
      Insert the list of possible completions into the line, deleting the
@@ -3545,15 +3575,16 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      is a character string.  If this function exists and returns ‘NULL’,
      or if this variable is set to ‘NULL’, then ‘rl_complete()’ will
      call the value of ‘rl_completion_entry_function’ to generate
-     matches, otherwise the array of strings returned will be used.  If
-     this function sets the ‘rl_attempted_completion_over’ variable to a
-     non-zero value, Readline will not perform its default completion
-     even if this function returns no matches.
+     matches, otherwise completion will use the array of strings this
+     function returns.  If this function sets the
+     ‘rl_attempted_completion_over’ variable to a non-zero value,
+     Readline will not perform its default completion even if this
+     function returns no matches.
 
  -- Variable: rl_quote_func_t * rl_filename_quoting_function
      A pointer to a function that will quote a filename in an
-     application-specific fashion.  This is called if filename
-     completion is being attempted and one of the characters in
+     application-specific fashion.  Readline calls this function during
+     filename completion if one of the characters in
      ‘rl_filename_quote_characters’ appears in a completed filename.
      The function is called with TEXT, MATCH_TYPE, and QUOTE_POINTER.
      The TEXT is the filename to be quoted.  The MATCH_TYPE is either
@@ -3561,48 +3592,49 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      ‘MULT_MATCH’.  Some functions use this to decide whether or not to
      insert a closing quote character.  The QUOTE_POINTER is a pointer
      to any opening quote character the user typed.  Some functions
-     choose to reset this character.
+     choose to reset this character if they decide to quote the filename
+     in a different style.  It's preferable to preserve the user's
+     quoting as much as possible - it's less disruptive.
 
  -- Variable: rl_dequote_func_t * rl_filename_dequoting_function
      A pointer to a function that will remove application-specific
-     quoting characters from a filename before completion is attempted,
-     so those characters do not interfere with matching the text against
+     quoting characters from a filename before attempting completion, so
+     those characters do not interfere with matching the text against
      names in the filesystem.  It is called with TEXT, the text of the
      word to be dequoted, and QUOTE_CHAR, which is the quoting character
      that delimits the filename (usually ‘'’ or ‘"’).  If QUOTE_CHAR is
-     zero, the filename was not in an embedded string.
+     zero, the filename was not in a quoted string.
 
  -- Variable: rl_linebuf_func_t * rl_char_is_quoted_p
      A pointer to a function to call that determines whether or not a
      specific character in the line buffer is quoted, according to
-     whatever quoting mechanism the program calling Readline uses.  The
-     function is called with two arguments: TEXT, the text of the line,
-     and INDEX, the index of the character in the line.  It is used to
-     decide whether a character found in
-     ‘rl_completer_word_break_characters’ should be used to break words
-     for the completer.
+     whatever quoting mechanism the application uses.  The function is
+     called with two arguments: TEXT, the text of the line, and INDEX,
+     the index of the character in the line.  It is used to decide
+     whether a character found in ‘rl_completer_word_break_characters’
+     should be used to break words for the completer.
 
  -- Variable: rl_compignore_func_t * rl_ignore_some_completions_function
-     This function, if defined, is called by the completer when real
-     filename completion is done, after all the matching names have been
-     generated.  It is passed a ‘NULL’ terminated array of matches.  The
-     first element (‘matches[0]’) is the maximal substring common to all
-     matches.  This function can re-arrange the list of matches as
-     required, but each element deleted from the array must be freed.
+     Readline calls this function, if defined, when filename completion
+     is done, after all the matching names have been generated.  It is
+     passed a ‘NULL’ terminated array of matches.  The first element
+     (‘matches[0]’) is the maximal substring common to all matches.
+     This function can re-arrange the list of matches as required, but
+     must free each element it deletes from the array.
 
  -- Variable: rl_icppfunc_t * rl_directory_completion_hook
      This function, if defined, is allowed to modify the directory
-     portion of filenames Readline completes.  It could be used to
-     expand symbolic links or shell variables in pathnames.  It is
-     called with the address of a string (the current directory name) as
-     an argument, and may modify that string.  If the string is replaced
-     with a new string, the old value should be freed.  Any modified
-     directory name should have a trailing slash.  The modified value
-     will be used as part of the completion, replacing the directory
-     portion of the pathname the user typed.  At the least, even if no
-     other expansion is performed, this function should remove any quote
-     characters from the directory name, because its result will be
-     passed directly to ‘opendir()’.
+     portion of filenames during completion.  It could be used to expand
+     symbolic links or shell variables in pathnames.  It is called with
+     the address of a string (the current directory name) as an
+     argument, and may modify that string.  If the function replaces the
+     string with a new string, it should free the old value.  Any
+     modified directory name should have a trailing slash.  The modified
+     value will be used as part of the completion, replacing the
+     directory portion of the pathname the user typed.  At the least,
+     even if no other expansion is performed, this function should
+     remove any quote characters from the directory name, because its
+     result will be passed directly to ‘opendir()’.
 
      The directory completion hook returns an integer that should be
      non-zero if the function modifies its directory argument.  The
@@ -3613,8 +3645,8 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      completing a directory name.  This function takes the address of
      the directory name to be modified as an argument.  Unlike
      ‘rl_directory_completion_hook’, it only modifies the directory name
-     used in ‘opendir’, not what is displayed when the possible
-     completions are printed or inserted.  It is called before
+     used in ‘opendir()’, not what Readline displays when it prints or
+     inserts the possible completions.  Readline calls this before
      rl_directory_completion_hook.  At the least, even if no other
      expansion is performed, this function should remove any quote
      characters from the directory name, because its result will be
@@ -3627,9 +3659,9 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
  -- Variable: rl_icppfunc_t * rl_filename_stat_hook
      If non-zero, this is the address of a function for the completer to
      call before deciding which character to append to a completed name.
-     This function modifies its filename name argument, and the modified
-     value is passed to ‘stat()’ to determine the file's type and
-     characteristics.  This function does not need to remove quote
+     This function modifies its filename name argument, and Readline
+     passes the modified value to ‘stat()’ to determine the file's type
+     and characteristics.  This function does not need to remove quote
      characters from the filename.
 
      The stat hook returns an integer that should be non-zero if the
@@ -3637,26 +3669,29 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      modify the directory argument if it returns 0.
 
  -- Variable: rl_dequote_func_t * rl_filename_rewrite_hook
-     If non-zero, this is the address of a function called when reading
-     directory entries from the filesystem for completion and comparing
-     them to the filename portion of the partial word to be completed
-     (after its potential modification by ‘rl_completion_rewrite_hook’).
-     The function should perform any necessary application or
-     system-specific conversion on the filename, such as converting
-     between character sets or converting from a filesystem format to a
-     character input format.  The function takes two arguments: FNAME,
-     the filename to be converted, and FNLEN, its length in bytes.  It
-     must either return its first argument (if no conversion takes
-     place) or the converted filename in newly-allocated memory.  The
-     converted form is used to compare against the word to be completed,
-     and, if it matches, is added to the list of matches.  Readline will
-     free the allocated string.
+     If non-zero, this is the address of a function for Readline to call
+     when reading directory entries from the filesystem for completion
+     and comparing them to the filename portion of the partial word
+     being completed.  It modifies the filesystem entries, as opposed to
+     ‘rl_completion_rewrite_hook’, which modifies the word being
+     completed.  The function takes two arguments: FNAME, the filename
+     to be converted, and FNLEN, its length in bytes.  It must either
+     return its first argument (if no conversion takes place) or the
+     converted filename in newly-allocated memory.  The function should
+     perform any necessary application or system-specific conversion on
+     the filename, such as converting between character sets or
+     converting from a filesystem format to a character input format.
+     Readline compares the converted form against the word to be
+     completed, and, if it matches, adds it to the list of matches.
+     Readline will free the allocated string.
 
  -- Variable: rl_dequote_func_t * rl_completion_rewrite_hook
-     If non-zero, this is the address of a function to call before
-     comparing the filename portion of a word to be completed with
-     directory entries from the filesystem.  The function takes two
-     arguments: FNAME, the filename to be converted, after any
+     If non-zero, this is the address of a function for Readline to call
+     before comparing the filename portion of a word to be completed
+     with directory entries from the filesystem.  It modifies the word
+     being completed, as opposed to ‘rl_filename_rewrite_hook’, which
+     modifies filesystem entries.  The function takes two arguments:
+     FNAME, the word to be converted, after any
      ‘rl_filename_dequoting_function’ has been applied, and FNLEN, its
      length in bytes.  It must either return its first argument (if no
      conversion takes place) or the converted filename in
@@ -3671,8 +3706,8 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
  -- Variable: rl_compdisp_func_t * rl_completion_display_matches_hook
      If non-zero, then this is the address of a function to call when
      completing a word would normally display the list of possible
-     matches.  This function is called in lieu of Readline displaying
-     the list.  It takes three arguments: (‘char **’MATCHES, ‘int’
+     matches.  Readline calls this function instead of displaying the
+     list itself.  It takes three arguments: (‘char **’MATCHES, ‘int’
      NUM_MATCHES, ‘int’ MAX_LENGTH) where MATCHES is the array of
      matching strings, NUM_MATCHES is the number of strings in that
      array, and MAX_LENGTH is the length of the longest string in that
@@ -3688,11 +3723,13 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      \t\n\"\\'`@$><=;|&{("’.
 
  -- Variable: const char * rl_basic_quote_characters
-     A list of quote characters which can cause a word break.
+     A list of quote characters which can cause a word break.  The
+     default value includes single and double quotes.
 
  -- Variable: const char * rl_completer_word_break_characters
      The list of characters that signal a break between words for
-     ‘rl_complete_internal()’.  The default list is the value of
+     ‘rl_complete_internal()’.  These characters determine how Readline
+     decides what to complete.  The default list is the value of
      ‘rl_basic_word_break_characters’.
 
  -- Variable: rl_cpvfunc_t * rl_completion_word_break_hook
@@ -3702,18 +3739,18 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      ‘rl_completer_word_break_characters’ to be used to perform the
      current completion.  The function may choose to set
      ‘rl_completer_word_break_characters’ itself.  If the function
-     returns ‘NULL’, ‘rl_completer_word_break_characters’ is used.
+     returns ‘NULL’, Readline uses ‘rl_completer_word_break_characters’.
 
  -- Variable: const char * rl_completer_quote_characters
      A list of characters which can be used to quote a substring of the
      line.  Completion occurs on the entire substring, and within the
-     substring ‘rl_completer_word_break_characters’ are treated as any
+     substring, ‘rl_completer_word_break_characters’ are treated as any
      other character, unless they also appear within this list.
 
  -- Variable: const char * rl_filename_quote_characters
-     A list of characters that cause a filename to be quoted by the
-     completer when they appear in a completed filename.  The default is
-     the null string.
+     A list of characters that cause Readline to quote a filename when
+     they appear in a completed filename.  The default is the null
+     string.
 
  -- Variable: const char * rl_special_prefixes
      The list of characters that are word break characters, but should
@@ -3723,90 +3760,92 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      complete shell variables and hostnames.
 
  -- Variable: int rl_completion_query_items
-     Up to this many items will be displayed in response to a
-     possible-completions call.  After that, Readline asks the user for
+     This determines the maximum number of items that
+     possible-completions will display unconditionally.  If there are
+     more possible completions than this, Readline asks the user for
      confirmation before displaying them.  The default value is 100.  A
      negative value indicates that Readline should never ask for
      confirmation.
 
  -- Variable: int rl_completion_append_character
      When a single completion alternative matches at the end of the
-     command line, this character is appended to the inserted completion
-     text.  The default is a space character (‘ ’).  Setting this to the
-     null character (‘\0’) prevents anything being appended
+     command line, Readline appends this character to the inserted
+     completion text.  The default is a space character (‘ ’).  Setting
+     this to the null character (‘\0’) prevents anything being appended
      automatically.  This can be changed in application-specific
      completion functions to provide the "most sensible word separator
      character" according to an application-specific command line syntax
-     specification.  It is set to the default before any
-     application-specific completion function is called, and may only be
-     changed within such a function.
+     specification.  It is set to the default before calling any
+     application-specific completion function, and may only be changed
+     within such a function.
 
  -- Variable: int rl_completion_suppress_append
-     If non-zero, RL_COMPLETION_APPEND_CHARACTER is not appended to
-     matches at the end of the command line, as described above.  It is
-     set to 0 before any application-specific completion function is
-     called, and may only be changed within such a function.
-
- -- Variable: int rl_completion_quote_character
-     When Readline is completing quoted text, as delimited by one of the
-     characters in RL_COMPLETER_QUOTE_CHARACTERS, it sets this variable
-     to the quoting character found.  This is set before any
-     application-specific completion function is called.
+     If non-zero, Readline will not append the
+     RL_COMPLETION_APPEND_CHARACTER to matches at the end of the command
+     line, as described above.  It is set to 0 before calling any
+     application-specific completion function, and may only be changed
+     within such a function.
 
  -- Variable: int rl_completion_suppress_quote
      If non-zero, Readline does not append a matching quote character
      when performing completion on a quoted string.  It is set to 0
-     before any application-specific completion function is called, and
+     before calling any application-specific completion function, and
      may only be changed within such a function.
 
  -- Variable: int rl_completion_found_quote
      When Readline is completing quoted text, it sets this variable to a
      non-zero value if the word being completed contains or is delimited
      by any quoting characters, including backslashes.  This is set
-     before any application-specific completion function is called.
+     before calling any application-specific completion function.
+
+ -- Variable: int rl_completion_quote_character
+     When Readline is completing quoted text, as delimited by one of the
+     characters in RL_COMPLETER_QUOTE_CHARACTERS, it sets this variable
+     to the quoting character it found.  This is set before calling any
+     application-specific completion function.
 
  -- Variable: int rl_completion_mark_symlink_dirs
-     If non-zero, a slash will be appended to completed filenames that
+     If non-zero, Readline appends a slash to completed filenames that
      are symbolic links to directory names, subject to the value of the
      user-settable MARK-DIRECTORIES variable.  This variable exists so
      that application-specific completion functions can override the
      user's global preference (set via the MARK-SYMLINKED-DIRECTORIES
      Readline variable) if appropriate.  This variable is set to the
-     user's preference before any application-specific completion
-     function is called, so unless that function modifies the value, the
-     user's preferences are honored.
+     user's preference before calling any application-specific
+     completion function, so unless that function modifies the value,
+     Readline will honor the user's preferences.
 
  -- Variable: int rl_ignore_completion_duplicates
-     If non-zero, then duplicates in the matches are removed.  The
-     default is 1.
+     If non-zero, then Readline removes duplicates in the set of
+     possible completions.  The default is 1.
 
  -- Variable: int rl_filename_completion_desired
-     Non-zero means that the results of the matches are to be treated as
-     filenames.  This is _always_ zero when completion is attempted, and
-     can only be changed within an application-specific completion
-     function.  If it is set to a non-zero value by such a function,
-     directory names have a slash appended and Readline attempts to
-     quote completed filenames if they contain any characters in
+     A non-zero value means that Readline should treat the results of
+     the matches as filenames.  This is _always_ zero when completion is
+     attempted, and can only be changed within an application-specific
+     completion function.  If it is set to a non-zero value by such a
+     function, Readline appends a slash to directory names and attempts
+     to quote completed filenames if they contain any characters in
      ‘rl_filename_quote_characters’ and ‘rl_filename_quoting_desired’ is
      set to a non-zero value.
 
  -- Variable: int rl_filename_quoting_desired
-     Non-zero means that the results of the matches are to be quoted
-     using double quotes (or an application-specific quoting mechanism)
-     if the completed filename contains any characters in
+     A non-zero value means that Readline should quote the results of
+     the matches using double quotes (or an application-specific quoting
+     mechanism) if the completed filename contains any characters in
      ‘rl_filename_quote_chars’.  This is _always_ non-zero when
      completion is attempted, and can only be changed within an
-     application-specific completion function.  The quoting is effected
+     application-specific completion function.  The quoting is performed
      via a call to the function pointed to by
      ‘rl_filename_quoting_function’.
 
  -- Variable: int rl_full_quoting_desired
-     Non-zero means that Readline should apply filename-style quoting,
-     including any application-specified quoting mechanism, to all
-     completion matches even if we are not otherwise treating the
+     A non-zero value means that Readline should apply filename-style
+     quoting, including any application-specified quoting mechanism, to
+     all completion matches even if it is not otherwise treating the
      matches as filenames.  This is _always_ zero when completion is
      attempted, and can only be changed within an application-specific
-     completion function.  The quoting is effected via a call to the
+     completion function.  The quoting is performed via a call to the
      function pointed to by ‘rl_filename_quoting_function’.
 
  -- Variable: int rl_attempted_completion_over
@@ -3829,19 +3868,19 @@ File: readline.info,  Node: Completion Variables,  Next: A Short Completion Exam
      currently attempting; see the description of
      ‘rl_complete_internal()’ (*note Completion Functions::) for the
      list of characters.  This is set to the appropriate value before
-     any application-specific completion function is called, allowing
-     such functions to present the same interface as ‘rl_complete()’.
+     calling any application-specific completion function, so these
+     functions can present the same interface as ‘rl_complete()’.
 
  -- Variable: int rl_completion_invoking_key
      Set to the final character in the key sequence that invoked one of
      the completion functions that call ‘rl_complete_internal()’.  This
-     is set to the appropriate value before any application-specific
-     completion function is called.
+     is set to the appropriate value before calling any
+     application-specific completion function.
 
  -- Variable: int rl_inhibit_completion
-     If this variable is non-zero, completion is inhibited.  The
-     completion character will be inserted as any other bound to
-     ‘self-insert’.
+     If this variable is non-zero, Readline does not perform completion,
+     even if a key binding indicates it should.  The completion
+     character is inserted as if it were bound to ‘self-insert’.
 
 
 File: readline.info,  Node: A Short Completion Example,  Prev: Completion Variables,  Up: Custom Completers
@@ -3851,8 +3890,8 @@ File: readline.info,  Node: A Short Completion Example,  Prev: Completion Variab
 
 Here is a small application demonstrating the use of the GNU Readline
 library.  It is called ‘fileman’, and the source code resides in
-‘examples/fileman.c’.  This sample application provides completion of
-command names, line editing features, and access to the history list.
+‘examples/fileman.c’.  This sample application provides command name
+completion, line editing features, and access to the history list.
 
      /* fileman.c -- A tiny application which demonstrates how to use the
         GNU Readline library.  This application interactively allows users
@@ -4816,7 +4855,7 @@ Concept Index
                                                                (line  6)
 * notation, readline:                    Readline Bare Essentials.
                                                                (line  6)
-* readline, function:                    Basic Behavior.       (line 12)
+* readline, function:                    Basic Behavior.       (line 11)
 * variables, readline:                   Readline Init File Syntax.
                                                                (line 34)
 * yanking text:                          Readline Killing Commands.
@@ -4831,12 +4870,12 @@ Function and Variable Index
  [index ]
 * Menu:
 
-* _rl_digit_p:                           Utility Functions.   (line  64)
-* _rl_digit_value:                       Utility Functions.   (line  75)
-* _rl_lowercase_p:                       Utility Functions.   (line  61)
-* _rl_to_lower:                          Utility Functions.   (line  71)
-* _rl_to_upper:                          Utility Functions.   (line  67)
-* _rl_uppercase_p:                       Utility Functions.   (line  58)
+* _rl_digit_p:                           Utility Functions.   (line  59)
+* _rl_digit_value:                       Utility Functions.   (line  70)
+* _rl_lowercase_p:                       Utility Functions.   (line  56)
+* _rl_to_lower:                          Utility Functions.   (line  66)
+* _rl_to_upper:                          Utility Functions.   (line  62)
+* _rl_uppercase_p:                       Utility Functions.   (line  53)
 * abort (C-g):                           Miscellaneous Commands.
                                                               (line  10)
 * accept-line (Newline or Return):       Commands For History.
@@ -4846,7 +4885,7 @@ Function and Variable Index
 * active-region-start-color:             Readline Init File Syntax.
                                                               (line  35)
 * backward-char (C-b):                   Commands For Moving. (line  17)
-* backward-delete-char (Rubout):         Commands For Text.   (line  17)
+* backward-delete-char (Rubout):         Commands For Text.   (line  18)
 * backward-kill-line (C-x Rubout):       Commands For Killing.
                                                               (line  11)
 * backward-kill-word (M-<DEL>):          Commands For Killing.
@@ -4861,9 +4900,9 @@ Function and Variable Index
                                                               (line  68)
 * blink-matching-paren:                  Readline Init File Syntax.
                                                               (line  76)
-* bracketed-paste-begin ():              Commands For Text.   (line  37)
+* bracketed-paste-begin ():              Commands For Text.   (line  38)
 * call-last-kbd-macro (C-x e):           Keyboard Macros.     (line  13)
-* capitalize-word (M-c):                 Commands For Text.   (line  68)
+* capitalize-word (M-c):                 Commands For Text.   (line  69)
 * character-search (C-]):                Miscellaneous Commands.
                                                               (line  41)
 * character-search-backward (M-C-]):     Miscellaneous Commands.
@@ -4906,7 +4945,7 @@ Function and Variable Index
                                                               (line 149)
 * do-lowercase-version (M-A, M-B, M-X, ...): Miscellaneous Commands.
                                                               (line  14)
-* downcase-word (M-l):                   Commands For Text.   (line  64)
+* downcase-word (M-l):                   Commands For Text.   (line  65)
 * dump-functions ():                     Miscellaneous Commands.
                                                               (line  68)
 * dump-macros ():                        Miscellaneous Commands.
@@ -4944,7 +4983,7 @@ Function and Variable Index
                                                               (line 105)
 * force-meta-prefix:                     Readline Init File Syntax.
                                                               (line 216)
-* forward-backward-delete-char ():       Commands For Text.   (line  22)
+* forward-backward-delete-char ():       Commands For Text.   (line  23)
 * forward-char (C-f):                    Commands For Moving. (line  14)
 * forward-search-history (C-s):          Commands For History.
                                                               (line  32)
@@ -5006,7 +5045,7 @@ Function and Variable Index
                                                               (line  98)
 * output-meta:                           Readline Init File Syntax.
                                                               (line 322)
-* overwrite-mode ():                     Commands For Text.   (line  72)
+* overwrite-mode ():                     Commands For Text.   (line  73)
 * page-completions:                      Readline Init File Syntax.
                                                               (line 331)
 * possible-completions (M-?):            Commands For Completion.
@@ -5017,10 +5056,10 @@ Function and Variable Index
                                                               (line  12)
 * previous-screen-line ():               Commands For Moving. (line  28)
 * print-last-kbd-macro ():               Keyboard Macros.     (line  17)
-* quoted-insert (C-q or C-v):            Commands For Text.   (line  27)
+* quoted-insert (C-q or C-v):            Commands For Text.   (line  28)
 * re-read-init-file (C-x C-r):           Miscellaneous Commands.
                                                               (line   6)
-* readline:                              Basic Behavior.      (line  12)
+* readline:                              Basic Behavior.      (line  11)
 * redraw-current-line ():                Commands For Moving. (line  51)
 * reverse-search-history (C-r):          Commands For History.
                                                               (line  26)
@@ -5029,35 +5068,35 @@ Function and Variable Index
 * revert-line (M-r):                     Miscellaneous Commands.
                                                               (line  26)
 * rl_activate_mark:                      Miscellaneous Functions.
-                                                              (line  60)
-* rl_add_defun:                          Function Naming.     (line  18)
+                                                              (line  62)
+* rl_add_defun:                          Function Naming.     (line  19)
 * rl_add_funmap_entry:                   Associating Function Names and Bindings.
-                                                              (line  69)
-* rl_add_undo:                           Allowing Undoing.    (line  39)
-* rl_alphabetic:                         Utility Functions.   (line  38)
-* rl_already_prompted:                   Readline Variables.  (line  70)
+                                                              (line  70)
+* rl_add_undo:                           Allowing Undoing.    (line  40)
+* rl_alphabetic:                         Utility Functions.   (line  33)
+* rl_already_prompted:                   Readline Variables.  (line  74)
 * rl_attempted_completion_function:      Completion Variables.
                                                               (line  11)
 * rl_attempted_completion_over:          Completion Variables.
-                                                              (line 282)
+                                                              (line 291)
 * rl_basic_quote_characters:             Completion Variables.
-                                                              (line 160)
+                                                              (line 165)
 * rl_basic_word_break_characters:        Completion Variables.
-                                                              (line 154)
-* rl_begin_undo_group:                   Allowing Undoing.    (line  28)
+                                                              (line 159)
+* rl_begin_undo_group:                   Allowing Undoing.    (line  29)
 * rl_bind_key:                           Binding Keys.        (line  21)
 * rl_bind_key_if_unbound:                Binding Keys.        (line  30)
 * rl_bind_key_if_unbound_in_map:         Binding Keys.        (line  36)
 * rl_bind_key_in_map:                    Binding Keys.        (line  25)
-* rl_bind_keyseq:                        Binding Keys.        (line  57)
-* rl_bind_keyseq_if_unbound:             Binding Keys.        (line  75)
-* rl_bind_keyseq_if_unbound_in_map:      Binding Keys.        (line  81)
-* rl_bind_keyseq_in_map:                 Binding Keys.        (line  64)
-* rl_binding_keymap:                     Readline Variables.  (line 204)
-* rl_callback_handler_install:           Alternate Interface. (line  13)
-* rl_callback_handler_remove:            Alternate Interface. (line  42)
-* rl_callback_read_char:                 Alternate Interface. (line  22)
-* rl_callback_sigcleanup:                Alternate Interface. (line  35)
+* rl_bind_keyseq:                        Binding Keys.        (line  58)
+* rl_bind_keyseq_if_unbound:             Binding Keys.        (line  76)
+* rl_bind_keyseq_if_unbound_in_map:      Binding Keys.        (line  82)
+* rl_bind_keyseq_in_map:                 Binding Keys.        (line  65)
+* rl_binding_keymap:                     Readline Variables.  (line 211)
+* rl_callback_handler_install:           Alternate Interface. (line  14)
+* rl_callback_handler_remove:            Alternate Interface. (line  44)
+* rl_callback_read_char:                 Alternate Interface. (line  23)
+* rl_callback_sigcleanup:                Alternate Interface. (line  37)
 * rl_catch_signals:                      Readline Signal Handling.
                                                               (line  69)
 * rl_catch_sigwinch:                     Readline Signal Handling.
@@ -5065,13 +5104,13 @@ Function and Variable Index
 * rl_change_environment:                 Readline Signal Handling.
                                                               (line  90)
 * rl_char_is_quoted_p:                   Completion Variables.
-                                                              (line  45)
+                                                              (line  48)
 * rl_check_signals:                      Readline Signal Handling.
                                                               (line 133)
 * rl_cleanup_after_signal:               Readline Signal Handling.
                                                               (line 107)
 * rl_clear_history:                      Miscellaneous Functions.
-                                                              (line  54)
+                                                              (line  56)
 * rl_clear_message:                      Redisplay.           (line  51)
 * rl_clear_pending_input:                Character Input.     (line  29)
 * rl_clear_signals:                      Readline Signal Handling.
@@ -5084,166 +5123,166 @@ Function and Variable Index
 * rl_complete_internal:                  Completion Functions.
                                                               (line   9)
 * rl_completer_quote_characters:         Completion Variables.
-                                                              (line 177)
+                                                              (line 184)
 * rl_completer_word_break_characters:    Completion Variables.
-                                                              (line 163)
+                                                              (line 169)
 * rl_completion_append_character:        Completion Variables.
-                                                              (line 202)
+                                                              (line 210)
 * rl_completion_display_matches_hook:    Completion Variables.
-                                                              (line 141)
+                                                              (line 146)
 * rl_completion_entry_function:          How Completing Works.
                                                               (line  52)
 * rl_completion_entry_function <1>:      Completion Variables.
                                                               (line   6)
 * rl_completion_found_quote:             Completion Variables.
-                                                              (line 232)
+                                                              (line 235)
 * rl_completion_invoking_key:            Completion Variables.
-                                                              (line 305)
+                                                              (line 314)
 * rl_completion_mark_symlink_dirs:       Completion Variables.
-                                                              (line 238)
+                                                              (line 247)
 * rl_completion_matches:                 Completion Functions.
                                                               (line  43)
 * rl_completion_mode:                    Completion Functions.
                                                               (line  36)
 * rl_completion_query_items:             Completion Variables.
-                                                              (line 195)
+                                                              (line 202)
 * rl_completion_quote_character:         Completion Variables.
-                                                              (line 220)
+                                                              (line 241)
 * rl_completion_rewrite_hook:            Completion Variables.
-                                                              (line 125)
+                                                              (line 128)
 * rl_completion_suppress_append:         Completion Variables.
-                                                              (line 214)
+                                                              (line 222)
 * rl_completion_suppress_quote:          Completion Variables.
-                                                              (line 226)
+                                                              (line 229)
 * rl_completion_type:                    Completion Variables.
-                                                              (line 297)
+                                                              (line 306)
 * rl_completion_word_break_hook:         Completion Variables.
-                                                              (line 168)
+                                                              (line 175)
 * rl_copy_keymap:                        Keymaps.             (line  16)
 * rl_copy_text:                          Modifying Text.      (line  14)
 * rl_crlf:                               Redisplay.           (line  33)
 * rl_deactivate_mark:                    Miscellaneous Functions.
-                                                              (line  67)
+                                                              (line  70)
 * rl_delete_text:                        Modifying Text.      (line  10)
-* rl_deprep_term_function:               Readline Variables.  (line 186)
+* rl_deprep_term_function:               Readline Variables.  (line 193)
 * rl_deprep_terminal:                    Terminal Management. (line  12)
-* rl_ding:                               Utility Functions.   (line  35)
+* rl_ding:                               Utility Functions.   (line  30)
 * rl_directory_completion_hook:          Completion Variables.
-                                                              (line  63)
+                                                              (line  65)
 * rl_directory_rewrite_hook;:            Completion Variables.
-                                                              (line  81)
+                                                              (line  83)
 * rl_discard_keymap:                     Keymaps.             (line  25)
-* rl_dispatching:                        Readline Variables.  (line  47)
-* rl_display_match_list:                 Utility Functions.   (line  41)
-* rl_display_prompt:                     Readline Variables.  (line  65)
-* rl_do_undo:                            Allowing Undoing.    (line  47)
-* rl_done:                               Readline Variables.  (line  27)
+* rl_dispatching:                        Readline Variables.  (line  49)
+* rl_display_match_list:                 Utility Functions.   (line  36)
+* rl_display_prompt:                     Readline Variables.  (line  69)
+* rl_do_undo:                            Allowing Undoing.    (line  48)
+* rl_done:                               Readline Variables.  (line  28)
 * rl_echo_signal_char:                   Readline Signal Handling.
                                                               (line 143)
-* rl_editing_mode:                       Readline Variables.  (line 310)
+* rl_editing_mode:                       Readline Variables.  (line 318)
 * rl_empty_keymap:                       Keymaps.             (line  33)
 * rl_end:                                Readline Variables.  (line  18)
-* rl_end_undo_group:                     Allowing Undoing.    (line  34)
-* rl_eof_found:                          Readline Variables.  (line  33)
-* rl_erase_empty_line:                   Readline Variables.  (line  53)
-* rl_event_hook:                         Readline Variables.  (line 130)
+* rl_end_undo_group:                     Allowing Undoing.    (line  35)
+* rl_eof_found:                          Readline Variables.  (line  34)
+* rl_erase_empty_line:                   Readline Variables.  (line  55)
+* rl_event_hook:                         Readline Variables.  (line 137)
 * rl_execute_next:                       Character Input.     (line  25)
-* rl_executing_key:                      Readline Variables.  (line 211)
-* rl_executing_keymap:                   Readline Variables.  (line 200)
-* rl_executing_keyseq:                   Readline Variables.  (line 215)
-* rl_executing_macro:                    Readline Variables.  (line 208)
+* rl_executing_key:                      Readline Variables.  (line 218)
+* rl_executing_keymap:                   Readline Variables.  (line 207)
+* rl_executing_keyseq:                   Readline Variables.  (line 222)
+* rl_executing_macro:                    Readline Variables.  (line 215)
 * rl_expand_prompt:                      Redisplay.           (line  66)
-* rl_explicit_arg:                       Readline Variables.  (line 301)
-* rl_extend_line_buffer:                 Utility Functions.   (line  26)
+* rl_explicit_arg:                       Readline Variables.  (line 308)
+* rl_extend_line_buffer:                 Utility Functions.   (line  21)
 * rl_filename_completion_desired:        Completion Variables.
-                                                              (line 253)
+                                                              (line 262)
 * rl_filename_completion_function:       Completion Functions.
                                                               (line  57)
 * rl_filename_dequoting_function:        Completion Variables.
-                                                              (line  36)
+                                                              (line  39)
 * rl_filename_quote_characters:          Completion Variables.
-                                                              (line 183)
+                                                              (line 190)
 * rl_filename_quoting_desired:           Completion Variables.
-                                                              (line 263)
+                                                              (line 272)
 * rl_filename_quoting_function:          Completion Variables.
-                                                              (line  23)
+                                                              (line  24)
 * rl_filename_rewrite_hook:              Completion Variables.
-                                                              (line 109)
+                                                              (line 111)
 * rl_filename_stat_hook:                 Completion Variables.
-                                                              (line  97)
+                                                              (line  99)
 * rl_forced_update_display:              Redisplay.           (line  10)
 * rl_free:                               Utility Functions.   (line  17)
 * rl_free_keymap:                        Keymaps.             (line  29)
 * rl_free_line_state:                    Readline Signal Handling.
                                                               (line 113)
-* rl_free_undo_list:                     Allowing Undoing.    (line  44)
+* rl_free_undo_list:                     Allowing Undoing.    (line  45)
 * rl_full_quoting_desired:               Completion Variables.
-                                                              (line 273)
+                                                              (line 282)
 * rl_function_dumper:                    Associating Function Names and Bindings.
-                                                              (line  53)
+                                                              (line  54)
 * rl_function_of_keyseq:                 Associating Function Names and Bindings.
-                                                              (line  13)
+                                                              (line  14)
 * rl_function_of_keyseq_len:             Associating Function Names and Bindings.
-                                                              (line  22)
+                                                              (line  23)
 * rl_funmap_names:                       Associating Function Names and Bindings.
-                                                              (line  63)
-* rl_generic_bind:                       Binding Keys.        (line  87)
-* rl_get_keymap:                         Keymaps.             (line  40)
-* rl_get_keymap_by_name:                 Keymaps.             (line  46)
-* rl_get_keymap_name:                    Keymaps.             (line  51)
+                                                              (line  64)
+* rl_generic_bind:                       Binding Keys.        (line  88)
+* rl_get_keymap:                         Keymaps.             (line  41)
+* rl_get_keymap_by_name:                 Keymaps.             (line  47)
+* rl_get_keymap_name:                    Keymaps.             (line  52)
 * rl_get_screen_size:                    Readline Signal Handling.
                                                               (line 165)
 * rl_get_termcap:                        Miscellaneous Functions.
-                                                              (line  43)
+                                                              (line  44)
 * rl_getc:                               Character Input.     (line  14)
-* rl_getc_function:                      Readline Variables.  (line 135)
-* rl_gnu_readline_p:                     Readline Variables.  (line  89)
+* rl_getc_function:                      Readline Variables.  (line 142)
+* rl_gnu_readline_p:                     Readline Variables.  (line  94)
 * rl_ignore_completion_duplicates:       Completion Variables.
-                                                              (line 249)
+                                                              (line 258)
 * rl_ignore_some_completions_function:   Completion Variables.
-                                                              (line  55)
+                                                              (line  57)
 * rl_inhibit_completion:                 Completion Variables.
-                                                              (line 311)
-* rl_initialize:                         Utility Functions.   (line  30)
-* rl_input_available_hook:               Readline Variables.  (line 151)
+                                                              (line 320)
+* rl_initialize:                         Utility Functions.   (line  25)
+* rl_input_available_hook:               Readline Variables.  (line 158)
 * rl_insert_completions:                 Completion Functions.
                                                               (line  31)
 * rl_insert_text:                        Modifying Text.      (line   6)
-* rl_instream:                           Readline Variables.  (line 103)
+* rl_instream:                           Readline Variables.  (line 110)
 * rl_invoking_keyseqs:                   Associating Function Names and Bindings.
-                                                              (line  37)
+                                                              (line  38)
 * rl_invoking_keyseqs_in_map:            Associating Function Names and Bindings.
-                                                              (line  41)
+                                                              (line  42)
 * rl_keep_mark_active:                   Miscellaneous Functions.
-                                                              (line  70)
-* rl_key_sequence_length:                Readline Variables.  (line 219)
+                                                              (line  73)
+* rl_key_sequence_length:                Readline Variables.  (line 226)
 * rl_kill_text:                          Modifying Text.      (line  18)
-* rl_last_func:                          Readline Variables.  (line 116)
-* rl_library_version:                    Readline Variables.  (line  79)
+* rl_last_func:                          Readline Variables.  (line 123)
+* rl_library_version:                    Readline Variables.  (line  83)
 * rl_line_buffer:                        Readline Variables.  (line   8)
 * rl_list_funmap_names:                  Associating Function Names and Bindings.
-                                                              (line  59)
+                                                              (line  60)
 * rl_macro_bind:                         Miscellaneous Functions.
                                                               (line   6)
-* rl_macro_display_hook:                 Readline Variables.  (line 192)
+* rl_macro_display_hook:                 Readline Variables.  (line 199)
 * rl_macro_dumper:                       Miscellaneous Functions.
                                                               (line  13)
 * rl_make_bare_keymap:                   Keymaps.             (line  11)
 * rl_make_keymap:                        Keymaps.             (line  19)
 * rl_mark:                               Readline Variables.  (line  23)
 * rl_mark_active_p:                      Miscellaneous Functions.
-                                                              (line  76)
+                                                              (line  79)
 * rl_message:                            Redisplay.           (line  42)
-* rl_modifying:                          Allowing Undoing.    (line  56)
+* rl_modifying:                          Allowing Undoing.    (line  58)
 * rl_named_function:                     Associating Function Names and Bindings.
                                                               (line  10)
-* rl_num_chars_to_read:                  Readline Variables.  (line  38)
-* rl_numeric_arg:                        Readline Variables.  (line 305)
+* rl_num_chars_to_read:                  Readline Variables.  (line  40)
+* rl_numeric_arg:                        Readline Variables.  (line 313)
 * rl_on_new_line:                        Redisplay.           (line  14)
 * rl_on_new_line_with_prompt:            Redisplay.           (line  18)
-* rl_outstream:                          Readline Variables.  (line 107)
-* rl_parse_and_bind:                     Binding Keys.        (line  95)
-* rl_pending_input:                      Readline Variables.  (line  43)
+* rl_outstream:                          Readline Variables.  (line 114)
+* rl_parse_and_bind:                     Binding Keys.        (line  97)
+* rl_pending_input:                      Readline Variables.  (line  45)
 * rl_pending_signal:                     Readline Signal Handling.
                                                               (line 102)
 * rl_persistent_signal_handlers:         Readline Signal Handling.
@@ -5251,24 +5290,24 @@ Function and Variable Index
 * rl_point:                              Readline Variables.  (line  14)
 * rl_possible_completions:               Completion Functions.
                                                               (line  27)
-* rl_pre_input_hook:                     Readline Variables.  (line 125)
-* rl_prefer_env_winsize:                 Readline Variables.  (line 111)
-* rl_prep_term_function:                 Readline Variables.  (line 179)
+* rl_pre_input_hook:                     Readline Variables.  (line 132)
+* rl_prefer_env_winsize:                 Readline Variables.  (line 118)
+* rl_prep_term_function:                 Readline Variables.  (line 186)
 * rl_prep_terminal:                      Terminal Management. (line   6)
 * rl_print_keybinding:                   Associating Function Names and Bindings.
-                                                              (line  46)
-* rl_prompt:                             Readline Variables.  (line  59)
-* rl_push_macro_input:                   Modifying Text.      (line  25)
-* rl_read_init_file:                     Binding Keys.        (line 100)
+                                                              (line  47)
+* rl_prompt:                             Readline Variables.  (line  61)
+* rl_push_macro_input:                   Modifying Text.      (line  30)
+* rl_read_init_file:                     Binding Keys.        (line 102)
 * rl_read_key:                           Character Input.     (line   6)
-* rl_readline_name:                      Readline Variables.  (line  98)
-* rl_readline_state:                     Readline Variables.  (line 222)
-* rl_readline_version:                   Readline Variables.  (line  82)
+* rl_readline_name:                      Readline Variables.  (line 105)
+* rl_readline_state:                     Readline Variables.  (line 229)
+* rl_readline_version:                   Readline Variables.  (line  87)
 * rl_redisplay:                          Redisplay.           (line   6)
-* rl_redisplay_function:                 Readline Variables.  (line 173)
+* rl_redisplay_function:                 Readline Variables.  (line 180)
 * rl_reparse_colors:                     Miscellaneous Functions.
-                                                              (line  51)
-* rl_replace_line:                       Utility Functions.   (line  21)
+                                                              (line  53)
+* rl_replace_line:                       Modifying Text.      (line  25)
 * rl_reset_after_signal:                 Readline Signal Handling.
                                                               (line 121)
 * rl_reset_line_state:                   Redisplay.           (line  29)
@@ -5281,49 +5320,49 @@ Function and Variable Index
 * rl_restore_state:                      Utility Functions.   (line  11)
 * rl_save_prompt:                        Redisplay.           (line  56)
 * rl_save_state:                         Utility Functions.   (line   6)
-* rl_set_key:                            Binding Keys.        (line  71)
+* rl_set_key:                            Binding Keys.        (line  72)
 * rl_set_keyboard_input_timeout:         Character Input.     (line  34)
-* rl_set_keymap:                         Keymaps.             (line  43)
-* rl_set_keymap_name:                    Keymaps.             (line  56)
+* rl_set_keymap:                         Keymaps.             (line  44)
+* rl_set_keymap_name:                    Keymaps.             (line  57)
 * rl_set_paren_blink_timeout:            Miscellaneous Functions.
-                                                              (line  38)
-* rl_set_prompt:                         Redisplay.           (line  80)
+                                                              (line  39)
+* rl_set_prompt:                         Redisplay.           (line  82)
 * rl_set_screen_size:                    Readline Signal Handling.
                                                               (line 153)
 * rl_set_signals:                        Readline Signal Handling.
                                                               (line 176)
 * rl_set_timeout:                        Character Input.     (line  42)
 * rl_show_char:                          Redisplay.           (line  36)
-* rl_signal_event_hook:                  Readline Variables.  (line 143)
+* rl_signal_event_hook:                  Readline Variables.  (line 149)
 * rl_sort_completion_matches:            Completion Variables.
-                                                              (line 289)
+                                                              (line 298)
 * rl_special_prefixes:                   Completion Variables.
-                                                              (line 188)
-* rl_startup_hook:                       Readline Variables.  (line 121)
+                                                              (line 195)
+* rl_startup_hook:                       Readline Variables.  (line 128)
 * rl_stuff_char:                         Character Input.     (line  18)
-* rl_terminal_name:                      Readline Variables.  (line  93)
-* rl_timeout_event_hook:                 Readline Variables.  (line 147)
+* rl_terminal_name:                      Readline Variables.  (line  98)
+* rl_timeout_event_hook:                 Readline Variables.  (line 154)
 * rl_timeout_remaining:                  Character Input.     (line  52)
 * rl_trim_arg_from_keyseq:               Associating Function Names and Bindings.
-                                                              (line  29)
+                                                              (line  30)
 * rl_tty_set_default_bindings:           Terminal Management. (line  17)
 * rl_tty_set_echoing:                    Terminal Management. (line  27)
 * rl_tty_unset_default_bindings:         Terminal Management. (line  22)
-* rl_unbind_command_in_map:              Binding Keys.        (line  53)
-* rl_unbind_function_in_map:             Binding Keys.        (line  49)
+* rl_unbind_command_in_map:              Binding Keys.        (line  54)
+* rl_unbind_function_in_map:             Binding Keys.        (line  50)
 * rl_unbind_key:                         Binding Keys.        (line  41)
-* rl_unbind_key_in_map:                  Binding Keys.        (line  45)
+* rl_unbind_key_in_map:                  Binding Keys.        (line  46)
 * rl_username_completion_function:       Completion Functions.
                                                               (line  64)
 * rl_variable_bind:                      Miscellaneous Functions.
                                                               (line  21)
 * rl_variable_dumper:                    Miscellaneous Functions.
-                                                              (line  32)
+                                                              (line  33)
 * rl_variable_value:                     Miscellaneous Functions.
-                                                              (line  27)
+                                                              (line  28)
 * search-ignore-case:                    Readline Init File Syntax.
                                                               (line 351)
-* self-insert (a, b, A, 1, !, ...):      Commands For Text.   (line  34)
+* self-insert (a, b, A, 1, !, ...):      Commands For Text.   (line  35)
 * set-mark (C-@):                        Miscellaneous Commands.
                                                               (line  33)
 * show-all-if-ambiguous:                 Readline Init File Syntax.
@@ -5337,11 +5376,11 @@ Function and Variable Index
 * skip-csi-sequence ():                  Miscellaneous Commands.
                                                               (line  50)
 * start-kbd-macro (C-x ():               Keyboard Macros.     (line   6)
-* tab-insert (M-<TAB>):                  Commands For Text.   (line  31)
+* tab-insert (M-<TAB>):                  Commands For Text.   (line  32)
 * tilde-expand (M-~):                    Miscellaneous Commands.
                                                               (line  30)
-* transpose-chars (C-t):                 Commands For Text.   (line  49)
-* transpose-words (M-t):                 Commands For Text.   (line  55)
+* transpose-chars (C-t):                 Commands For Text.   (line  50)
+* transpose-words (M-t):                 Commands For Text.   (line  56)
 * undo (C-_ or C-x C-u):                 Miscellaneous Commands.
                                                               (line  23)
 * universal-argument ():                 Numeric Arguments.   (line  10)
@@ -5351,7 +5390,7 @@ Function and Variable Index
                                                               (line  16)
 * unix-word-rubout (C-w):                Commands For Killing.
                                                               (line  32)
-* upcase-word (M-u):                     Commands For Text.   (line  60)
+* upcase-word (M-u):                     Commands For Text.   (line  61)
 * vi-cmd-mode-string:                    Readline Init File Syntax.
                                                               (line 390)
 * vi-editing-mode (M-C-j):               Miscellaneous Commands.
@@ -5375,56 +5414,56 @@ Tag Table:
 Node: Top863
 Node: Command Line Editing1588
 Node: Introduction and Notation2240
-Node: Readline Interaction4594
-Node: Readline Bare Essentials5786
-Node: Readline Movement Commands7598
-Node: Readline Killing Commands8598
-Node: Readline Arguments10625
-Node: Searching11686
-Node: Readline Init File13917
-Node: Readline Init File Syntax15115
-Node: Conditional Init Constructs41480
-Node: Sample Init File45869
-Node: Bindable Readline Commands48994
-Node: Commands For Moving50312
-Node: Commands For History52242
-Node: Commands For Text57447
-Node: Commands For Killing61226
-Node: Numeric Arguments63682
-Node: Commands For Completion64838
-Node: Keyboard Macros66925
-Node: Miscellaneous Commands67630
-Node: Readline vi Mode71954
-Node: Programming with GNU Readline73851
-Node: Basic Behavior74837
-Node: Custom Functions78823
-Node: Readline Typedefs80342
-Node: Function Writing82068
-Node: Readline Variables83386
-Node: Readline Convenience Functions97874
-Node: Function Naming98950
-Node: Keymaps100220
-Node: Binding Keys103327
-Node: Associating Function Names and Bindings107931
-Node: Allowing Undoing111572
-Node: Redisplay114194
-Node: Modifying Text118349
-Node: Character Input119600
-Node: Terminal Management122749
-Node: Utility Functions124608
-Node: Miscellaneous Functions128004
-Node: Alternate Interface131728
-Node: A Readline Example134518
-Node: Alternate Interface Example136445
-Node: Readline Signal Handling140064
-Node: Custom Completers149605
-Node: How Completing Works150325
-Node: Completion Functions153700
-Node: Completion Variables157370
-Node: A Short Completion Example175002
-Node: GNU Free Documentation License187675
-Node: Concept Index212852
-Node: Function and Variable Index214373
+Node: Readline Interaction4596
+Node: Readline Bare Essentials5788
+Node: Readline Movement Commands7600
+Node: Readline Killing Commands8600
+Node: Readline Arguments10627
+Node: Searching11688
+Node: Readline Init File13919
+Node: Readline Init File Syntax15117
+Node: Conditional Init Constructs41509
+Node: Sample Init File45898
+Node: Bindable Readline Commands49023
+Node: Commands For Moving50407
+Node: Commands For History52337
+Node: Commands For Text57542
+Node: Commands For Killing61387
+Node: Numeric Arguments63843
+Node: Commands For Completion64999
+Node: Keyboard Macros67086
+Node: Miscellaneous Commands67791
+Node: Readline vi Mode72115
+Node: Programming with GNU Readline74012
+Node: Basic Behavior74998
+Node: Custom Functions79061
+Node: Readline Typedefs80583
+Node: Function Writing82469
+Node: Readline Variables83775
+Node: Readline Convenience Functions98729
+Node: Function Naming99805
+Node: Keymaps101136
+Node: Binding Keys104298
+Node: Associating Function Names and Bindings109123
+Node: Allowing Undoing112953
+Node: Redisplay115703
+Node: Modifying Text120005
+Node: Character Input121544
+Node: Terminal Management124701
+Node: Utility Functions126588
+Node: Miscellaneous Functions129698
+Node: Alternate Interface133588
+Node: A Readline Example136483
+Node: Alternate Interface Example138401
+Node: Readline Signal Handling142020
+Node: Custom Completers151570
+Node: How Completing Works152290
+Node: Completion Functions155666
+Node: Completion Variables159333
+Node: A Short Completion Example177651
+Node: GNU Free Documentation License190320
+Node: Concept Index215497
+Node: Function and Variable Index217018
 
 End Tag Table
 

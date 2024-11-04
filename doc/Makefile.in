@@ -129,22 +129,37 @@ text:	$(TEXTOBJ)
 pdf:	$(PDFOBJ)
 
 readline.dvi: $(RLSRC)
+	$(RM) $@
 	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2DVI) -o $@ $(srcdir)/rlman.texi
 
 readline.info: $(RLSRC)
+	$(RM) $@
 	$(MAKEINFO) --no-split -I $(TEXINPUTDIR) -o $@ $(srcdir)/rlman.texi
 
+readline.pdf:	$(RLSRC)
+	$(RM) $@
+	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) -o $@ $(srcdir)/rlman.texi
+
 rluserman.dvi: $(RLSRC)
+	$(RM) $@
 	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2DVI) $(srcdir)/rluserman.texi
 
 rluserman.info: $(RLSRC)
+	$(RM) $@
 	$(MAKEINFO) --no-split -I $(TEXINPUTDIR) -o $@ $(srcdir)/rluserman.texi
+
+rluserman.pdf:	$(RLSRC)
+	$(RM) $@
+	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) -o $@ $(srcdir)/rlman.texi
 
 history.dvi: ${HISTSRC}
 	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2DVI) $(srcdir)/history.texi
 
 history.info: ${HISTSRC}
 	$(MAKEINFO) --no-split -I $(TEXINPUTDIR) -o $@ $(srcdir)/history.texi
+
+history.pdf:	$(HISTSRC)
+	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) $(srcdir)/history.texi
 
 readline.ps:	readline.dvi
 	$(RM) $@
@@ -162,7 +177,7 @@ history.ps:	history.dvi
 # This leaves readline.html and rlman.html -- rlman.html is for www.gnu.org
 #
 readline.html:	${RLSRC}
-	$(MAKEINFO) -o $@ --html --no-split -I$(TEXINPUTDIR) $(srcdir)/rlman.texi
+	$(MAKEINFO) -o $@ --html --no-split -I$(TEXINPUTDIR) -o $@ $(srcdir)/rlman.texi
 
 rlman.html:	${RLSRC}
 	$(MAKEINFO) -o $@ --html --no-split -I$(TEXINPUTDIR) $(srcdir)/rlman.texi
@@ -174,28 +189,23 @@ history.html:	${HISTSRC}
 	$(MAKEINFO) --html --no-split -I$(TEXINPUTDIR) $(srcdir)/history.texi
 
 readline.0: readline.3
+history.0: history.3
 
 readline_3.ps: $(srcdir)/readline.3
+	$(RM) $@
+	-${GROFF} -man $< > $@
+
 readline_3.pdf: $(srcdir)/readline.3
 	$(RM) $@
 	-${GROFF} -man -T pdf $< > $@
 
-history.0: history.3
-
 history_3.ps: $(srcdir)/history.3
+	$(RM) $@
+	-${GROFF} -man $< > $@
+
 history_3.pdf: $(srcdir)/history.3
 	$(RM) $@
 	-${GROFF} -man -T pdf $< > $@
-
-readline.pdf:	$(RLSRC)
-	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) $(srcdir)/rlman.texi
-	mv rlman.pdf $@
-
-history.pdf:	$(HISTSRC)
-	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) $(srcdir)/history.texi
-
-rluserman.pdf:	$(RLSRC)
-	TEXINPUTS=.:$(TEXINPUTDIR):$$TEXINPUTS $(TEXI2PDF) $(srcdir)/rluserman.texi
 
 clean:
 	$(RM) *.aux *.bak *.cp *.fn *.ky *.log *.pg *.toc *.tp *.vr *.cps \
@@ -216,7 +226,6 @@ maybe-clean:
 maintainer-clean: clean
 	$(RM) $(DIST_DOCS)
 	$(RM) $(INTERMEDIATE_OBJ)
-	$(RM) $(PDFOBJ)
 	$(RM) Makefile
 
 installdirs:	$(topdir)/support/mkdirs

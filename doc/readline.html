@@ -4,11 +4,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This manual describes the GNU Readline Library
-(version 8.3, 10 October 2024), a library which aids in the
+(version 8.3, 15 October 2024), a library which aids in the
 consistency of user interface across discrete programs which provide
 a command line interface.
 
-Copyright © 1988-2022 Free Software Foundation, Inc.
+Copyright © 1988-2024 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -184,8 +184,8 @@ Next: <a href="#Readline-Interaction" accesskey="n" rel="next">Readline Interact
 </div>
 <h3 class="section" id="Introduction-to-Line-Editing"><span>1.1 Introduction to Line Editing<a class="copiable-link" href="#Introduction-to-Line-Editing"> &para;</a></span></h3>
 
-<p>The following paragraphs describe the notation used to represent
-keystrokes.
+<p>The following paragraphs use Emacs style to
+describe the notation used to represent keystrokes.
 </p>
 <p>The text <kbd class="kbd">C-k</kbd> is read as &lsquo;Control-K&rsquo; and describes the character
 produced when the <kbd class="key">k</kbd> key is pressed while the Control key
@@ -193,16 +193,16 @@ is depressed.
 </p>
 <p>The text <kbd class="kbd">M-k</kbd> is read as &lsquo;Meta-K&rsquo; and describes the character
 produced when the Meta key (if you have one) is depressed, and the <kbd class="key">k</kbd>
-key is pressed (a <em class="dfn">meta character</em>).
-The Meta key is labeled <kbd class="key">ALT</kbd> on many keyboards.
+key is pressed (a <em class="dfn">meta character</em>), then both are released.
+The Meta key is labeled <kbd class="key">ALT</kbd> or <kbd class="key">Option</kbd> on many keyboards.
 On keyboards with two keys labeled <kbd class="key">ALT</kbd> (usually to either side of
 the space bar), the <kbd class="key">ALT</kbd> on the left side is generally set to
 work as a Meta key.
-The <kbd class="key">ALT</kbd> key on the right may also be configured to work as a
-Meta key or may be configured as some other modifier, such as a
+One of the <kbd class="key">ALT</kbd> keys may also be configured
+as some other modifier, such as a
 Compose key for typing accented characters.
 </p>
-<p>On some keyboards, the Meta key modifier produces meta characters with
+<p>On some keyboards, the Meta key modifier produces characters with
 the eighth bit (0200) set.
 You can use the <code class="code">enable-meta-key</code> variable
 to control whether or not it does this, if the keyboard allows it.
@@ -533,7 +533,7 @@ commands in an <em class="dfn">inputrc</em> file, conventionally in their home d
 The name of this file is taken from the value of the
 environment variable <code class="env">INPUTRC</code>.
 If that variable is unset, the default is <samp class="file">~/.inputrc</samp>.
-If that file does not exist or cannot be read, readline looks for
+If that file does not exist or cannot be read, Readline looks for
 <samp class="file">/etc/inputrc</samp>.
 </p>
 <p>When a program which uses the Readline library starts up, Readline reads
@@ -698,7 +698,7 @@ The default value is &lsquo;<samp class="samp">off</samp>&rsquo;.
 <dd><p>The maximum
 length in characters of the common prefix of a list of possible
 completions that is displayed without modification.
-When set to a value greater than zero, readline
+When set to a value greater than zero, Readline
 replaces common prefixes longer than this value
 with an ellipsis when displaying possible completions.
 </p>
@@ -819,7 +819,7 @@ sequences containing <kbd class="kbd">\M-</kbd> or <code class="code">Meta-</cod
 (see <code class="code">Key Bindings</code> in <a class="ref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>)
 by converting a key sequence of the form
 <kbd class="kbd">\M-</kbd><var class="var">C</var> or <code class="code">Meta-</code><var class="var">C</var> to the two-character sequence
-<kbd class="kbd">ESC</kbd><var class="var">C</var> (adding the meta prefix).
+<kbd class="kbd">ESC</kbd> <var class="var">C</var> (adding the meta prefix).
 If <code class="code">force-meta-prefix</code> is set to &lsquo;<samp class="samp">off</samp>&rsquo; (the default),
 Readline uses the value of the <code class="code">convert-meta</code> variable to determine
 whether to perform this conversion:
@@ -1019,7 +1019,7 @@ The default value is &lsquo;<samp class="samp">off</samp>&rsquo;.
 <dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, this alters the default completion behavior when
 inserting a single match into the line.
 It&rsquo;s only active when performing completion in the middle of a word.
-If enabled, readline does not insert characters from the completion
+If enabled, Readline does not insert characters from the completion
 that match characters after point in the word being completed,
 so portions of the word following the cursor are not duplicated.
 For instance, if this is enabled, attempting completion when the cursor
@@ -1111,7 +1111,7 @@ expressed on the right hand side (that is, to insert the text
 <var class="var">NEWLINE</var>,
 <var class="var">RET</var>,
 <var class="var">RETURN</var>,
-<var class="var">RUBOUT</var>,
+<var class="var">RUBOUT</var> (a destructive backspace),
 <var class="var">SPACE</var>,
 <var class="var">SPC</var>,
 and
@@ -1483,9 +1483,10 @@ position, and <em class="dfn">mark</em> refers to a cursor position saved by the
 <code class="code">set-mark</code> command.
 The text between the point and mark is referred to as the <em class="dfn">region</em>.
 Readline has the concept of an <em class="emph">active region</em>:
-when the region is active, Readline redisplay uses the
-value of the <code class="code">active-region-start-color</code> variable
-to denote the region.
+when the region is active,
+Readline redisplay highlights the region using the
+value of the <code class="code">active-region-start-color</code> variable.
+The <code class="code">enable-active-region</code> variable turns this on and off.
 Several commands set the region to active; those are noted below.
 </p>
 <ul class="mini-toc">
@@ -1737,6 +1738,7 @@ interprets it as the end of input and returns <small class="sc">EOF</small>.
 If this function is bound to the
 same character as the tty <small class="sc">EOF</small> character, as <kbd class="kbd">C-d</kbd>
 commonly is, see above for the effects.
+This may also be bound to the Delete key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-backward_002ddelete_002dchar-_0028Rubout_0029"></a><span><code class="code">backward-delete-char (Rubout)</code><a class="copiable-link" href="#index-backward_002ddelete_002dchar-_0028Rubout_0029"> &para;</a></span></dt>
@@ -2165,7 +2167,7 @@ This command is unbound by default.
 </p>
 </dd>
 <dt><a id="index-execute_002dnamed_002dcommand-_0028M_002dx_0029"></a><span><code class="code">execute-named-command (M-x)</code><a class="copiable-link" href="#index-execute_002dnamed_002dcommand-_0028M_002dx_0029"> &para;</a></span></dt>
-<dd><p>Read a bindable readline command name from the input and execute the
+<dd><p>Read a bindable Readline command name from the input and execute the
 function to which it&rsquo;s bound, as if the key sequence to which it was
 bound appeared in the input.
 If this function is supplied with a numeric argument, it passes that
@@ -2250,10 +2252,11 @@ Next: <a href="#Custom-Functions" accesskey="n" rel="next">Custom Functions</a>,
 <h3 class="section" id="Basic-Behavior-1"><span>2.1 Basic Behavior<a class="copiable-link" href="#Basic-Behavior-1"> &para;</a></span></h3>
 
 <p>Many programs provide a command line interface, such as <code class="code">mail</code>,
-<code class="code">ftp</code>, and <code class="code">sh</code>.  For such programs, the default behaviour of
-Readline is sufficient.  This section describes how to use Readline in
+<code class="code">ftp</code>, and <code class="code">sh</code>.
+For such programs, the default behaviour of Readline is sufficient.
+This section describes how to use Readline in
 the simplest way possible, perhaps to replace calls in your code to
-<code class="code">gets()</code> or <code class="code">fgets()</code>.
+<code class="code">fgets()</code>.
 </p>
 <a class="index-entry-id" id="index-readline"></a>
 <a class="index-entry-id" id="index-readline_002c-function"></a>
@@ -2263,8 +2266,9 @@ and then reads and returns a single line of text from the user.
 Since it&rsquo;s possible to enter characters into the line while quoting
 them to disable any Readline editing function they might normally have,
 this line may include embedded newlines and other special characters.
-If <var class="var">prompt</var> is <code class="code">NULL</code> or the empty string, no prompt is displayed.
-The line <code class="code">readline</code> returns is allocated with <code class="code">malloc()</code>;
+If <var class="var">prompt</var> is <code class="code">NULL</code> or the empty string,
+<code class="code">readline()</code> does not display a prompt.
+The line <code class="code">readline()</code> returns is allocated with <code class="code">malloc()</code>;
 the caller should <code class="code">free()</code> the line when it has finished with it.
 The declaration for <code class="code">readline</code> in ANSI C is
 </p>
@@ -2279,13 +2283,16 @@ The declaration for <code class="code">readline</code> in ANSI C is
 <p>in order to read a line of text from the user.
 The line returned has the final newline removed, so only the
 text remains.
+This means that lines consisting of a newline return the empty string.
 </p>
-<p>If <code class="code">readline</code> encounters an <code class="code">EOF</code> while reading the line, and the
-line is empty at that point, then <code class="code">(char *)NULL</code> is returned.
+<p>If Readline encounters an <code class="code">EOF</code> while reading the line,
+and the line is empty at that point,
+then <code class="code">readline()</code> returns <code class="code">(char *)NULL</code>.
 Otherwise, the line is ended just as if a newline had been typed.
 </p>
 <p>Readline performs some expansion on the <var class="var">prompt</var> before it is
-displayed on the screen.  See the description of <code class="code">rl_expand_prompt</code>
+displayed on the screen.
+See the description of <code class="code">rl_expand_prompt</code>
 (see <a class="pxref" href="#Redisplay">Redisplay</a>) for additional details, especially if <var class="var">prompt</var>
 will contain characters that do not consume physical screen space when
 displayed.
@@ -2301,8 +2308,8 @@ line away in a <em class="dfn">history</em> list of such lines.
 <p>For full details on the GNU History Library, see the associated manual.
 </p>
 <p>It is preferable to avoid saving empty lines on the history list, since
-users rarely have a burning need to reuse a blank line.  Here is
-a function which usefully replaces the standard <code class="code">gets()</code> library
+users rarely have a burning need to reuse a blank line.
+Here is a function which usefully replaces the standard <code class="code">gets()</code> library
 function, and has the advantage of no static buffer to overflow:
 </p>
 <div class="example">
@@ -2335,8 +2342,9 @@ rl_gets ()
 </pre></div>
 
 <p>This function gives the user the default behaviour of <kbd class="key">TAB</kbd>
-completion: completion on file names.  If you do not want Readline to
-complete on filenames, you can change the binding of the <kbd class="key">TAB</kbd> key
+completion: filename completion.
+If you do not want Readline to
+complete filenames, you can change the binding of the <kbd class="key">TAB</kbd> key
 with <code class="code">rl_bind_key()</code>.
 </p>
 <div class="example">
@@ -2345,8 +2353,8 @@ with <code class="code">rl_bind_key()</code>.
 
 <p><code class="code">rl_bind_key()</code> takes two arguments: <var class="var">key</var> is the character that
 you want to bind, and <var class="var">function</var> is the address of the function to
-call when <var class="var">key</var> is pressed.  Binding <kbd class="key">TAB</kbd> to <code class="code">rl_insert()</code>
-makes <kbd class="key">TAB</kbd> insert itself.
+call when <var class="var">key</var> is pressed.
+Binding <kbd class="key">TAB</kbd> to <code class="code">rl_insert()</code> makes <kbd class="key">TAB</kbd> insert itself.
 <code class="code">rl_bind_key()</code> returns non-zero if <var class="var">key</var> is not a valid
 ASCII character code (between 0 and 255).
 </p>
@@ -2371,21 +2379,25 @@ Next: <a href="#Readline-Variables" accesskey="n" rel="next">Readline Variables<
 
 <p>Readline provides many functions for manipulating the text of
 the line, but it isn&rsquo;t possible to anticipate the needs of all
-programs.  This section describes the various functions and variables
-defined within the Readline library which allow a user program to add
+programs.
+This section describes the various functions and variables
+defined within the Readline library which allow a program to add
 customized functionality to Readline.
 </p>
 <p>Before declaring any functions that customize Readline&rsquo;s behavior, or
 using any functionality Readline provides in other code, an
 application writer should include the file <code class="code">&lt;readline/readline.h&gt;</code>
-in any file that uses Readline&rsquo;s features.  Since some of the definitions
-in <code class="code">readline.h</code> use the <code class="code">stdio</code> library, the file
-<code class="code">&lt;stdio.h&gt;</code> should be included before <code class="code">readline.h</code>.
+in any file that uses Readline&rsquo;s features.
+Since some of the definitions
+in <code class="code">readline.h</code> use the <code class="code">stdio</code> library, the program
+should include the file <code class="code">&lt;stdio.h&gt;</code>
+before <code class="code">readline.h</code>.
 </p>
 <p><code class="code">readline.h</code> defines a C preprocessor variable that should
 be treated as an integer, <code class="code">RL_READLINE_VERSION</code>, which may
 be used to conditionally compile application code depending on
-the installed Readline version.  The value is a hexadecimal
+the installed Readline version.
+The value is a hexadecimal
 encoding of the major and minor version numbers of the library,
 of the form 0x<var class="var">MMmm</var>.  <var class="var">MM</var> is the two-digit major
 version number; <var class="var">mm</var> is the two-digit minor version number. 
@@ -2437,6 +2449,7 @@ Instead of the classic C declaration
 <dt><code class="code">typedef char *rl_dequote_func_t (char *, int);</code></dt>
 <dt><code class="code">typedef int rl_compignore_func_t (char **);</code></dt>
 <dt><code class="code">typedef void rl_compdisp_func_t (char **, int, int);</code></dt>
+<dt><code class="code">typedef void rl_macro_print_func_t (const char *, const char *, int, const char *);</code></dt>
 <dt><code class="code">typedef int rl_hook_func_t (void);</code></dt>
 <dt><code class="code">typedef int rl_getc_func_t (FILE *);</code></dt>
 <dt><code class="code">typedef int rl_linebuf_func_t (char *, int);</code></dt>
@@ -2450,6 +2463,8 @@ Instead of the classic C declaration
 <dt><code class="code">typedef void rl_vcppfunc_t (char **);</code></dt>
 </dl>
 
+<p>The <samp class="file">rltypedefs.h</samp> file has more documentation for these types.
+</p>
 <hr>
 </div>
 <div class="subsection-level-extent" id="Function-Writing">
@@ -2473,10 +2488,12 @@ variables that describe the current state of the line read so far.
 <var class="var">key</var> is the key that invoked this function.
 </p>
 <p>It is completely up to the function as to what should be done with the
-numeric argument.  Some functions use it as a repeat count, some
+numeric argument.
+Some functions use it as a repeat count, some
 as a flag, and others to choose alternate behavior (refreshing the current
-line as opposed to refreshing the screen, for example).  Some choose to
-ignore it.  In general, if a
+line as opposed to refreshing the screen, for example).
+Some choose to ignore it.
+In general, if a
 function uses the numeric argument as a repeat count, it should be able
 to do something useful with both negative and positive arguments.
 At the very least, it should be aware that it can be passed a
@@ -2484,8 +2501,8 @@ negative argument.
 </p>
 <p>A command function should return 0 if its action completes successfully,
 and a value greater than zero if some error occurs.
-This is the convention obeyed by all of the builtin Readline bindable
-command functions.
+All of the builtin Readline bindable command functions
+obey this convention.
 </p>
 <hr>
 </div>
@@ -2501,9 +2518,10 @@ Next: <a href="#Readline-Convenience-Functions" accesskey="n" rel="next">Readlin
 </p>
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fline_005fbuffer"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">rl_line_buffer</strong><a class="copiable-link" href="#index-rl_005fline_005fbuffer"> &para;</a></span></dt>
-<dd><p>This is the line gathered so far.  You are welcome to modify the
-contents of the line, but see <a class="ref" href="#Allowing-Undoing">Allowing Undoing</a>.  The
-function <code class="code">rl_extend_line_buffer</code> is available to increase
+<dd><p>This is the line gathered so far.
+You are welcome to modify the contents of the line,
+but see <a class="ref" href="#Allowing-Undoing">Allowing Undoing</a>.
+The function <code class="code">rl_extend_line_buffer</code> will increase
 the memory allocated to <code class="code">rl_line_buffer</code>.
 </p></dd></dl>
 
@@ -2515,15 +2533,17 @@ the memory allocated to <code class="code">rl_line_buffer</code>.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fend"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_end</strong><a class="copiable-link" href="#index-rl_005fend"> &para;</a></span></dt>
-<dd><p>The number of characters present in <code class="code">rl_line_buffer</code>.  When
-<code class="code">rl_point</code> is at the end of the line, <code class="code">rl_point</code> and
-<code class="code">rl_end</code> are equal.
+<dd><p>The number of characters present in <code class="code">rl_line_buffer</code>.
+When <code class="code">rl_point</code> is at the end of the line,
+<code class="code">rl_point</code> and <code class="code">rl_end</code> are equal.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fmark"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_mark</strong><a class="copiable-link" href="#index-rl_005fmark"> &para;</a></span></dt>
-<dd><p>The <var class="var">mark</var> (saved position) in the current line.  If set, the mark
-and point define a <em class="emph">region</em>.
+<dd><p>The <var class="var">mark</var> (saved position) in the current line.
+If set, the mark and point define a <em class="emph">region</em>.
+Some Readline commands set the mark as part of operating;
+users can also set the mark explicitly.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -2536,8 +2556,9 @@ to <code class="code">accept-line</code> and is about to return the line to the 
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005feof_005ffound"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_eof_found</strong><a class="copiable-link" href="#index-rl_005feof_005ffound"> &para;</a></span></dt>
-<dd><p>Readline will set this variable when it has read an EOF character (e.g., the
-stty &lsquo;<samp class="samp">EOF</samp>&rsquo; character) on an empty line or encountered a read error and
+<dd><p>Readline will set this variable when it has read an EOF character
+(e.g., the stty &lsquo;<samp class="samp">EOF</samp>&rsquo; character) on an empty line
+or has encountered a read error or EOF and 
 is about to return a NULL line to the caller.
 </p></dd></dl>
 
@@ -2550,14 +2571,15 @@ than reading up to a character bound to <code class="code">accept-line</code>.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fpending_005finput"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_pending_input</strong><a class="copiable-link" href="#index-rl_005fpending_005finput"> &para;</a></span></dt>
-<dd><p>Setting this to a value makes it the next keystroke read.  This is a
-way to stuff a single character into the input stream.
+<dd><p>Setting this to a value makes it the next keystroke read.
+This is a way to stuff a single character into the input stream.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fdispatching"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_dispatching</strong><a class="copiable-link" href="#index-rl_005fdispatching"> &para;</a></span></dt>
 <dd><p>Set to a non-zero value if a function is being called from a key binding;
-zero otherwise.  Application functions can test this to discover whether
+zero otherwise.
+Application functions can test this to discover whether
 they were called directly or by Readline&rsquo;s dispatching mechanism.
 </p></dd></dl>
 
@@ -2565,21 +2587,25 @@ they were called directly or by Readline&rsquo;s dispatching mechanism.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ferase_005fempty_005fline"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_erase_empty_line</strong><a class="copiable-link" href="#index-rl_005ferase_005fempty_005fline"> &para;</a></span></dt>
 <dd><p>Setting this to a non-zero value causes Readline to completely erase
 the current line, including any prompt, any time a newline is typed as
-the only character on an otherwise-empty line.  The cursor is moved to
-the beginning of the newly-blank line.
+the only character on an otherwise-empty line.
+This moves the cursor to the beginning of the newly-blank line.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fprompt"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">rl_prompt</strong><a class="copiable-link" href="#index-rl_005fprompt"> &para;</a></span></dt>
-<dd><p>The prompt Readline uses.  This is set from the argument to
+<dd><p>The prompt Readline uses.
+This is set from the argument to
 <code class="code">readline()</code>, and should not be assigned to directly.
 The <code class="code">rl_set_prompt()</code> function (see <a class="pxref" href="#Redisplay">Redisplay</a>) may
 be used to modify the prompt string after calling <code class="code">readline()</code>.
+Readline performs some prompt expansions and analyzes the prompt for
+line breaks, so <code class="code">rl_set_prompt()</code> is preferred.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fdisplay_005fprompt"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">rl_display_prompt</strong><a class="copiable-link" href="#index-rl_005fdisplay_005fprompt"> &para;</a></span></dt>
-<dd><p>The string displayed as the prompt.  This is usually identical to
+<dd><p>The string displayed as the prompt.
+This is usually identical to
 <var class="var">rl_prompt</var>, but may be changed temporarily by functions that
 use the prompt string as a message area, such as incremental search.
 </p></dd></dl>
@@ -2597,14 +2623,16 @@ never sets it.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005flibrary_005fversion"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_library_version</strong><a class="copiable-link" href="#index-rl_005flibrary_005fversion"> &para;</a></span></dt>
-<dd><p>The version number of this revision of the library.
+<dd><p>The version number of this revision of the Readline library, as a string
+(e.g., &quot;4.2&quot;).
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005freadline_005fversion"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_readline_version</strong><a class="copiable-link" href="#index-rl_005freadline_005fversion"> &para;</a></span></dt>
-<dd><p>An integer encoding the current version of the library.  The encoding is
-of the form 0x<var class="var">MMmm</var>, where <var class="var">MM</var> is the two-digit major version
-number, and <var class="var">mm</var> is the two-digit minor version number.
+<dd><p>An integer encoding the current version of the library.
+The encoding is of the form 0x<var class="var">MMmm</var>,
+where <var class="var">MM</var> is the two-digit major version number,
+and <var class="var">mm</var> is the two-digit minor version number.
 For example, for Readline-4.2, <code class="code">rl_readline_version</code> would have the
 value 0x0402.
 </p></dd></dl>
@@ -2617,9 +2645,12 @@ emulation.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fterminal_005fname"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_terminal_name</strong><a class="copiable-link" href="#index-rl_005fterminal_005fname"> &para;</a></span></dt>
-<dd><p>The terminal type, used for initialization.  If not set by the application,
+<dd><p>The terminal type, used for initialization.
+If not set by the application,
 Readline sets this to the value of the <code class="env">TERM</code> environment variable
 the first time it is called.
+Readline uses this to look up the terminal capabilities it needs in
+the terminfo database.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -2650,21 +2681,21 @@ from the kernel when computing the screen dimensions.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005flast_005ffunc"><span class="category-def">Variable: </span><span><code class="def-type">rl_command_func_t *</code> <strong class="def-name">rl_last_func</strong><a class="copiable-link" href="#index-rl_005flast_005ffunc"> &para;</a></span></dt>
-<dd><p>The address of the last command function Readline executed.  May be used to
-test whether or not a function is being executed twice in succession, for
-example.
+<dd><p>The address of the last command function Readline executed.
+This may be used to test whether or not a function is being executed
+twice in succession, for example.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fstartup_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_hook_func_t *</code> <strong class="def-name">rl_startup_hook</strong><a class="copiable-link" href="#index-rl_005fstartup_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function to call just
-before <code class="code">readline</code> prints the first prompt.
+before Readline prints the first prompt.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fpre_005finput_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_hook_func_t *</code> <strong class="def-name">rl_pre_input_hook</strong><a class="copiable-link" href="#index-rl_005fpre_005finput_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function to call after
-the first prompt has been printed and just before <code class="code">readline</code>
+the first prompt has been printed and just before Readline
 starts reading input characters.
 </p></dd></dl>
 
@@ -2679,9 +2710,9 @@ is no keyboard input.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fgetc_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_getc_func_t *</code> <strong class="def-name">rl_getc_function</strong><a class="copiable-link" href="#index-rl_005fgetc_005ffunction"> &para;</a></span></dt>
 <dd><p>If non-zero, Readline will call indirectly through this pointer
-to get a character from the input stream.  By default, it is set to
-<code class="code">rl_getc</code>, the default Readline character input function
-(see <a class="pxref" href="#Character-Input">Character Input</a>).
+to get a character from the input stream.
+By default, it is set to <code class="code">rl_getc</code>, the Readline character
+input function (see <a class="pxref" href="#Character-Input">Character Input</a>).
 In general, an application that sets <var class="var">rl_getc_function</var> should consider
 setting <var class="var">rl_input_available_hook</var> as well.
 </p></dd></dl>
@@ -2689,7 +2720,7 @@ setting <var class="var">rl_input_available_hook</var> as well.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fsignal_005fevent_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_hook_func_t *</code> <strong class="def-name">rl_signal_event_hook</strong><a class="copiable-link" href="#index-rl_005fsignal_005fevent_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function to call if a read system
-call is interrupted when Readline is reading terminal input.
+call is interrupted by a signal when Readline is reading terminal input.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -2734,7 +2765,8 @@ redisplay function (see <a class="pxref" href="#Redisplay">Redisplay</a>).
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fprep_005fterm_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_vintfunc_t *</code> <strong class="def-name">rl_prep_term_function</strong><a class="copiable-link" href="#index-rl_005fprep_005fterm_005ffunction"> &para;</a></span></dt>
 <dd><p>If non-zero, Readline will call indirectly through this pointer
-to initialize the terminal.  The function takes a single argument, an
+to initialize the terminal.
+The function takes a single argument, an
 <code class="code">int</code> flag that says whether or not to use eight-bit characters.
 By default, this is set to <code class="code">rl_prep_terminal</code>
 (see <a class="pxref" href="#Terminal-Management">Terminal Management</a>).
@@ -2743,8 +2775,8 @@ By default, this is set to <code class="code">rl_prep_terminal</code>
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fdeprep_005fterm_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_voidfunc_t *</code> <strong class="def-name">rl_deprep_term_function</strong><a class="copiable-link" href="#index-rl_005fdeprep_005fterm_005ffunction"> &para;</a></span></dt>
 <dd><p>If non-zero, Readline will call indirectly through this pointer
-to reset the terminal.  This function should undo the effects of
-<code class="code">rl_prep_term_function</code>.
+to reset the terminal.
+This function should undo the effects of <code class="code">rl_prep_term_function</code>.
 By default, this is set to <code class="code">rl_deprep_terminal</code>
 (see <a class="pxref" href="#Terminal-Management">Terminal Management</a>).
 </p></dd></dl>
@@ -2796,8 +2828,10 @@ Readline function.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005freadline_005fstate"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_readline_state</strong><a class="copiable-link" href="#index-rl_005freadline_005fstate"> &para;</a></span></dt>
 <dd><p>A variable with bit values that encapsulate the current Readline state.
 A bit is set with the <code class="code">RL_SETSTATE</code> macro, and unset with the
-<code class="code">RL_UNSETSTATE</code> macro.  Use the <code class="code">RL_ISSTATE</code> macro to test
-whether a particular state bit is set.  Current state bits include:
+<code class="code">RL_UNSETSTATE</code> macro.
+Use the <code class="code">RL_ISSTATE</code> macro to test whether a particular state
+bit is set.
+Current state bits include:
 </p>
 <dl class="table">
 <dt><code class="code">RL_STATE_NONE</code></dt>
@@ -2850,7 +2884,7 @@ macro.
 <dd><p>Readline is performing word completion.
 </p></dd>
 <dt><code class="code">RL_STATE_SIGHANDLER</code></dt>
-<dd><p>Readline is currently executing the readline signal handler.
+<dd><p>Readline is currently executing the Readline signal handler.
 </p></dd>
 <dt><code class="code">RL_STATE_UNDOING</code></dt>
 <dd><p>Readline is performing an undo.
@@ -2886,7 +2920,8 @@ elapsed) and is returning that status to the caller.
 </p></dd>
 <dt><code class="code">RL_STATE_EOF</code></dt>
 <dd><p>Readline has read an EOF character (e.g., the stty &lsquo;<samp class="samp">EOF</samp>&rsquo; character)
-or encountered a read error and is about to return a NULL line to the caller.
+or encountered a read error or EOF
+and is about to return a NULL line to the caller.
 </p></dd>
 </dl>
 
@@ -2895,21 +2930,23 @@ or encountered a read error and is about to return a NULL line to the caller.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fexplicit_005farg"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_explicit_arg</strong><a class="copiable-link" href="#index-rl_005fexplicit_005farg"> &para;</a></span></dt>
 <dd><p>Set to a non-zero value if an explicit numeric argument was specified by
-the user.  Only valid in a bindable command function.
+the user.
+It is only valid in a bindable command function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fnumeric_005farg"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_numeric_arg</strong><a class="copiable-link" href="#index-rl_005fnumeric_005farg"> &para;</a></span></dt>
 <dd><p>Set to the value of any numeric argument explicitly specified by the user
-before executing the current Readline function.  Only valid in a bindable
-command function.
+before executing the current Readline function.
+It is only valid in a bindable command function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fediting_005fmode"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_editing_mode</strong><a class="copiable-link" href="#index-rl_005fediting_005fmode"> &para;</a></span></dt>
-<dd><p>Set to a value denoting Readline&rsquo;s current editing mode.  A value of
-<var class="var">1</var> means Readline is currently in emacs mode; <var class="var">0</var>
-means that vi mode is active.
+<dd><p>Set to a value denoting Readline&rsquo;s current editing mode.
+A value of <var class="var">1</var> means Readline is currently in emacs mode;
+<var class="var">0</var> means that vi mode is active.
+This determines the current keymap and key bindings.
 </p></dd></dl>
 
 <hr>
@@ -2946,24 +2983,29 @@ Next: <a href="#Keymaps" accesskey="n" rel="next">Selecting a Keymap</a>, Up: <a
 </div>
 <h4 class="subsection" id="Naming-a-Function"><span>2.4.1 Naming a Function<a class="copiable-link" href="#Naming-a-Function"> &para;</a></span></h4>
 
-<p>The user can dynamically change the bindings of keys while using
-Readline.  This is done by representing the function with a descriptive
-name.  The user is able to type the descriptive name when referring to
-the function.  Thus, in an init file, one might find
+<p>Readline has a descriptive
+string name for every function a user can bind to a key sequence,
+so users can dynamically change the bindings associated with key
+sequences while using Readline,
+using the descriptive name when referring to the function.
+Thus, in an init file, one might find
 </p>
 <div class="example">
 <pre class="example-preformatted">Meta-Rubout:	backward-kill-word
 </pre></div>
 
 <p>This binds the keystroke <kbd class="key">Meta-Rubout</kbd> to the function
-<em class="emph">descriptively</em> named <code class="code">backward-kill-word</code>.  You, as the
-programmer, should bind the functions you write to descriptive names as
-well.  Readline provides a function for doing that:
+<em class="emph">descriptively</em> named <code class="code">backward-kill-word</code>.
+As the programmer, you
+should bind the functions you write to descriptive names as well.
+Readline provides a function for doing that:
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fadd_005fdefun"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_add_defun</strong> <code class="def-code-arguments">(const char *name, rl_command_func_t *function, int key)</code><a class="copiable-link" href="#index-rl_005fadd_005fdefun"> &para;</a></span></dt>
-<dd><p>Add <var class="var">name</var> to the list of named functions.  Make <var class="var">function</var> be
-the function that gets called.  If <var class="var">key</var> is not -1, then bind it to
+<dd><p>Add <var class="var">name</var> to the list of named functions.
+Make <var class="var">function</var> be the function that gets called by key sequences
+that bind to <var class="var">name</var>.
+If <var class="var">key</var> is not -1, then bind it to
 <var class="var">function</var> using <code class="code">rl_bind_key()</code>.
 </p></dd></dl>
 
@@ -2982,14 +3024,16 @@ Next: <a href="#Binding-Keys" accesskey="n" rel="next">Binding Keys</a>, Previou
 </div>
 <h4 class="subsection" id="Selecting-a-Keymap"><span>2.4.2 Selecting a Keymap<a class="copiable-link" href="#Selecting-a-Keymap"> &para;</a></span></h4>
 
-<p>Key bindings take place on a <em class="dfn">keymap</em>.  The keymap is the
-association between the keys that the user types and the functions that
-get run.  You can make your own keymaps, copy existing keymaps, and tell
+<p>Key bindings take place on a <em class="dfn">keymap</em>.
+The keymap is the association between the keys that the user types and
+the functions that get run.
+You can make your own keymaps, copy existing keymaps, and tell
 Readline which keymap to use.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fmake_005fbare_005fkeymap"><span class="category-def">Function: </span><span><code class="def-type">Keymap</code> <strong class="def-name">rl_make_bare_keymap</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fmake_005fbare_005fkeymap"> &para;</a></span></dt>
-<dd><p>Returns a new, empty keymap.  The space for the keymap is allocated with
+<dd><p>Returns a new, empty keymap.
+The space for the keymap is allocated with
 <code class="code">malloc()</code>; the caller should free it by calling
 <code class="code">rl_free_keymap()</code> when done.
 </p></dd></dl>
@@ -3014,8 +3058,9 @@ The caller should free <var class="var">keymap</var>.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffree_005fkeymap"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_free_keymap</strong> <code class="def-code-arguments">(Keymap keymap)</code><a class="copiable-link" href="#index-rl_005ffree_005fkeymap"> &para;</a></span></dt>
-<dd><p>Free all storage associated with <var class="var">keymap</var>.  This calls
-<code class="code">rl_discard_keymap</code> to free subordindate keymaps and macros.
+<dd><p>Free all storage associated with <var class="var">keymap</var>.
+This calls <code class="code">rl_discard_keymap</code> to free subordindate
+keymaps and macros.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3024,8 +3069,9 @@ The caller should free <var class="var">keymap</var>.
 zero if there are any keys bound.
 </p></dd></dl>
 
-<p>Readline has several internal keymaps.  These functions allow you to
-change which keymap is active.
+<p>Readline has several internal keymaps.
+These functions allow you to change which keymap is active.
+This is one way to switch editing modes, for example.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fget_005fkeymap"><span class="category-def">Function: </span><span><code class="def-type">Keymap</code> <strong class="def-name">rl_get_keymap</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fget_005fkeymap"> &para;</a></span></dt>
@@ -3039,19 +3085,22 @@ change which keymap is active.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fget_005fkeymap_005fby_005fname"><span class="category-def">Function: </span><span><code class="def-type">Keymap</code> <strong class="def-name">rl_get_keymap_by_name</strong> <code class="def-code-arguments">(const char *name)</code><a class="copiable-link" href="#index-rl_005fget_005fkeymap_005fby_005fname"> &para;</a></span></dt>
-<dd><p>Return the keymap matching <var class="var">name</var>.  <var class="var">name</var> is one which would
-be supplied in a <code class="code">set keymap</code> inputrc line (see <a class="pxref" href="#Readline-Init-File">Readline Init File</a>).
+<dd><p>Return the keymap matching <var class="var">name</var>.
+<var class="var">name</var> is one which would be supplied in a
+<code class="code">set keymap</code> inputrc line (see <a class="pxref" href="#Readline-Init-File">Readline Init File</a>).
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fget_005fkeymap_005fname"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">rl_get_keymap_name</strong> <code class="def-code-arguments">(Keymap keymap)</code><a class="copiable-link" href="#index-rl_005fget_005fkeymap_005fname"> &para;</a></span></dt>
-<dd><p>Return the name matching <var class="var">keymap</var>.  <var class="var">name</var> is one which would
-be supplied in a <code class="code">set keymap</code> inputrc line (see <a class="pxref" href="#Readline-Init-File">Readline Init File</a>).
+<dd><p>Return the name matching <var class="var">keymap</var>.
+<var class="var">name</var> is one which would be supplied in a
+<code class="code">set keymap</code> inputrc line (see <a class="pxref" href="#Readline-Init-File">Readline Init File</a>).
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fset_005fkeymap_005fname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_set_keymap_name</strong> <code class="def-code-arguments">(const char *name, Keymap keymap)</code><a class="copiable-link" href="#index-rl_005fset_005fkeymap_005fname"> &para;</a></span></dt>
-<dd><p>Set the name of <var class="var">keymap</var>.  This name will then be &quot;registered&quot; and
+<dd><p>Set the name of <var class="var">keymap</var>.
+This name will then be &quot;registered&quot; and
 available for use in a <code class="code">set keymap</code> inputrc directive
 see <a class="pxref" href="#Readline-Init-File">Readline Init File</a>).
 The <var class="var">name</var> may not be one of Readline&rsquo;s builtin keymap names;
@@ -3077,7 +3126,7 @@ Next: <a href="#Associating-Function-Names-and-Bindings" accesskey="n" rel="next
 </div>
 <h4 class="subsection" id="Binding-Keys-1"><span>2.4.3 Binding Keys<a class="copiable-link" href="#Binding-Keys-1"> &para;</a></span></h4>
 
-<p>Key sequences are associate with functions through the keymap.
+<p>Key sequences are associated with functions through the keymap.
 Readline has several internal keymaps: <code class="code">emacs_standard_keymap</code>,
 <code class="code">emacs_meta_keymap</code>, <code class="code">emacs_ctlx_keymap</code>,
 <code class="code">vi_movement_keymap</code>, and <code class="code">vi_insertion_keymap</code>.
@@ -3087,7 +3136,8 @@ this manual assume that.
 <p>Since <code class="code">readline()</code> installs a set of default key bindings the first
 time it is called, there is always the danger that a custom binding
 installed before the first call to <code class="code">readline()</code> will be overridden.
-An alternate mechanism is to install custom key bindings in an
+An alternate mechanism that can avoid this
+is to install custom key bindings in an
 initialization function assigned to the <code class="code">rl_startup_hook</code> variable
 (see <a class="pxref" href="#Readline-Variables">Readline Variables</a>).
 </p>
@@ -3123,12 +3173,14 @@ already bound.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005funbind_005fkey"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_unbind_key</strong> <code class="def-code-arguments">(int key)</code><a class="copiable-link" href="#index-rl_005funbind_005fkey"> &para;</a></span></dt>
 <dd><p>Bind <var class="var">key</var> to the null function in the currently active keymap.
+This is not the same as binding it to <code class="code">self-insert</code>.
 Returns non-zero in case of error.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005funbind_005fkey_005fin_005fmap"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_unbind_key_in_map</strong> <code class="def-code-arguments">(int key, Keymap map)</code><a class="copiable-link" href="#index-rl_005funbind_005fkey_005fin_005fmap"> &para;</a></span></dt>
 <dd><p>Bind <var class="var">key</var> to the null function in <var class="var">map</var>.
+This is not the same as binding it to <code class="code">self-insert</code>.
 Returns non-zero in case of error.
 </p></dd></dl>
 
@@ -3153,7 +3205,8 @@ The return value is non-zero if <var class="var">keyseq</var> is invalid.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fbind_005fkeyseq_005fin_005fmap"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_bind_keyseq_in_map</strong> <code class="def-code-arguments">(const char *keyseq, rl_command_func_t *function, Keymap map)</code><a class="copiable-link" href="#index-rl_005fbind_005fkeyseq_005fin_005fmap"> &para;</a></span></dt>
 <dd><p>Bind the key sequence represented by the string <var class="var">keyseq</var> to the function
-<var class="var">function</var>.  This makes new keymaps as necessary.
+<var class="var">function</var> in <var class="var">map</var>.
+This makes new keymaps as necessary.
 Initial bindings are performed in <var class="var">map</var>.
 The return value is non-zero if <var class="var">keyseq</var> is invalid.
 </p></dd></dl>
@@ -3181,10 +3234,14 @@ already bound.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fgeneric_005fbind"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_generic_bind</strong> <code class="def-code-arguments">(int type, const char *keyseq, char *data, Keymap map)</code><a class="copiable-link" href="#index-rl_005fgeneric_005fbind"> &para;</a></span></dt>
 <dd><p>Bind the key sequence represented by the string <var class="var">keyseq</var> to the arbitrary
-pointer <var class="var">data</var>.  <var class="var">type</var> says what kind of data is pointed to by
-<var class="var">data</var>; this can be a function (<code class="code">ISFUNC</code>), a macro
-(<code class="code">ISMACR</code>), or a keymap (<code class="code">ISKMAP</code>).  This makes new keymaps as
-necessary.  The initial keymap in which to do bindings is <var class="var">map</var>.
+pointer <var class="var">data</var>.
+<var class="var">type</var> says what kind of data is pointed to by <var class="var">data</var>; this can be
+a function (<code class="code">ISFUNC</code>),
+a macro (<code class="code">ISMACR</code>),
+or a keymap (<code class="code">ISKMAP</code>).
+This makes new keymaps as necessary.
+The initial keymap in which to do bindings is <var class="var">map</var>.
+Returns non-zero in the case of an invalid <var class="var">keyseq</var>, zero otherwise.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3210,31 +3267,34 @@ Next: <a href="#Allowing-Undoing" accesskey="n" rel="next">Allowing Undoing</a>,
 <h4 class="subsection" id="Associating-Function-Names-and-Bindings-1"><span>2.4.4 Associating Function Names and Bindings<a class="copiable-link" href="#Associating-Function-Names-and-Bindings-1"> &para;</a></span></h4>
 
 <p>These functions allow you to find out what keys invoke named functions
-and the functions invoked by a particular key sequence.  You may also
-associate a new function name with an arbitrary function.
+and the functions invoked by a particular key sequence.
+You may also associate a new function name with an arbitrary function.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fnamed_005ffunction"><span class="category-def">Function: </span><span><code class="def-type">rl_command_func_t *</code> <strong class="def-name">rl_named_function</strong> <code class="def-code-arguments">(const char *name)</code><a class="copiable-link" href="#index-rl_005fnamed_005ffunction"> &para;</a></span></dt>
 <dd><p>Return the function with name <var class="var">name</var>.
+<var class="var">name</var> is a descriptive name users might use in a key binding.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffunction_005fof_005fkeyseq"><span class="category-def">Function: </span><span><code class="def-type">rl_command_func_t *</code> <strong class="def-name">rl_function_of_keyseq</strong> <code class="def-code-arguments">(const char *keyseq, Keymap map, int *type)</code><a class="copiable-link" href="#index-rl_005ffunction_005fof_005fkeyseq"> &para;</a></span></dt>
 <dd><p>Return the function invoked by <var class="var">keyseq</var> in keymap <var class="var">map</var>.
-If <var class="var">map</var> is <code class="code">NULL</code>, the current keymap is used.  If <var class="var">type</var> is
-not <code class="code">NULL</code>, the type of the object is returned in the <code class="code">int</code> variable
-it points to (one of <code class="code">ISFUNC</code>, <code class="code">ISKMAP</code>, or <code class="code">ISMACR</code>).
-It takes a &quot;translated&quot; key sequence and should not be used if the key sequence
-can include NUL.
+If <var class="var">map</var> is <code class="code">NULL</code>, this uses the current keymap.
+If <var class="var">type</var> is not <code class="code">NULL</code>, this returns the type of the object
+in the <code class="code">int</code> variable it points to
+(one of <code class="code">ISFUNC</code>, <code class="code">ISKMAP</code>, or <code class="code">ISMACR</code>).
+It takes a &quot;translated&quot; key sequence and should not be used
+if the key sequence can include NUL.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffunction_005fof_005fkeyseq_005flen"><span class="category-def">Function: </span><span><code class="def-type">rl_command_func_t *</code> <strong class="def-name">rl_function_of_keyseq_len</strong> <code class="def-code-arguments">(const char *keyseq, size_t len, Keymap map, int *type)</code><a class="copiable-link" href="#index-rl_005ffunction_005fof_005fkeyseq_005flen"> &para;</a></span></dt>
 <dd><p>Return the function invoked by <var class="var">keyseq</var> of length <var class="var">len</var>
-in keymap <var class="var">map</var>. Equivalent to <code class="code">rl_function_of_keyseq</code> with the
-addition of the <var class="var">len</var> parameter.
-It takes a &quot;translated&quot; key sequence and should be used if the key sequence
-can include NUL.
+in keymap <var class="var">map</var>.
+Equivalent to <code class="code">rl_function_of_keyseq</code> with the addition
+of the <var class="var">len</var> parameter.
+It takes a &quot;translated&quot; key sequence and should be used
+if the key sequence can include NUL.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3243,7 +3303,7 @@ can include NUL.
 including digits, return the index of the first character in <var class="var">keyseq</var>
 following the numeric argument.
 This can be used to skip over the numeric argument (which is available as
-<code class="code">rl_numeric_arg</code> while traversing the key sequence that invoked the
+<code class="code">rl_numeric_arg</code>) while traversing the key sequence that invoked the
 current command.
 </p></dd></dl>
 
@@ -3266,7 +3326,7 @@ keymap <var class="var">map</var>.
 If <var class="var">map</var> is NULL, this uses the current keymap.
 If <var class="var">readable</var> is non-zero,
 the list is formatted in such a way that it can be made part of an
-<code class="code">inputrc</code> file and re-read.
+<code class="code">inputrc</code> file and re-read to recreate the key binding.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3285,16 +3345,19 @@ the list is formatted in such a way that it can be made part of an
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffunmap_005fnames"><span class="category-def">Function: </span><span><code class="def-type">const char **</code> <strong class="def-name">rl_funmap_names</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005ffunmap_005fnames"> &para;</a></span></dt>
-<dd><p>Return a NULL terminated array of known function names.  The array is
-sorted.  The array itself is allocated, but not the strings inside.  You
-should free the array, but not the pointers, using <code class="code">free</code> or
-<code class="code">rl_free</code> when you are done.
+<dd><p>Return a NULL terminated array of known function names.
+The array is sorted. 
+The array itself is allocated, but not the strings inside.
+You should free the array, but not the pointers, using <code class="code">free</code>
+or <code class="code">rl_free</code> when you are done.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fadd_005ffunmap_005fentry"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_add_funmap_entry</strong> <code class="def-code-arguments">(const char *name, rl_command_func_t *function)</code><a class="copiable-link" href="#index-rl_005fadd_005ffunmap_005fentry"> &para;</a></span></dt>
 <dd><p>Add <var class="var">name</var> to the list of bindable Readline command names, and make
 <var class="var">function</var> the function to be called when <var class="var">name</var> is invoked.
+This returns the index of the newly-added <var class="var">name</var> in the array of
+function names.
 </p></dd></dl>
 
 <hr>
@@ -3307,49 +3370,52 @@ Next: <a href="#Redisplay" accesskey="n" rel="next">Redisplay</a>, Previous: <a 
 <h4 class="subsection" id="Allowing-Undoing-1"><span>2.4.5 Allowing Undoing<a class="copiable-link" href="#Allowing-Undoing-1"> &para;</a></span></h4>
 
 <p>Supporting the undo command is a painless thing, and makes your
-functions much more useful.  It is certainly easy to try
-something if you know you can undo it.
+functions much more useful.
+It is certainly easier to try something if you know you can undo it.
 </p>
-<p>If your function simply inserts text once, or deletes text once, and
-uses <code class="code">rl_insert_text()</code> or <code class="code">rl_delete_text()</code> to do it, then
-undoing is already done for you automatically.
+<p>If your function simply inserts text once, or deletes text once,
+and uses <code class="code">rl_insert_text()</code> or <code class="code">rl_delete_text()</code> to do it,
+then Readline does the undoing for you automatically.
 </p>
 <p>If you do multiple insertions or multiple deletions, or any combination
 of these operations, you should group them together into one operation.
 This is done with <code class="code">rl_begin_undo_group()</code> and
 <code class="code">rl_end_undo_group()</code>.
 </p>
-<p>The types of events that can be undone are:
+<p>The types of events Readline can undo are:
 </p>
 <div class="example smallexample">
 <pre class="example-preformatted">enum undo_code { UNDO_DELETE, UNDO_INSERT, UNDO_BEGIN, UNDO_END }; 
 </pre></div>
 
 <p>Notice that <code class="code">UNDO_DELETE</code> means to insert some text, and
-<code class="code">UNDO_INSERT</code> means to delete some text.  That is, the undo code
-tells what to undo, not how to undo it.  <code class="code">UNDO_BEGIN</code> and
-<code class="code">UNDO_END</code> are tags added by <code class="code">rl_begin_undo_group()</code> and
-<code class="code">rl_end_undo_group()</code>.
+<code class="code">UNDO_INSERT</code> means to delete some text.
+That is, the undo code tells what to undo, not how to undo it.
+<code class="code">UNDO_BEGIN</code> and <code class="code">UNDO_END</code> are tags
+added by <code class="code">rl_begin_undo_group()</code> and <code class="code">rl_end_undo_group()</code>;
+they are how Readline delimits groups of commands that should be
+undone together.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fbegin_005fundo_005fgroup"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_begin_undo_group</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fbegin_005fundo_005fgroup"> &para;</a></span></dt>
-<dd><p>Begins saving undo information in a group construct.  The undo
-information usually comes from calls to <code class="code">rl_insert_text()</code> and
-<code class="code">rl_delete_text()</code>, but could be the result of calls to
+<dd><p>Begins saving undo information in a group construct.
+The undo information usually comes from calls to <code class="code">rl_insert_text()</code>
+and <code class="code">rl_delete_text()</code>, but could be the result of calls to
 <code class="code">rl_add_undo()</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fend_005fundo_005fgroup"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_end_undo_group</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fend_005fundo_005fgroup"> &para;</a></span></dt>
-<dd><p>Closes the current undo group started with <code class="code">rl_begin_undo_group
-()</code>.  There should be one call to <code class="code">rl_end_undo_group()</code>
+<dd><p>Closes the current undo group started with <code class="code">rl_begin_undo_group()</code>.
+There should be one call to <code class="code">rl_end_undo_group()</code>
 for each call to <code class="code">rl_begin_undo_group()</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fadd_005fundo"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_add_undo</strong> <code class="def-code-arguments">(enum undo_code what, int start, int end, char *text)</code><a class="copiable-link" href="#index-rl_005fadd_005fundo"> &para;</a></span></dt>
-<dd><p>Remember how to undo an event (according to <var class="var">what</var>).  The affected
-text runs from <var class="var">start</var> to <var class="var">end</var>, and encompasses <var class="var">text</var>.
+<dd><p>Remember how to undo an event (according to <var class="var">what</var>).
+The affected text runs from <var class="var">start</var> to <var class="var">end</var>,
+and encompasses <var class="var">text</var>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3359,20 +3425,22 @@ text runs from <var class="var">start</var> to <var class="var">end</var>, and e
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fdo_005fundo"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_do_undo</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fdo_005fundo"> &para;</a></span></dt>
-<dd><p>Undo the first thing on the undo list.  Returns <code class="code">0</code> if there was
-nothing to undo, non-zero if something was undone.
+<dd><p>Undo the first thing on the undo list.
+Returns <code class="code">0</code> if there was nothing to undo,
+non-zero if something was undone.
 </p></dd></dl>
 
 <p>Finally, if you neither insert nor delete text, but directly modify the
 existing text (e.g., change its case), call <code class="code">rl_modifying()</code>
-once, just before you modify the text.  You must supply the indices of
-the text range that you are going to modify.
+once, just before you modify the text.
+You must supply the indices of the text range that you are going to modify.
+Readline will create an undo group for you.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fmodifying"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_modifying</strong> <code class="def-code-arguments">(int start, int end)</code><a class="copiable-link" href="#index-rl_005fmodifying"> &para;</a></span></dt>
 <dd><p>Tell Readline to save the text between <var class="var">start</var> and <var class="var">end</var> as a
-single undo unit.  It is assumed that you will subsequently modify
-that text.
+single undo unit.
+It is assumed that you will subsequently modify that text.
 </p></dd></dl>
 
 <hr>
@@ -3442,17 +3510,18 @@ redisplay.
 <dd><p>The arguments are a format string as would be supplied to <code class="code">printf</code>,
 possibly containing conversion specifications such as &lsquo;<samp class="samp">%d</samp>&rsquo;, and
 any additional arguments necessary to satisfy the conversion specifications.
-The resulting string is displayed in the <em class="dfn">echo area</em>.  The echo area
-is also used to display numeric arguments and search strings.
+The resulting string is displayed in the <em class="dfn">echo area</em>.
+The echo area is also used to display numeric arguments and search strings.
 You should call <code class="code">rl_save_prompt</code> to save the prompt information
 before calling this function.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fclear_005fmessage"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_clear_message</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fclear_005fmessage"> &para;</a></span></dt>
-<dd><p>Clear the message in the echo area.  If the prompt was saved with a call to
+<dd><p>Clear the message in the echo area.
+If the prompt was saved with a call to
 <code class="code">rl_save_prompt</code> before the last call to <code class="code">rl_message</code>,
-call <code class="code">rl_restore_prompt</code> before calling this function.
+you must call <code class="code">rl_restore_prompt</code> before calling this function.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3465,8 +3534,8 @@ displaying a new message in the message area with <code class="code">rl_message(
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005frestore_005fprompt"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_restore_prompt</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005frestore_005fprompt"> &para;</a></span></dt>
 <dd><p>Restore the local Readline prompt display state saved by the most
 recent call to <code class="code">rl_save_prompt</code>.
-if <code class="code">rl_save_prompt</code> was called to save the prompt before a call
-to <code class="code">rl_message</code>, this function should be called before the
+if you called <code class="code">rl_save_prompt</code> to save the prompt before a call
+to <code class="code">rl_message</code>, you should call this function before the
 corresponding call to <code class="code">rl_clear_message</code>.
 </p></dd></dl>
 
@@ -3474,9 +3543,11 @@ corresponding call to <code class="code">rl_clear_message</code>.
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fexpand_005fprompt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_expand_prompt</strong> <code class="def-code-arguments">(char *prompt)</code><a class="copiable-link" href="#index-rl_005fexpand_005fprompt"> &para;</a></span></dt>
 <dd><p>Expand any special character sequences in <var class="var">prompt</var> and set up the
 local Readline prompt redisplay variables.
-This function is called by <code class="code">readline()</code>.  It may also be called to
-expand the primary prompt if the <code class="code">rl_on_new_line_with_prompt()</code>
-function or <code class="code">rl_already_prompted</code> variable is used.
+This function is called by <code class="code">readline()</code>.
+It may also be called to
+expand the primary prompt if the application uses the
+<code class="code">rl_on_new_line_with_prompt()</code> function or
+<code class="code">rl_already_prompted</code> variable.
 It returns the number of visible characters on the last line of the
 (possibly multi-line) prompt.
 Applications may indicate that the prompt contains characters that take
@@ -3485,13 +3556,15 @@ such characters with the special markers <code class="code">RL_PROMPT_START_IGNO
 and <code class="code">RL_PROMPT_END_IGNORE</code> (declared in <samp class="file">readline.h</samp> as
 &lsquo;<samp class="samp">\001</samp>&rsquo; and &lsquo;<samp class="samp">\002</samp>&rsquo;, respectively).
 This may be used to embed terminal-specific escape sequences in prompts.
+If you don&rsquo;t use these indicators, redisplay will likely produce screen
+contents that don&rsquo;t match the line buffer.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fset_005fprompt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_set_prompt</strong> <code class="def-code-arguments">(const char *prompt)</code><a class="copiable-link" href="#index-rl_005fset_005fprompt"> &para;</a></span></dt>
-<dd><p>Make Readline use <var class="var">prompt</var> for subsequent redisplay.  This calls
-<code class="code">rl_expand_prompt()</code> to expand the prompt and sets <code class="code">rl_prompt</code>
-to the result.
+<dd><p>Make Readline use <var class="var">prompt</var> for subsequent redisplay.
+This calls <code class="code">rl_expand_prompt()</code> to expand the prompt
+and sets <code class="code">rl_prompt</code> to the result.
 </p></dd></dl>
 
 <hr>
@@ -3525,17 +3598,26 @@ the current line.
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fkill_005ftext"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_kill_text</strong> <code class="def-code-arguments">(int start, int end)</code><a class="copiable-link" href="#index-rl_005fkill_005ftext"> &para;</a></span></dt>
 <dd><p>Copy the text between <var class="var">start</var> and <var class="var">end</var> in the current line
 to the kill ring, appending or prepending to the last kill if the
-last command was a kill command.  The text is deleted.
-If <var class="var">start</var> is less than <var class="var">end</var>,
-the text is appended, otherwise prepended.  If the last command was
-not a kill, a new kill ring slot is used.
+last command was a kill command.
+This deletes the text from the line.
+If <var class="var">start</var> is less than <var class="var">end</var>, the text is appended,
+otherwise it is prepended.
+If the last command was not a kill, this uses a new kill ring slot.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
+<dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005freplace_005fline"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_replace_line</strong> <code class="def-code-arguments">(const char *text, int clear_undo)</code><a class="copiable-link" href="#index-rl_005freplace_005fline"> &para;</a></span></dt>
+<dd><p>Replace the contents of <code class="code">rl_line_buffer</code> with <var class="var">text</var>.
+This preserves the point and mark, if possible.
+If <var class="var">clear_undo</var> is non-zero, this clears the undo list associated
+with the current line.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fpush_005fmacro_005finput"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_push_macro_input</strong> <code class="def-code-arguments">(char *macro)</code><a class="copiable-link" href="#index-rl_005fpush_005fmacro_005finput"> &para;</a></span></dt>
-<dd><p>Cause <var class="var">macro</var> to be inserted into the line, as if it had been invoked
-by a key bound to a macro.  Not especially useful; use
-<code class="code">rl_insert_text()</code> instead.
+<dd><p>Insert <var class="var">macro</var> into the line, as if it had been invoked
+by a key bound to a macro.
+Not especially useful; use <code class="code">rl_insert_text()</code> instead.
 </p></dd></dl>
 
 <hr>
@@ -3565,9 +3647,10 @@ be the keyboard.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fstuff_005fchar"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_stuff_char</strong> <code class="def-code-arguments">(int c)</code><a class="copiable-link" href="#index-rl_005fstuff_005fchar"> &para;</a></span></dt>
-<dd><p>Insert <var class="var">c</var> into the Readline input stream.  It will be &quot;read&quot;
-before Readline attempts to read characters from the terminal with
-<code class="code">rl_read_key()</code>.  Up to 512 characters may be pushed back.
+<dd><p>Insert <var class="var">c</var> into the Readline input stream.
+It will be &quot;read&quot; before Readline attempts to read characters
+from the terminal with <code class="code">rl_read_key()</code>.
+Applications can push back up to 512 characters.
 <code class="code">rl_stuff_char</code> returns 1 if the character was successfully inserted;
 0 otherwise.
 </p></dd></dl>
@@ -3575,21 +3658,24 @@ before Readline attempts to read characters from the terminal with
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fexecute_005fnext"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_execute_next</strong> <code class="def-code-arguments">(int c)</code><a class="copiable-link" href="#index-rl_005fexecute_005fnext"> &para;</a></span></dt>
 <dd><p>Make <var class="var">c</var> be the next command to be executed when <code class="code">rl_read_key()</code>
-is called.  This sets <var class="var">rl_pending_input</var>.
+is called.
+This sets <var class="var">rl_pending_input</var>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fclear_005fpending_005finput"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_clear_pending_input</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fclear_005fpending_005finput"> &para;</a></span></dt>
 <dd><p>Unset <var class="var">rl_pending_input</var>, effectively negating the effect of any
-previous call to <code class="code">rl_execute_next()</code>.  This works only if the
-pending input has not already been read with <code class="code">rl_read_key()</code>.
+previous call to <code class="code">rl_execute_next()</code>.
+This works only if the pending input has not already been read
+with <code class="code">rl_read_key()</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fset_005fkeyboard_005finput_005ftimeout"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_set_keyboard_input_timeout</strong> <code class="def-code-arguments">(int u)</code><a class="copiable-link" href="#index-rl_005fset_005fkeyboard_005finput_005ftimeout"> &para;</a></span></dt>
 <dd><p>While waiting for keyboard input in <code class="code">rl_read_key()</code>, Readline will
 wait for <var class="var">u</var> microseconds for input before calling any function
-assigned to <code class="code">rl_event_hook</code>.  <var class="var">u</var> must be greater than or equal
+assigned to <code class="code">rl_event_hook</code>.
+<var class="var">u</var> must be greater than or equal
 to zero (a zero-length timeout is equivalent to a poll).
 The default waiting period is one-tenth of a second.
 Returns the old timeout value.
@@ -3597,10 +3683,11 @@ Returns the old timeout value.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fset_005ftimeout"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_set_timeout</strong> <code class="def-code-arguments">(unsigned int secs, unsigned int usecs)</code><a class="copiable-link" href="#index-rl_005fset_005ftimeout"> &para;</a></span></dt>
-<dd><p>Set a timeout for subsequent calls to <code class="code">readline()</code>. If Readline does
-not read a complete line, or the number of characters specified by
-<code class="code">rl_num_chars_to_read</code>, before the duration specified by <var class="var">secs</var>
-(in seconds) and <var class="var">usecs</var> (microseconds), it returns and sets
+<dd><p>Set a timeout for subsequent calls to <code class="code">readline()</code>.
+If Readline does not read a complete line, or the number of characters
+specified by <code class="code">rl_num_chars_to_read</code>,
+before the duration specified by <var class="var">secs</var> (in seconds)
+and <var class="var">usecs</var> (microseconds), it returns and sets
 <code class="code">RL_STATE_TIMEOUT</code> in <code class="code">rl_readline_state</code>.
 Passing 0 for <code class="code">secs</code> and <code class="code">usecs</code> cancels any previously set
 timeout; the convenience macro <code class="code">rl_clear_timeout()</code> is shorthand
@@ -3633,7 +3720,8 @@ Next: <a href="#Utility-Functions" accesskey="n" rel="next">Utility Functions</a
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fprep_005fterminal"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_prep_terminal</strong> <code class="def-code-arguments">(int meta_flag)</code><a class="copiable-link" href="#index-rl_005fprep_005fterminal"> &para;</a></span></dt>
 <dd><p>Modify the terminal settings for Readline&rsquo;s use, so <code class="code">readline()</code>
-can read a single character at a time from the keyboard.
+can read a single character at a time from the keyboard
+and perform redisplay.
 The <var class="var">meta_flag</var> argument should be non-zero if Readline should
 read eight-bit input.
 </p></dd></dl>
@@ -3661,19 +3749,21 @@ The bindings are performed in <var class="var">kmap</var>.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ftty_005fset_005fechoing"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_tty_set_echoing</strong> <code class="def-code-arguments">(int value)</code><a class="copiable-link" href="#index-rl_005ftty_005fset_005fechoing"> &para;</a></span></dt>
-<dd><p>Set Readline&rsquo;s idea of whether or not it is echoing output to its output
-stream (<var class="var">rl_outstream</var>).  If <var class="var">value</var> is 0, Readline does not display
-output to <var class="var">rl_outstream</var>; any other value enables output.  The initial
-value is set when Readline initializes the terminal settings.
+<dd><p>Set Readline&rsquo;s idea of whether or not it is
+echoing output to its output stream (<var class="var">rl_outstream</var>).
+If <var class="var">value</var> is 0,
+Readline does not display output to <var class="var">rl_outstream</var>; any other
+value enables output.
+The initial value is set when Readline initializes the terminal settings.
 This function returns the previous value.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005freset_005fterminal"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_reset_terminal</strong> <code class="def-code-arguments">(const char *terminal_name)</code><a class="copiable-link" href="#index-rl_005freset_005fterminal"> &para;</a></span></dt>
 <dd><p>Reinitialize Readline&rsquo;s idea of the terminal settings using
-<var class="var">terminal_name</var> as the terminal type (e.g., <code class="code">vt100</code>).
-If <var class="var">terminal_name</var> is <code class="code">NULL</code>, the value of the <code class="code">TERM</code>
-environment variable is used.
+<var class="var">terminal_name</var> as the terminal type (e.g., <code class="code">xterm</code>).
+If <var class="var">terminal_name</var> is <code class="code">NULL</code>, Readline uses the value of the
+<code class="code">TERM</code> environment variable.
 </p></dd></dl>
 
 <hr>
@@ -3688,45 +3778,37 @@ Next: <a href="#Miscellaneous-Functions" accesskey="n" rel="next">Miscellaneous 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fsave_005fstate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_save_state</strong> <code class="def-code-arguments">(struct readline_state *sp)</code><a class="copiable-link" href="#index-rl_005fsave_005fstate"> &para;</a></span></dt>
 <dd><p>Save a snapshot of Readline&rsquo;s internal state to <var class="var">sp</var>.
-The contents of the <var class="var">readline_state</var> structure are documented
-in <samp class="file">readline.h</samp>.
+The contents of the <var class="var">readline_state</var> structure are
+documented in <samp class="file">readline.h</samp>.
 The caller is responsible for allocating the structure.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005frestore_005fstate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_restore_state</strong> <code class="def-code-arguments">(struct readline_state *sp)</code><a class="copiable-link" href="#index-rl_005frestore_005fstate"> &para;</a></span></dt>
-<dd><p>Restore Readline&rsquo;s internal state to that stored in <var class="var">sp</var>, which must
-have been saved by a call to <code class="code">rl_save_state</code>.
-The contents of the <var class="var">readline_state</var> structure are documented
-in <samp class="file">readline.h</samp>.
-The caller is responsible for freeing the structure.
+<dd><p>Restore Readline&rsquo;s internal state to that stored in <var class="var">sp</var>,
+which must have been saved by a call to <code class="code">rl_save_state</code>. 
+The contents of the <var class="var">readline_state</var> structure are documented in
+<samp class="file">readline.h</samp>.
+The caller is responsible for freeing the structure. 
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffree"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_free</strong> <code class="def-code-arguments">(void *mem)</code><a class="copiable-link" href="#index-rl_005ffree"> &para;</a></span></dt>
-<dd><p>Deallocate the memory pointed to by <var class="var">mem</var>.  <var class="var">mem</var> must have been
-allocated by <code class="code">malloc</code>.
-</p></dd></dl>
-
-<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
-<dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005freplace_005fline"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_replace_line</strong> <code class="def-code-arguments">(const char *text, int clear_undo)</code><a class="copiable-link" href="#index-rl_005freplace_005fline"> &para;</a></span></dt>
-<dd><p>Replace the contents of <code class="code">rl_line_buffer</code> with <var class="var">text</var>.
-The point and mark are preserved, if possible.
-If <var class="var">clear_undo</var> is non-zero, the undo list associated with the
-current line is cleared.
+<dd><p>Deallocate the memory pointed to by <var class="var">mem</var>.
+<var class="var">mem</var> must have been allocated by <code class="code">malloc</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fextend_005fline_005fbuffer"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_extend_line_buffer</strong> <code class="def-code-arguments">(int len)</code><a class="copiable-link" href="#index-rl_005fextend_005fline_005fbuffer"> &para;</a></span></dt>
 <dd><p>Ensure that <code class="code">rl_line_buffer</code> has enough space to hold <var class="var">len</var>
-characters, possibly reallocating it if necessary.
+characters, reallocating it if necessary. 
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005finitialize"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_initialize</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005finitialize"> &para;</a></span></dt>
 <dd><p>Initialize or re-initialize Readline&rsquo;s internal state.
-It&rsquo;s not strictly necessary to call this; <code class="code">readline()</code> calls it before
-reading any input.
+It&rsquo;s not strictly necessary to call this;
+<code class="code">readline()</code> calls it before reading any input.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3742,12 +3824,13 @@ reading any input.
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fdisplay_005fmatch_005flist"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_display_match_list</strong> <code class="def-code-arguments">(char **matches, int len, int max)</code><a class="copiable-link" href="#index-rl_005fdisplay_005fmatch_005flist"> &para;</a></span></dt>
 <dd><p>A convenience function for displaying a list of strings in
-columnar format on Readline&rsquo;s output stream.  <code class="code">matches</code> is the list
-of strings, in argv format, such as a list of completion matches.
+columnar format on Readline&rsquo;s output stream.
+<code class="code">matches</code> is the list of strings, in argv format,
+such as a list of completion matches.
 <code class="code">len</code> is the number of strings in <code class="code">matches</code>, and <code class="code">max</code>
-is the length of the longest string in <code class="code">matches</code>.  This function uses
-the setting of <code class="code">print-completions-horizontally</code> to select how the
-matches are displayed (see <a class="pxref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>).
+is the length of the longest string in <code class="code">matches</code>.
+This function uses the setting of <code class="code">print-completions-horizontally</code>
+to select how the matches are displayed (see <a class="pxref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>).
 When displaying completions, this function sets the number of columns used
 for display to the value of <code class="code">completion-display-width</code>, the value of
 the environment variable <code class="env">COLUMNS</code>, or the screen width, in that order.
@@ -3800,9 +3883,9 @@ Next: <a href="#Alternate-Interface" accesskey="n" rel="next">Alternate Interfac
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fmacro_005fbind"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_macro_bind</strong> <code class="def-code-arguments">(const char *keyseq, const char *macro, Keymap map)</code><a class="copiable-link" href="#index-rl_005fmacro_005fbind"> &para;</a></span></dt>
 <dd><p>Bind the key sequence <var class="var">keyseq</var> to invoke the macro <var class="var">macro</var>.
-The binding is performed in <var class="var">map</var>.  When <var class="var">keyseq</var> is invoked, the
-<var class="var">macro</var> will be inserted into the line.  This function is deprecated;
-use <code class="code">rl_generic_bind</code> instead.
+The binding is performed in <var class="var">map</var>.
+When <var class="var">keyseq</var> is invoked, the <var class="var">macro</var> will be inserted into the line.
+This function is deprecated; use <code class="code">rl_generic_bind</code> instead.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3820,7 +3903,8 @@ that it can be made part of an <code class="code">inputrc</code> file and re-rea
 <dd><p>Make the Readline variable <var class="var">variable</var> have <var class="var">value</var>.
 This behaves as if the Readline command
 &lsquo;<samp class="samp">set <var class="var">variable</var> <var class="var">value</var></samp>&rsquo; had been executed in an <code class="code">inputrc</code>
-file (see <a class="pxref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>).
+file (see <a class="pxref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>)
+or by <code class="code">rl_parse_and_bind</code>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3848,9 +3932,10 @@ a balancing character when <code class="code">blink-matching-paren</code> has be
 <dd><p>Retrieve the string value of the termcap capability <var class="var">cap</var>.
 Readline fetches the termcap entry for the current terminal name and
 uses those capabilities to move around the screen line and perform other
-terminal-specific operations, like erasing a line.  Readline does not
-use all of a terminal&rsquo;s capabilities, and this function will return
-values for only those capabilities Readline uses.
+terminal-specific operations, like erasing a line.
+Readline does not fetch or use all of a terminal&rsquo;s capabilities,
+and this function will return
+values for only those capabilities Readline fetches.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3868,16 +3953,18 @@ Readline saves in the history list.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005factivate_005fmark"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_activate_mark</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005factivate_005fmark"> &para;</a></span></dt>
-<dd><p>Enable an <em class="emph">active</em> mark.
+<dd><p>Enable an <em class="emph">active</em> region.
 When this is enabled, the text between point and mark (the <var class="var">region</var>) is
-displayed in the terminal&rsquo;s standout mode (a <var class="var">face</var>).
+displayed using the color specified by the value of the
+<code class="code">active-region-start-color</code> variable (a <var class="var">face</var>).
+The default face is the terminal&rsquo;s standout mode.
 This is called by various Readline functions that set the mark and insert
 text, and is available for applications to call.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fdeactivate_005fmark"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_deactivate_mark</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fdeactivate_005fmark"> &para;</a></span></dt>
-<dd><p>Turn off the active mark.
+<dd><p>Turn off the active region.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -3902,17 +3989,21 @@ Next: <a href="#A-Readline-Example" accesskey="n" rel="next">A Readline Example<
 </div>
 <h4 class="subsection" id="Alternate-Interface-1"><span>2.4.12 Alternate Interface<a class="copiable-link" href="#Alternate-Interface-1"> &para;</a></span></h4>
 
-<p>An alternate interface is available to plain <code class="code">readline()</code>.  Some
-applications need to interleave keyboard I/O with file, device, or
-window system I/O, typically by using a main loop to <code class="code">select()</code>
-on various file descriptors.  To accommodate this need, Readline can
-also be invoked as a &lsquo;callback&rsquo; function from an event loop.  There
-are functions available to make this easy.
+<p>For applications that need more granular control than
+plain <code class="code">readline()</code> provides, there is
+an alternate interface.
+Some applications need to interleave keyboard I/O with file, device,
+or window system I/O, typically by using a main loop to <code class="code">select()</code>
+on various file descriptors.
+To accommodate this use case, Readline can
+also be invoked as a &lsquo;callback&rsquo; function from an event loop.
+There are functions available to make this easy.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
-<dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcallback_005fhandler_005finstall"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_callback_handler_install</strong> <code class="def-code-arguments">(const char *prompt, rl_vcpfunc_t *lhandler)</code><a class="copiable-link" href="#index-rl_005fcallback_005fhandler_005finstall"> &para;</a></span></dt>
+<dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcallback_005fhandler_005finstall"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_callback_handler_install</strong> <code class="def-code-arguments">(const char *prompt, rl_vcpfunc_t *line_handler)</code><a class="copiable-link" href="#index-rl_005fcallback_005fhandler_005finstall"> &para;</a></span></dt>
 <dd><p>Set up the terminal for Readline I/O and display the initial
-expanded value of <var class="var">prompt</var>.  Save the value of <var class="var">lhandler</var> to
+expanded value of <var class="var">prompt</var>.
+Save the value of <var class="var">line_handler</var> to
 use as a handler function to call when a complete line of input has been
 entered.
 The handler function receives the text of the line as an argument.
@@ -3926,15 +4017,15 @@ line when it it finished with it.
 should call <code class="code">rl_callback_read_char()</code>, which will read the next
 character from the current input source.
 If that character completes the line, <code class="code">rl_callback_read_char</code> will
-invoke the <var class="var">lhandler</var> function installed by
+invoke the <var class="var">line_handler</var> function installed by
 <code class="code">rl_callback_handler_install</code> to process the line.
-Before calling the <var class="var">lhandler</var> function, the terminal settings are
-reset to the values they had before calling
+Before calling the <var class="var">line_handler</var> function, Readline resets
+the terminal settings to the values they had before calling
 <code class="code">rl_callback_handler_install</code>.
-If the <var class="var">lhandler</var> function returns,
+If the <var class="var">line_handler</var> function returns,
 and the line handler remains installed,
-the terminal settings are modified for Readline&rsquo;s use again.
-<code class="code">EOF</code> is indicated by calling <var class="var">lhandler</var> with a
+Readline modifies the terminal settings for its use again.
+<code class="code">EOF</code> is indicated by calling <var class="var">line_handler</var> with a
 <code class="code">NULL</code> line.
 </p></dd></dl>
 
@@ -3942,19 +4033,21 @@ the terminal settings are modified for Readline&rsquo;s use again.
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcallback_005fsigcleanup"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_callback_sigcleanup</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fcallback_005fsigcleanup"> &para;</a></span></dt>
 <dd><p>Clean up any internal state the callback interface uses to maintain state
 between calls to rl_callback_read_char (e.g., the state of any active
-incremental searches).  This is intended to be used by applications that
-wish to perform their own signal handling; Readline&rsquo;s internal signal handler
-calls this when appropriate.
+incremental searches).
+This is intended to be used by applications that
+wish to perform their own signal handling;
+Readline&rsquo;s internal signal handler calls this when appropriate.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcallback_005fhandler_005fremove"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_callback_handler_remove</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fcallback_005fhandler_005fremove"> &para;</a></span></dt>
 <dd><p>Restore the terminal to its initial state and remove the line handler.
 You may call this function from within a callback as well as independently.
-If the <var class="var">lhandler</var> installed by <code class="code">rl_callback_handler_install</code>
-does not exit the program, either this function or the function referred
-to by the value of <code class="code">rl_deprep_term_function</code> should be called before
-the program exits to reset the terminal settings.
+If the <var class="var">line_handler</var> installed by <code class="code">rl_callback_handler_install</code>
+does not exit the program, your program should call
+either this function or the function referred
+to by the value of <code class="code">rl_deprep_term_function</code>
+before the program exits to reset the terminal settings.
 </p></dd></dl>
 
 <hr>
@@ -3967,10 +4060,11 @@ Next: <a href="#Alternate-Interface-Example" accesskey="n" rel="next">Alternate 
 <h4 class="subsection" id="A-Readline-Example-1"><span>2.4.13 A Readline Example<a class="copiable-link" href="#A-Readline-Example-1"> &para;</a></span></h4>
 
 <p>Here is a function which changes lowercase characters to their uppercase
-equivalents, and uppercase characters to lowercase.  If
-this function was bound to &lsquo;<samp class="samp">M-c</samp>&rsquo;, then typing &lsquo;<samp class="samp">M-c</samp>&rsquo; would
-change the case of the character under point.  Typing &lsquo;<samp class="samp">M-1 0 M-c</samp>&rsquo;
-would change the case of the following 10 characters, leaving the cursor on
+equivalents, and uppercase characters to lowercase.
+If this function was bound to &lsquo;<samp class="samp">M-c</samp>&rsquo;, then typing &lsquo;<samp class="samp">M-c</samp>&rsquo; would
+change the case of the character under point.
+Typing &lsquo;<samp class="samp">M-1 0 M-c</samp>&rsquo; would change the case
+of the following 10 characters, leaving the cursor on
 the last character changed.
 </p>
 <div class="example">
@@ -3979,7 +4073,7 @@ int
 invert_case_line (count, key)
      int count, key;
 {
-  register int start, end, i;
+  int start, end, i;
 
   start = rl_point;
 
@@ -4169,20 +4263,22 @@ Next: <a href="#Custom-Completers" accesskey="n" rel="next">Custom Completers</a
 <h3 class="section" id="Readline-Signal-Handling-1"><span>2.5 Readline Signal Handling<a class="copiable-link" href="#Readline-Signal-Handling-1"> &para;</a></span></h3>
 
 <p>Signals are asynchronous events sent to a process by the Unix kernel,
-sometimes on behalf of another process.  They are intended to indicate
-exceptional events, like a user pressing the terminal&rsquo;s interrupt key,
-or a network connection being broken.  There is a class of signals that can
-be sent to the process currently reading input from the keyboard.  Since
-Readline changes the terminal attributes when it is called, it needs to
-perform special processing when such a signal is received in order to
-restore the terminal to a sane state, or provide application writers with
-functions to do so manually. 
+sometimes on behalf of another process.
+They are intended to indicate exceptional events,
+like a user pressing the terminal&rsquo;s interrupt key,
+or a network connection being broken.
+There is a class of signals that can
+be sent to the process currently reading input from the keyboard.
+Since Readline changes the terminal attributes when it is called, it needs
+to perform special processing when such a signal is received in order to
+restore the terminal to a sane state, or provide applications using
+Readline with functions to do so manually. 
 </p>
 <p>Readline contains an internal signal handler that is installed for a
 number of signals (<code class="code">SIGINT</code>, <code class="code">SIGQUIT</code>, <code class="code">SIGTERM</code>,
 <code class="code">SIGHUP</code>, 
 <code class="code">SIGALRM</code>, <code class="code">SIGTSTP</code>, <code class="code">SIGTTIN</code>, and <code class="code">SIGTTOU</code>).
-When one of these signals is received, the signal handler
+When Readline receives one of these signals, the signal handler
 will reset the terminal attributes to those that were in effect before
 <code class="code">readline()</code> was called, reset the signal handling to what it was
 before <code class="code">readline()</code> was called, and resend the signal to the calling
@@ -4195,22 +4291,24 @@ aborted (see the description of <code class="code">rl_free_line_state()</code> b
 </p>
 <p>There is an additional Readline signal handler, for <code class="code">SIGWINCH</code>, which
 the kernel sends to a process whenever the terminal&rsquo;s size changes (for
-example, if a user resizes an <code class="code">xterm</code>).  The Readline <code class="code">SIGWINCH</code>
-handler updates Readline&rsquo;s internal screen size information, and then calls
-any <code class="code">SIGWINCH</code> signal handler the calling application has installed. 
+example, if a user resizes an <code class="code">xterm</code>).
+The Readline <code class="code">SIGWINCH</code> handler updates
+Readline&rsquo;s internal screen size information, and then calls any
+<code class="code">SIGWINCH</code> signal handler the calling application has installed. 
 Readline calls the application&rsquo;s <code class="code">SIGWINCH</code> signal handler without
-resetting the terminal to its original state.  If the application&rsquo;s signal
-handler does more than update its idea of the terminal size and return (for
-example, a <code class="code">longjmp</code> back to a main processing loop), it <em class="emph">must</em>
-call <code class="code">rl_cleanup_after_signal()</code> (described below), to restore the
-terminal state.
+resetting the terminal to its original state.
+If the application&rsquo;s signal
+handler does more than update its idea of the terminal size and return
+(for example, a <code class="code">longjmp</code> back to a main processing loop),
+it <em class="emph">must</em> call <code class="code">rl_cleanup_after_signal()</code> (described below),
+to restore the terminal state.
 </p>
 <p>When an application is using the callback interface
 (see <a class="pxref" href="#Alternate-Interface">Alternate Interface</a>), Readline installs signal handlers only for
-the duration of the call to <code class="code">rl_callback_read_char</code>.  Applications
-using the callback interface should be prepared to clean up Readline&rsquo;s
-state if they wish to handle the signal before the line handler completes
-and restores the terminal state.
+the duration of the call to <code class="code">rl_callback_read_char</code>.
+Applications using the callback interface should be prepared
+to clean up Readline&rsquo;s state if they wish to handle the signal
+before the line handler completes and restores the terminal state.
 </p>
 <p>If an application using the callback interface wishes to have Readline
 install its signal handlers at the time the application calls
@@ -4221,18 +4319,21 @@ This allows an application to defer all of the handling of the signals
 Readline catches to Readline.
 Applications should use this variable with care; it can result in Readline
 catching signals and not acting on them (or allowing the application to react
-to them) until the application calls <code class="code">rl_callback_read_char</code>.  This
-can result in an application becoming less responsive to keyboard signals
-like SIGINT.
+to them) until the application calls <code class="code">rl_callback_read_char</code>.
+This can result in an application becoming less responsive to keyboard
+signals like SIGINT.
 If an application does not want or need to perform any signal handling, or
-does not need to do any processing between calls to <code class="code">rl_callback_read_char</code>,
-setting this variable may be desirable.
+does not need to do any processing
+between calls to <code class="code">rl_callback_read_char</code>,
+setting this variable may be appropriate.
 </p>
 <p>Readline provides two variables that allow application writers to
 control whether or not it will catch certain signals and act on them
-when they are received.  It is important that applications change the
-values of these variables only when calling <code class="code">readline()</code>, not in
-a signal handler, so Readline&rsquo;s internal signal state is not corrupted.
+when they are received.
+It is important that applications change the
+values of these variables only when calling <code class="code">readline()</code>,
+not in a signal handler, so Readline&rsquo;s internal signal state
+is not corrupted.
 </p>
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcatch_005fsignals"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_catch_signals</strong><a class="copiable-link" href="#index-rl_005fcatch_005fsignals"> &para;</a></span></dt>
@@ -4266,7 +4367,7 @@ it should set this variable to a non-zero value.
 <dd><p>If this variable is set to a non-zero value,
 and Readline is handling <code class="code">SIGWINCH</code>, Readline will modify the
 <var class="var">LINES</var> and <var class="var">COLUMNS</var> environment variables upon receipt of a
-<code class="code">SIGWINCH</code>
+<code class="code">SIGWINCH</code>.
 </p>
 <p>The default value of <code class="code">rl_change_environment</code> is 1.
 </p></dd></dl>
@@ -4295,10 +4396,10 @@ all signals, depending on the values of <code class="code">rl_catch_signals</cod
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005ffree_005fline_005fstate"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_free_line_state</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005ffree_005fline_005fstate"> &para;</a></span></dt>
 <dd><p>This will free any partial state associated with the current input line
 (undo information, any partial history entry, any partially-entered
-keyboard macro, and any partially-entered numeric argument).  This
-should be called before <code class="code">rl_cleanup_after_signal()</code>.  The
-Readline signal handler for <code class="code">SIGINT</code> calls this to abort the
-current input line.
+keyboard macro, and any partially-entered numeric argument).
+This should be called before <code class="code">rl_cleanup_after_signal()</code>.
+The Readline signal handler for <code class="code">SIGINT</code> calls this to abort
+the current input line.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -4311,20 +4412,22 @@ handlers, depending on the values of <code class="code">rl_catch_signals</code> 
 <p>If an application wants to force Readline to handle any signals that
 have arrived while it has been executing, <code class="code">rl_check_signals()</code>
 will call Readline&rsquo;s internal signal handler if there are any pending
-signals.  This is primarily intended for those applications that use
+signals.
+This is primarily intended for those applications that use
 a custom <code class="code">rl_getc_function</code> (see <a class="pxref" href="#Readline-Variables">Readline Variables</a>) and wish
 to handle signals received while waiting for input.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcheck_005fsignals"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_check_signals</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-rl_005fcheck_005fsignals"> &para;</a></span></dt>
-<dd><p>If there are any pending signals, call Readline&rsquo;s internal signal handling
-functions to process them. <code class="code">rl_pending_signal()</code> can be used independently
+<dd><p>If there are any pending signals, call Readline&rsquo;s internal signal
+handling functions to process them.
+<code class="code">rl_pending_signal()</code> can be used independently
 to determine whether or not there are any pending signals.
 </p></dd></dl>
 
-<p>If an application does not wish Readline to catch <code class="code">SIGWINCH</code>, it may
-call <code class="code">rl_resize_terminal()</code> or <code class="code">rl_set_screen_size()</code> to force
-Readline to update its idea of the terminal size when it receives
+<p>If an application does not wish Readline to catch <code class="code">SIGWINCH</code>,
+it may call <code class="code">rl_resize_terminal()</code> or <code class="code">rl_set_screen_size()</code> 
+to force Readline to update its idea of the terminal size when it receives
 a <code class="code">SIGWINCH</code>.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
@@ -4343,8 +4446,9 @@ function with <var class="var">sig</var> set to <code class="code">SIGINT</code>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fset_005fscreen_005fsize"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">rl_set_screen_size</strong> <code class="def-code-arguments">(int rows, int cols)</code><a class="copiable-link" href="#index-rl_005fset_005fscreen_005fsize"> &para;</a></span></dt>
 <dd><p>Set Readline&rsquo;s idea of the terminal size to <var class="var">rows</var> rows and
-<var class="var">cols</var> columns.  If either <var class="var">rows</var> or <var class="var">columns</var> is less than
-or equal to 0, Readline&rsquo;s idea of that terminal dimension is unchanged.
+<var class="var">cols</var> columns.
+If either <var class="var">rows</var> or <var class="var">columns</var> is less than or equal to 0,
+Readline doesn&rsquo;t change that terminal dimension.
 This is intended to tell Readline the physical dimensions of the terminal,
 and is used internally to calculate the maximum number of characters that
 may appear on a single line and on the screen.
@@ -4392,7 +4496,8 @@ Previous: <a href="#Readline-Signal-Handling" accesskey="p" rel="prev">Readline 
 <a class="index-entry-id" id="index-application_002dspecific-completion-functions"></a>
 
 <p>Typically, a program that reads commands from the user has a way of
-disambiguating commands and data.  If your program is one of these, then
+disambiguating commands and data.
+If your program is one of these, then
 it can provide completion for commands, data, or both.
 The following sections describe how your program and Readline
 cooperate to provide this service.
@@ -4413,20 +4518,24 @@ Next: <a href="#Completion-Functions" accesskey="n" rel="next">Completion Functi
 <h4 class="subsection" id="How-Completing-Works-1"><span>2.6.1 How Completing Works<a class="copiable-link" href="#How-Completing-Works-1"> &para;</a></span></h4>
 
 <p>In order to complete some text, the full list of possible completions
-must be available.  That is, it is not possible to accurately
+must be available.
+That is, it is not possible to accurately
 expand a partial word without knowing all of the possible words
-which make sense in that context.  The Readline library provides
+which make sense in that context.
+The Readline library provides
 the user interface to completion, and two of the most common
-completion functions:  filename and username.  For completing other types
-of text, you must write your own completion function.  This section
+completion functions:  filename and username.
+For completing other types
+of text, you must write your own completion function.
+This section
 describes exactly what such functions must do, and provides an example.
 </p>
 <p>There are three major functions used to perform completion:
 </p>
 <ol class="enumerate">
-<li> The user-interface function <code class="code">rl_complete()</code>.  This function is
-called with the same arguments as other bindable Readline functions:
-<var class="var">count</var> and <var class="var">invoking_key</var>.
+<li> The user-interface function <code class="code">rl_complete()</code>.
+This function is called with the same arguments as other bindable
+Readline functions: <var class="var">count</var> and <var class="var">invoking_key</var>.
 It isolates the word to be completed and calls
 <code class="code">rl_completion_matches()</code> to generate a list of possible completions.
 It then either lists the possible completions, inserts the possible
@@ -4440,16 +4549,19 @@ The caller should place the address of its generator function in
 <code class="code">rl_completion_entry_function</code>.
 
 </li><li> The generator function is called repeatedly from
-<code class="code">rl_completion_matches()</code>, returning a string each time.  The
-arguments to the generator function are <var class="var">text</var> and <var class="var">state</var>.
-<var class="var">text</var> is the partial word to be completed.  <var class="var">state</var> is zero the
-first time the function is called, allowing the generator to perform
-any necessary initialization, and a positive non-zero integer for
-each subsequent call.  The generator function returns
+<code class="code">rl_completion_matches()</code>, returning a string each time.
+The arguments to the generator function are <var class="var">text</var> and <var class="var">state</var>.
+<var class="var">text</var> is the partial word to be completed.
+<var class="var">state</var> is zero the first time the function is called,
+allowing the generator to perform any necessary initialization,
+and a positive integer for each subsequent call.
+The generator function returns
 <code class="code">(char *)NULL</code> to inform <code class="code">rl_completion_matches()</code> that there are
-no more possibilities left.  Usually the generator function computes the
+no more possibilities left.
+Usually the generator function computes the
 list of possible completions when <var class="var">state</var> is zero, and returns them
-one at a time on subsequent calls.  Each string the generator function
+one at a time on subsequent calls.
+Each string the generator function
 returns as a match must be allocated with <code class="code">malloc()</code>; Readline
 frees the strings when it has finished with them.
 Such a generator function is referred to as an
@@ -4459,9 +4571,10 @@ Such a generator function is referred to as an
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcomplete"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_complete</strong> <code class="def-code-arguments">(int ignore, int invoking_key)</code><a class="copiable-link" href="#index-rl_005fcomplete"> &para;</a></span></dt>
-<dd><p>Complete the word at or before point.  You have supplied the function
-that does the initial simple matching selection algorithm (see
-<code class="code">rl_completion_matches()</code>).  The default is to do filename completion.
+<dd><p>Complete the word at or before point.
+You have supplied the function that does the initial simple matching
+selection algorithm (see <code class="code">rl_completion_matches()</code>).
+The default is to do filename completion.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -4469,11 +4582,11 @@ that does the initial simple matching selection algorithm (see
 <dd><p>This is a pointer to the generator function for
 <code class="code">rl_completion_matches()</code>.
 If the value of <code class="code">rl_completion_entry_function</code> is
-<code class="code">NULL</code> then the default filename generator
-function, <code class="code">rl_filename_completion_function()</code>, is used.
+<code class="code">NULL</code> then Readline uses the default filename generator
+function, <code class="code">rl_filename_completion_function()</code>.
 An <em class="dfn">application-specific completion function</em> is a function whose
 address is assigned to <code class="code">rl_completion_entry_function</code> and whose
-return values are used to  generate possible completions.
+return values are used to generate possible completions.
 </p></dd></dl>
 
 <hr>
@@ -4490,37 +4603,40 @@ Readline.
 </p>
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcomplete_005finternal"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_complete_internal</strong> <code class="def-code-arguments">(int what_to_do)</code><a class="copiable-link" href="#index-rl_005fcomplete_005finternal"> &para;</a></span></dt>
-<dd><p>Complete the word at or before point.  <var class="var">what_to_do</var> says what to do
-with the completion.  A value of &lsquo;<samp class="samp">?</samp>&rsquo; means list the possible
-completions.  &lsquo;<samp class="samp">TAB</samp>&rsquo; means do standard completion.  &lsquo;<samp class="samp">*</samp>&rsquo; means
-insert all of the possible completions.  &lsquo;<samp class="samp">!</samp>&rsquo; means to display
-all of the possible completions, if there is more than one, as well as
-performing partial completion.  &lsquo;<samp class="samp">@</samp>&rsquo; is similar to &lsquo;<samp class="samp">!</samp>&rsquo;, but
-possible completions are not listed if the possible completions share
-a common prefix.
+<dd><p>Complete the word at or before point.
+<var class="var">what_to_do</var> says what to do with the completion.
+A value of &lsquo;<samp class="samp">?</samp>&rsquo; means list the possible completions.
+&lsquo;<samp class="samp">TAB</samp>&rsquo; means do standard completion.
+&lsquo;<samp class="samp">*</samp>&rsquo; means insert all of the possible completions.
+&lsquo;<samp class="samp">!</samp>&rsquo; means to display all of the possible completions,
+if there is more than one, as well as performing partial completion.
+&lsquo;<samp class="samp">@</samp>&rsquo; is similar to &lsquo;<samp class="samp">!</samp>&rsquo;, but does not list possible completions
+if the possible completions share a common prefix.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcomplete-1"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_complete</strong> <code class="def-code-arguments">(int ignore, int invoking_key)</code><a class="copiable-link" href="#index-rl_005fcomplete-1"> &para;</a></span></dt>
-<dd><p>Complete the word at or before point.  You have supplied the function
-that does the initial simple matching selection algorithm (see
-<code class="code">rl_completion_matches()</code> and <code class="code">rl_completion_entry_function</code>).
-The default is to do filename
-completion.  This calls <code class="code">rl_complete_internal()</code> with an
+<dd><p>Complete the word at or before point.
+You have supplied the function that does the initial simple
+matching selection algorithm (see <code class="code">rl_completion_matches()</code> and
+<code class="code">rl_completion_entry_function</code>).
+The default is to do filename completion.
+This calls <code class="code">rl_complete_internal()</code> with an
 argument depending on <var class="var">invoking_key</var>.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fpossible_005fcompletions"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_possible_completions</strong> <code class="def-code-arguments">(int count, int invoking_key)</code><a class="copiable-link" href="#index-rl_005fpossible_005fcompletions"> &para;</a></span></dt>
-<dd><p>List the possible completions.  See description of <code class="code">rl_complete
-()</code>.  This calls <code class="code">rl_complete_internal()</code> with an argument of
-&lsquo;<samp class="samp">?</samp>&rsquo;.
+<dd><p>List the possible completions.
+See description of <code class="code">rl_complete()</code>.
+This calls <code class="code">rl_complete_internal()</code> with an argument of &lsquo;<samp class="samp">?</samp>&rsquo;.
 </p></dd></dl>
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005finsert_005fcompletions"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">rl_insert_completions</strong> <code class="def-code-arguments">(int count, int invoking_key)</code><a class="copiable-link" href="#index-rl_005finsert_005fcompletions"> &para;</a></span></dt>
 <dd><p>Insert the list of possible completions into the line, deleting the
-partially-completed word.  See description of <code class="code">rl_complete()</code>.
+partially-completed word.
+See description of <code class="code">rl_complete()</code>.
 This calls <code class="code">rl_complete_internal()</code> with an argument of &lsquo;<samp class="samp">*</samp>&rsquo;.
 </p></dd></dl>
 
@@ -4536,16 +4652,17 @@ the same interface as <code class="code">rl_complete()</code>.
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fcompletion_005fmatches"><span class="category-def">Function: </span><span><code class="def-type">char **</code> <strong class="def-name">rl_completion_matches</strong> <code class="def-code-arguments">(const char *text, rl_compentry_func_t *entry_func)</code><a class="copiable-link" href="#index-rl_005fcompletion_005fmatches"> &para;</a></span></dt>
-<dd><p>Returns an array of strings which is a list of completions for
-<var class="var">text</var>.  If there are no completions, returns <code class="code">NULL</code>.
+<dd><p>Returns an array of strings which is a list of completions for <var class="var">text</var>.
+If there are no completions, returns <code class="code">NULL</code>.
 The first entry in the returned array is the substitution for <var class="var">text</var>.
-The remaining entries are the possible completions.  The array is
-terminated with a <code class="code">NULL</code> pointer.
+The remaining entries are the possible completions.
+The array is terminated with a <code class="code">NULL</code> pointer.
 </p>
-<p><var class="var">entry_func</var> is a function of two args, and returns a
-<code class="code">char *</code>.  The first argument is <var class="var">text</var>.  The second is a
-state argument; it is zero on the first call, and non-zero on subsequent
-calls.  <var class="var">entry_func</var> returns a <code class="code">NULL</code>  pointer to the caller
+<p><var class="var">entry_func</var> is a function of two args, and returns a <code class="code">char *</code>.
+The first argument is <var class="var">text</var>.
+The second is a state argument;
+it is zero on the first call, and non-zero on subsequent calls.
+<var class="var">entry_func</var> returns a <code class="code">NULL</code> pointer to the caller
 when there are no more matches.
 </p></dd></dl>
 
@@ -4560,10 +4677,11 @@ Readline functions).
 
 <dl class="first-deftypefn first-deftypefun-alias-first-deftypefn">
 <dt class="deftypefn deftypefun-alias-deftypefn" id="index-rl_005fusername_005fcompletion_005ffunction"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">rl_username_completion_function</strong> <code class="def-code-arguments">(const char *text, int state)</code><a class="copiable-link" href="#index-rl_005fusername_005fcompletion_005ffunction"> &para;</a></span></dt>
-<dd><p>A completion generator for usernames.  <var class="var">text</var> contains a partial
-username preceded by a random character (usually &lsquo;<samp class="samp">~</samp>&rsquo;).  As with all
-completion generators, <var class="var">state</var> is zero on the first call and non-zero
-for subsequent calls.
+<dd><p>A completion generator for usernames.
+<var class="var">text</var> contains a partial username preceded by a
+random character (usually &lsquo;<samp class="samp">~</samp>&rsquo;).
+As with all completion generators,
+<var class="var">state</var> is zero on the first call and non-zero for subsequent calls.
 </p></dd></dl>
 
 <hr>
@@ -4590,8 +4708,8 @@ The function is called with <var class="var">text</var>, <var class="var">start<
 the boundaries of <var class="var">text</var>, which is a character string.
 If this function exists and returns <code class="code">NULL</code>, or if this variable is
 set to <code class="code">NULL</code>, then <code class="code">rl_complete()</code> will call the value of
-<code class="code">rl_completion_entry_function</code> to generate matches, otherwise the
-array of strings returned will be used.
+<code class="code">rl_completion_entry_function</code> to generate matches, otherwise
+completion will use the array of strings this function returns.
 If this function sets the <code class="code">rl_attempted_completion_over</code>
 variable to a non-zero value, Readline will not perform its default
 completion even if this function returns no matches.
@@ -4600,59 +4718,70 @@ completion even if this function returns no matches.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fquoting_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_quote_func_t *</code> <strong class="def-name">rl_filename_quoting_function</strong><a class="copiable-link" href="#index-rl_005ffilename_005fquoting_005ffunction"> &para;</a></span></dt>
 <dd><p>A pointer to a function that will quote a filename in an
-application-specific fashion.  This is called if filename completion is being
-attempted and one of the characters in <code class="code">rl_filename_quote_characters</code>
-appears in a completed filename.  The function is called with
-<var class="var">text</var>, <var class="var">match_type</var>, and <var class="var">quote_pointer</var>.  The <var class="var">text</var>
-is the filename to be quoted.  The <var class="var">match_type</var> is either
-<code class="code">SINGLE_MATCH</code>, if there is only one completion match, or
-<code class="code">MULT_MATCH</code>.  Some functions use this to decide whether or not to
-insert a closing quote character.  The <var class="var">quote_pointer</var> is a pointer
-to any opening quote character the user typed.  Some functions choose
-to reset this character.
+application-specific fashion.
+Readline calls this function during filename completion
+if one of the characters in <code class="code">rl_filename_quote_characters</code>
+appears in a completed filename.
+The function is called with
+<var class="var">text</var>, <var class="var">match_type</var>, and <var class="var">quote_pointer</var>.
+The <var class="var">text</var> is the filename to be quoted.
+The <var class="var">match_type</var> is either <code class="code">SINGLE_MATCH</code>,
+if there is only one completion match, or <code class="code">MULT_MATCH</code>.
+Some functions use this to decide whether or not to
+insert a closing quote character.
+The <var class="var">quote_pointer</var> is a pointer
+to any opening quote character the user typed.
+Some functions choose to reset this character if they decide to quote
+the filename in a different style.
+It&rsquo;s preferable to preserve the user&rsquo;s quoting as much as possible &ndash;
+it&rsquo;s less disruptive.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fdequoting_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_dequote_func_t *</code> <strong class="def-name">rl_filename_dequoting_function</strong><a class="copiable-link" href="#index-rl_005ffilename_005fdequoting_005ffunction"> &para;</a></span></dt>
 <dd><p>A pointer to a function that will remove application-specific quoting
-characters from a filename before completion is attempted, so those
-characters do not interfere with matching the text against names in
-the filesystem.  It is called with <var class="var">text</var>, the text of the word
+characters from a filename before attempting completion,
+so those characters do not interfere with matching the text against
+names in the filesystem.
+It is called with <var class="var">text</var>, the text of the word
 to be dequoted, and <var class="var">quote_char</var>, which is the quoting character 
-that delimits the filename (usually &lsquo;<samp class="samp">'</samp>&rsquo; or &lsquo;<samp class="samp">&quot;</samp>&rsquo;).  If
-<var class="var">quote_char</var> is zero, the filename was not in an embedded string.
+that delimits the filename (usually &lsquo;<samp class="samp">'</samp>&rsquo; or &lsquo;<samp class="samp">&quot;</samp>&rsquo;).
+If <var class="var">quote_char</var> is zero, the filename was not in a quoted string.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fchar_005fis_005fquoted_005fp"><span class="category-def">Variable: </span><span><code class="def-type">rl_linebuf_func_t *</code> <strong class="def-name">rl_char_is_quoted_p</strong><a class="copiable-link" href="#index-rl_005fchar_005fis_005fquoted_005fp"> &para;</a></span></dt>
 <dd><p>A pointer to a function to call that determines whether or not a specific
 character in the line buffer is quoted, according to whatever quoting
-mechanism the program calling Readline uses.  The function is called with
-two arguments: <var class="var">text</var>, the text of the line, and <var class="var">index</var>, the
-index of the character in the line.  It is used to decide whether a
-character found in <code class="code">rl_completer_word_break_characters</code> should be
+mechanism the application uses.
+The function is called with two arguments:
+<var class="var">text</var>, the text of the line,
+and <var class="var">index</var>, the index of the character in the line.
+It is used to decide whether a character found in
+<code class="code">rl_completer_word_break_characters</code> should be
 used to break words for the completer.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fignore_005fsome_005fcompletions_005ffunction"><span class="category-def">Variable: </span><span><code class="def-type">rl_compignore_func_t *</code> <strong class="def-name">rl_ignore_some_completions_function</strong><a class="copiable-link" href="#index-rl_005fignore_005fsome_005fcompletions_005ffunction"> &para;</a></span></dt>
-<dd><p>This function, if defined, is called by the completer when real filename
+<dd><p>Readline calls this function, if defined, when filename
 completion is done, after all the matching names have been generated.
 It is passed a <code class="code">NULL</code> terminated array of matches.
-The first element (<code class="code">matches[0]</code>) is the
-maximal substring common to all matches. This function can
-re-arrange the list of matches as required, but each element deleted
-from the array must be freed.
+The first element (<code class="code">matches[0]</code>) is the maximal substring
+common to all matches.
+This function can re-arrange the list of matches as required, but
+must free each element it deletes from the array.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fdirectory_005fcompletion_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_icppfunc_t *</code> <strong class="def-name">rl_directory_completion_hook</strong><a class="copiable-link" href="#index-rl_005fdirectory_005fcompletion_005fhook"> &para;</a></span></dt>
 <dd><p>This function, if defined, is allowed to modify the directory portion
-of filenames Readline completes.
+of filenames during completion.
 It could be used to expand symbolic links or shell variables in pathnames.
 It is called with the address of a string (the current directory name) as an
 argument, and may modify that string.
-If the string is replaced with a new string, the old value should be freed.
+If the function replaces the string with a new string, it
+should free the old value.
 Any modified directory name should have a trailing slash.
 The modified value will be used as part of the completion, replacing
 the directory portion of the pathname the user typed.
@@ -4668,11 +4797,14 @@ The function should not modify the directory argument if it returns 0.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fdirectory_005frewrite_005fhook_003b"><span class="category-def">Variable: </span><span><code class="def-type">rl_icppfunc_t *</code> <strong class="def-name">rl_directory_rewrite_hook;</strong><a class="copiable-link" href="#index-rl_005fdirectory_005frewrite_005fhook_003b"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function to call when completing
-a directory name.  This function takes the address of the directory name
-to be modified as an argument.  Unlike <code class="code">rl_directory_completion_hook</code>,
-it only modifies the directory name used in <code class="code">opendir</code>, not what is
-displayed when the possible completions are printed or inserted.  It is
-called before rl_directory_completion_hook.
+a directory name.
+This function takes the address of the directory name
+to be modified as an argument.
+Unlike <code class="code">rl_directory_completion_hook</code>,
+it only modifies the directory name used in <code class="code">opendir()</code>,
+not what Readline displays when it prints or inserts
+the possible completions.
+Readline calls this before rl_directory_completion_hook.
 At the least, even if no other expansion is performed, this function should
 remove any quote characters from the directory name, because its result will
 be passed directly to <code class="code">opendir()</code>.
@@ -4686,8 +4818,9 @@ The function should not modify the directory argument if it returns 0.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fstat_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_icppfunc_t *</code> <strong class="def-name">rl_filename_stat_hook</strong><a class="copiable-link" href="#index-rl_005ffilename_005fstat_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function for the completer to
 call before deciding which character to append to a completed name.
-This function modifies its filename name argument, and the modified value
-is passed to <code class="code">stat()</code> to determine the file&rsquo;s type and characteristics.
+This function modifies its filename name argument, and Readline passes
+the modified value to <code class="code">stat()</code>
+to determine the file&rsquo;s type and characteristics.
 This function does not need to remove quote characters from the filename.
 </p>
 <p>The stat hook returns an integer that should be non-zero if
@@ -4697,29 +4830,37 @@ The function should not modify the directory argument if it returns 0.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005frewrite_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_dequote_func_t *</code> <strong class="def-name">rl_filename_rewrite_hook</strong><a class="copiable-link" href="#index-rl_005ffilename_005frewrite_005fhook"> &para;</a></span></dt>
-<dd><p>If non-zero, this is the address of a function called when reading
+<dd><p>If non-zero, this is the address of a function
+for Readline to call when reading
 directory entries from the filesystem for completion and comparing
-them to the filename portion of the partial word to be completed
-(after its potential modification by <code class="code">rl_completion_rewrite_hook</code>).
-The function should
-perform any necessary application or system-specific conversion on
-the filename, such as converting between character sets or converting
-from a filesystem format to a character input format.
-The function takes two arguments: <var class="var">fname</var>, the filename to be converted,
+them to the filename portion of the partial word being completed.
+It modifies the filesystem entries,
+as opposed to <code class="code">rl_completion_rewrite_hook</code>,
+which modifies the word being completed.
+The function takes two arguments:
+<var class="var">fname</var>, the filename to be converted,
 and <var class="var">fnlen</var>, its length in bytes.
 It must either return its first argument (if no conversion takes place)
-or the converted filename in newly-allocated memory.  The converted
-form is used to compare against the word to be completed, and, if it
-matches, is added to the list of matches.  Readline will free the
-allocated string.
+or the converted filename in newly-allocated memory.
+The function should perform any necessary application or system-specific
+conversion on the filename, such as converting between character sets
+or converting from a filesystem format to a character input format.
+Readline compares the converted form against the word to be completed,
+and, if it matches, adds it to the list of matches.
+Readline will free the allocated string.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005frewrite_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_dequote_func_t *</code> <strong class="def-name">rl_completion_rewrite_hook</strong><a class="copiable-link" href="#index-rl_005fcompletion_005frewrite_005fhook"> &para;</a></span></dt>
-<dd><p>If non-zero, this is the address of a function to call before
+<dd><p>If non-zero, this is the address of a function
+for Readline to call before
 comparing the filename portion of a word to be completed with directory
 entries from the filesystem.
-The function takes two arguments: <var class="var">fname</var>, the filename to be converted,
+It modifies the word being completed,
+as opposed to <code class="code">rl_filename_rewrite_hook</code>,
+which modifies filesystem entries.
+The function takes two arguments:
+<var class="var">fname</var>, the word to be converted,
 after any <code class="code">rl_filename_dequoting_function</code> has been applied,
 and <var class="var">fnlen</var>, its length in bytes.
 It must either return its first argument (if no conversion takes place)
@@ -4728,8 +4869,8 @@ The function should perform any necessary application or system-specific
 conversion on the filename, such as converting between character sets or
 converting from a character input format to some other format.
 Readline compares the converted form against directory entries, after
-their potential modification by <code class="code">rl_filename_rewrite_hook</code>, and adds
-any matches to the list of matches.
+their potential modification by <code class="code">rl_filename_rewrite_hook</code>,
+and adds any matches to the list of matches.
 Readline will free the allocated string.
 </p></dd></dl>
 
@@ -4737,7 +4878,7 @@ Readline will free the allocated string.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fdisplay_005fmatches_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_compdisp_func_t *</code> <strong class="def-name">rl_completion_display_matches_hook</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fdisplay_005fmatches_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, then this is the address of a function to call when
 completing a word would normally display the list of possible matches.
-This function is called in lieu of Readline displaying the list.
+Readline calls this function instead of displaying the list itself.
 It takes three arguments:
 (<code class="code">char **</code><var class="var">matches</var>, <code class="code">int</code> <var class="var">num_matches</var>, <code class="code">int</code> <var class="var">max_length</var>)
 where <var class="var">matches</var> is the array of matching strings,
@@ -4751,7 +4892,8 @@ You may call that function from this hook.
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fbasic_005fword_005fbreak_005fcharacters"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_basic_word_break_characters</strong><a class="copiable-link" href="#index-rl_005fbasic_005fword_005fbreak_005fcharacters"> &para;</a></span></dt>
 <dd><p>The basic list of characters that signal a break between words for the
-completer routine.  The default value of this variable is the characters
+completer routine.
+The default value of this variable is the characters
 which break words for completion in Bash:
 <code class="code">&quot; \t\n\&quot;\\'`@$&gt;&lt;=;|&amp;{(&quot;</code>.
 </p></dd></dl>
@@ -4759,37 +4901,44 @@ which break words for completion in Bash:
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fbasic_005fquote_005fcharacters"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_basic_quote_characters</strong><a class="copiable-link" href="#index-rl_005fbasic_005fquote_005fcharacters"> &para;</a></span></dt>
 <dd><p>A list of quote characters which can cause a word break.
+The default value includes single and double quotes.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompleter_005fword_005fbreak_005fcharacters"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_completer_word_break_characters</strong><a class="copiable-link" href="#index-rl_005fcompleter_005fword_005fbreak_005fcharacters"> &para;</a></span></dt>
 <dd><p>The list of characters that signal a break between words for
-<code class="code">rl_complete_internal()</code>.  The default list is the value of
+<code class="code">rl_complete_internal()</code>.
+These characters determine how Readline decides what to complete.
+The default list is the value of
 <code class="code">rl_basic_word_break_characters</code>.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fword_005fbreak_005fhook"><span class="category-def">Variable: </span><span><code class="def-type">rl_cpvfunc_t *</code> <strong class="def-name">rl_completion_word_break_hook</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fword_005fbreak_005fhook"> &para;</a></span></dt>
 <dd><p>If non-zero, this is the address of a function to call when Readline is
-deciding where to separate words for word completion.  It should return
-a character string like <code class="code">rl_completer_word_break_characters</code> to be
-used to perform the current completion.  The function may choose to set
-<code class="code">rl_completer_word_break_characters</code> itself.  If the function
-returns <code class="code">NULL</code>, <code class="code">rl_completer_word_break_characters</code> is used.
+deciding where to separate words for word completion.
+It should return a character string like
+<code class="code">rl_completer_word_break_characters</code> to be
+used to perform the current completion.
+The function may choose to set
+<code class="code">rl_completer_word_break_characters</code> itself.
+If the function returns <code class="code">NULL</code>, Readline uses
+<code class="code">rl_completer_word_break_characters</code>.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompleter_005fquote_005fcharacters"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_completer_quote_characters</strong><a class="copiable-link" href="#index-rl_005fcompleter_005fquote_005fcharacters"> &para;</a></span></dt>
 <dd><p>A list of characters which can be used to quote a substring of the line.
-Completion occurs on the entire substring, and within the substring
+Completion occurs on the entire substring, and within the substring,
 <code class="code">rl_completer_word_break_characters</code> are treated as any other character,
 unless they also appear within this list.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fquote_005fcharacters"><span class="category-def">Variable: </span><span><code class="def-type">const char *</code> <strong class="def-name">rl_filename_quote_characters</strong><a class="copiable-link" href="#index-rl_005ffilename_005fquote_005fcharacters"> &para;</a></span></dt>
-<dd><p>A list of characters that cause a filename to be quoted by the completer
-when they appear in a completed filename.  The default is the null string.
+<dd><p>A list of characters that cause Readline to quote a filename
+when they appear in a completed filename.
+The default is the null string.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -4803,48 +4952,44 @@ shell variables and hostnames.
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fquery_005fitems"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_query_items</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fquery_005fitems"> &para;</a></span></dt>
-<dd><p>Up to this many items will be displayed in response to a
-possible-completions call.  After that, Readline asks the user for
-confirmation before displaying them.
-The default value is 100.  A negative value 
+<dd><p>This determines the maximum number of items
+that possible-completions will display unconditionally.
+If there are more possible completions than this,
+Readline asks the user for confirmation before displaying them.
+The default value is 100.
+A negative value 
 indicates that Readline should never ask for confirmation.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fappend_005fcharacter"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_append_character</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fappend_005fcharacter"> &para;</a></span></dt>
 <dd><p>When a single completion alternative matches at the end of the command
-line, this character is appended to the inserted completion text.  The
-default is a space character (&lsquo;<samp class="samp"> </samp>&rsquo;).  Setting this to the null
+line, Readline appends this character to the inserted completion text.
+The default is a space character (&lsquo;<samp class="samp"> </samp>&rsquo;).
+Setting this to the null
 character (&lsquo;<samp class="samp">\0</samp>&rsquo;) prevents anything being appended automatically.
 This can be changed in application-specific completion functions to
 provide the &ldquo;most sensible word separator character&rdquo; according to
 an application-specific command line syntax specification.
-It is set to the default before any application-specific completion function
-is called, and may only be changed within such a function.
+It is set to the default before calling any application-specific completion
+function, and may only be changed within such a function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fsuppress_005fappend"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_suppress_append</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fsuppress_005fappend"> &para;</a></span></dt>
-<dd><p>If non-zero, <var class="var">rl_completion_append_character</var> is not appended to
+<dd><p>If non-zero, Readline will not append the
+<var class="var">rl_completion_append_character</var> to
 matches at the end of the command line, as described above.
-It is set to 0 before any application-specific completion function
-is called, and may only be changed within such a function.
-</p></dd></dl>
-
-<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
-<dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fquote_005fcharacter"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_quote_character</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fquote_005fcharacter"> &para;</a></span></dt>
-<dd><p>When Readline is completing quoted text, as delimited by one of the
-characters in <var class="var">rl_completer_quote_characters</var>, it sets this variable
-to the quoting character found.
-This is set before any application-specific completion function is called.
+It is set to 0 before calling any application-specific completion function,
+and may only be changed within such a function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fsuppress_005fquote"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_suppress_quote</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fsuppress_005fquote"> &para;</a></span></dt>
 <dd><p>If non-zero, Readline does not append a matching quote character when
 performing completion on a quoted string.
-It is set to 0 before any application-specific completion function
-is called, and may only be changed within such a function.
+It is set to 0 before calling any application-specific completion function,
+and may only be changed within such a function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -4852,61 +4997,76 @@ is called, and may only be changed within such a function.
 <dd><p>When Readline is completing quoted text, it sets this variable
 to a non-zero value if the word being completed contains or is delimited
 by any quoting characters, including backslashes.
-This is set before any application-specific completion function is called.
+This is set before calling any application-specific completion function.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
+<dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fquote_005fcharacter"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_quote_character</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fquote_005fcharacter"> &para;</a></span></dt>
+<dd><p>When Readline is completing quoted text, as delimited by one of the
+characters in <var class="var">rl_completer_quote_characters</var>, it sets this variable
+to the quoting character it found.
+This is set before calling any application-specific completion function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005fmark_005fsymlink_005fdirs"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_mark_symlink_dirs</strong><a class="copiable-link" href="#index-rl_005fcompletion_005fmark_005fsymlink_005fdirs"> &para;</a></span></dt>
-<dd><p>If non-zero, a slash will be appended to completed filenames that are
+<dd><p>If non-zero, Readline appends a slash to completed filenames that are
 symbolic links to directory names, subject to the value of the
 user-settable <var class="var">mark-directories</var> variable.
 This variable exists so that application-specific completion functions
 can override the user&rsquo;s global preference (set via the
 <var class="var">mark-symlinked-directories</var> Readline variable) if appropriate.
-This variable is set to the user&rsquo;s preference before any
-application-specific completion function is called, so unless that
-function modifies the value, the user&rsquo;s preferences are honored.
+This variable is set to the user&rsquo;s preference before calling any
+application-specific completion function,
+so unless that function modifies the value,
+Readline will honor the user&rsquo;s preferences.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fignore_005fcompletion_005fduplicates"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_ignore_completion_duplicates</strong><a class="copiable-link" href="#index-rl_005fignore_005fcompletion_005fduplicates"> &para;</a></span></dt>
-<dd><p>If non-zero, then duplicates in the matches are removed.
+<dd><p>If non-zero, then Readline removes duplicates in the set of possible
+completions.
 The default is 1.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fcompletion_005fdesired"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_filename_completion_desired</strong><a class="copiable-link" href="#index-rl_005ffilename_005fcompletion_005fdesired"> &para;</a></span></dt>
-<dd><p>Non-zero means that the results of the matches are to be treated as
-filenames.  This is <em class="emph">always</em> zero when completion is attempted,
+<dd><p>A non-zero value means that Readline should treat the results of the
+matches as filenames.
+This is <em class="emph">always</em> zero when completion is attempted,
 and can only be changed
-within an application-specific completion function.  If it is set to a
-non-zero value by such a function, directory names have a slash appended
-and Readline attempts to quote completed filenames if they contain any
+within an application-specific completion function.
+If it is set to a
+non-zero value by such a function, Readline
+appends a slash to directory names
+and attempts to quote completed filenames if they contain any
 characters in <code class="code">rl_filename_quote_characters</code> and
 <code class="code">rl_filename_quoting_desired</code> is set to a non-zero value.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffilename_005fquoting_005fdesired"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_filename_quoting_desired</strong><a class="copiable-link" href="#index-rl_005ffilename_005fquoting_005fdesired"> &para;</a></span></dt>
-<dd><p>Non-zero means that the results of the matches are to be quoted using
-double quotes (or an application-specific quoting mechanism) if the
-completed filename contains any characters in
-<code class="code">rl_filename_quote_chars</code>.  This is <em class="emph">always</em> non-zero
-when completion is attempted, and can only be changed within an
+<dd><p>A non-zero value means that Readline should quote the results of the 
+matches using double quotes (or an application-specific quoting mechanism)
+if the completed filename contains any characters in
+<code class="code">rl_filename_quote_chars</code>.
+This is <em class="emph">always</em> non-zero when completion is attempted,
+and can only be changed within an
 application-specific completion function.
-The quoting is effected via a call to the function pointed to
+The quoting is performed via a call to the function pointed to
 by <code class="code">rl_filename_quoting_function</code>.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005ffull_005fquoting_005fdesired"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_full_quoting_desired</strong><a class="copiable-link" href="#index-rl_005ffull_005fquoting_005fdesired"> &para;</a></span></dt>
-<dd><p>Non-zero means that Readline should apply filename-style quoting,
+<dd><p>A non-zero value means that Readline should apply filename-style quoting,
 including any application-specified quoting mechanism,
-to all completion matches even if we are not otherwise treating the
+to all completion matches even if it is not otherwise treating the
 matches as filenames.
-This is <em class="emph">always</em> zero when completion is attempted, and can only
-be changed within an application-specific completion function.
-The quoting is effected via a call to the function pointed to
+This is <em class="emph">always</em> zero when completion is attempted,
+and can only be changed within an
+application-specific completion function.
+The quoting is performed via a call to the function pointed to
 by <code class="code">rl_filename_quoting_function</code>.
 </p></dd></dl>
 
@@ -4923,10 +5083,11 @@ It should be set only by an application&rsquo;s completion function.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fsort_005fcompletion_005fmatches"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_sort_completion_matches</strong><a class="copiable-link" href="#index-rl_005fsort_005fcompletion_005fmatches"> &para;</a></span></dt>
 <dd><p>If an application sets this variable to 0, Readline will not sort the
 list of completions (which implies that it cannot remove any duplicate
-completions).  The default value is 1, which means that Readline will
+completions).
+The default value is 1, which means that Readline will
 sort the completions and, depending on the value of
-<code class="code">rl_ignore_completion_duplicates</code>, will attempt to remove duplicate
-matches.
+<code class="code">rl_ignore_completion_duplicates</code>, will attempt to remove
+duplicate matches.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -4934,23 +5095,26 @@ matches.
 <dd><p>Set to a character describing the type of completion Readline is currently
 attempting; see the description of <code class="code">rl_complete_internal()</code>
 (see <a class="pxref" href="#Completion-Functions">Completion Functions</a>) for the list of characters.
-This is set to the appropriate value before any application-specific
-completion function is called, allowing such functions to present
+This is set to the appropriate value before calling
+any application-specific completion function,
+so these functions can present
 the same interface as <code class="code">rl_complete()</code>.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005fcompletion_005finvoking_005fkey"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_completion_invoking_key</strong><a class="copiable-link" href="#index-rl_005fcompletion_005finvoking_005fkey"> &para;</a></span></dt>
 <dd><p>Set to the final character in the key sequence that invoked one of the
-completion functions that call <code class="code">rl_complete_internal()</code>.  This is
-set to the appropriate value before any application-specific completion
-function is called.
+completion functions that call <code class="code">rl_complete_internal()</code>.
+This is set to the appropriate value before calling
+any application-specific completion function.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-rl_005finhibit_005fcompletion"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">rl_inhibit_completion</strong><a class="copiable-link" href="#index-rl_005finhibit_005fcompletion"> &para;</a></span></dt>
-<dd><p>If this variable is non-zero, completion is inhibited.  The completion
-character will be inserted as any other bound to <code class="code">self-insert</code>.
+<dd><p>If this variable is non-zero, Readline does not perform completion,
+even if a key binding indicates it should.
+The completion character
+is inserted as if it were bound to <code class="code">self-insert</code>.
 </p></dd></dl>
 
 <hr>
@@ -4963,10 +5127,12 @@ Previous: <a href="#Completion-Variables" accesskey="p" rel="prev">Completion Va
 <h4 class="subsection" id="A-Short-Completion-Example-1"><span>2.6.4 A Short Completion Example<a class="copiable-link" href="#A-Short-Completion-Example-1"> &para;</a></span></h4>
 
 <p>Here is a small application demonstrating the use of the GNU Readline
-library.  It is called <code class="code">fileman</code>, and the source code resides in
-<samp class="file">examples/fileman.c</samp>.  This sample application provides
-completion of command names, line editing features, and access to the
-history list.
+library.
+It is called <code class="code">fileman</code>, and the source code resides in
+<samp class="file">examples/fileman.c</samp>.
+This sample application provides
+command name completion, line editing features,
+and access to the history list.
 </p>
 <div class="example smallexample">
 <pre class="example-preformatted">/* fileman.c -- A tiny application which demonstrates how to use the
@@ -6358,7 +6524,7 @@ Previous: <a href="#Concept-Index" accesskey="p" rel="prev">Concept Index</a>, U
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005fredisplay"><code>rl_redisplay</code></a></td><td class="printindex-index-section"><a href="#Redisplay">Redisplay</a></td></tr>
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005fredisplay_005ffunction">rl_redisplay_function</a></td><td class="printindex-index-section"><a href="#Readline-Variables">Readline Variables</a></td></tr>
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freparse_005fcolors"><code>rl_reparse_colors</code></a></td><td class="printindex-index-section"><a href="#Miscellaneous-Functions">Miscellaneous Functions</a></td></tr>
-<tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freplace_005fline"><code>rl_replace_line</code></a></td><td class="printindex-index-section"><a href="#Utility-Functions">Utility Functions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freplace_005fline"><code>rl_replace_line</code></a></td><td class="printindex-index-section"><a href="#Modifying-Text">Modifying Text</a></td></tr>
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freset_005fafter_005fsignal"><code>rl_reset_after_signal</code></a></td><td class="printindex-index-section"><a href="#Readline-Signal-Handling">Readline Signal Handling</a></td></tr>
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freset_005fline_005fstate"><code>rl_reset_line_state</code></a></td><td class="printindex-index-section"><a href="#Redisplay">Redisplay</a></td></tr>
 <tr><td></td><td class="printindex-index-entry"><a href="#index-rl_005freset_005fscreen_005fsize"><code>rl_reset_screen_size</code></a></td><td class="printindex-index-section"><a href="#Readline-Signal-Handling">Readline Signal Handling</a></td></tr>

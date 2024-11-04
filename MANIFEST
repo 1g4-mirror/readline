@@ -156,6 +156,8 @@ examples/rlwrap-0.46.1.tar.gz	f
 doc/readline.ps		f
 doc/history.ps		f
 doc/rluserman.ps	f
+doc/readline_3.ps	f
+doc/history_3.ps	f
 doc/readline.dvi	f
 doc/history.dvi		f
 doc/rluserman.dvi	f
@@ -167,8 +169,8 @@ doc/history.html	f
 doc/rluserman.html	f
 doc/readline.0		f
 doc/history.0		f
-doc/readline_3.ps	f
-doc/history_3.ps	f
+doc/readline_3.pdf	f
+doc/history_3.pdf	f
 doc/history.pdf		f
 doc/readline.pdf	f
 doc/rluserman.pdf	f
