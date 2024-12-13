@@ -38,7 +38,7 @@ man3ext = .3
 man3dir = $(mandir)/$(manpfx)3
 
 # set this to a value to have the HTML documentation installed
-htmldir =
+htmldir = @htmldir@
 
 # Support an alternate destination root directory for package building
 DESTDIR =
@@ -207,19 +207,23 @@ history_3.pdf: $(srcdir)/history.3
 	$(RM) $@
 	-${GROFF} -man -T pdf $< > $@
 
-clean:
+.PHONY: clean maintainer-clean distclean mostlyclean maybe-clean
+
+mostlyclean:
 	$(RM) *.aux *.bak *.cp *.fn *.ky *.log *.pg *.toc *.tp *.vr *.cps \
 	      *.pgs *.bt *.bts *.rw *.rws *.fns *.kys *.tps *.vrs *.o \
 	      core *.core
 
-mostlyclean: clean
+clean: mostlyclean
 
 distclean: clean maybe-clean
 	$(RM) $(INTERMEDIATE_OBJ)
 	$(RM) Makefile
 
 maybe-clean:
-	-if test "X$(topdir)" != "X.." && test "X$(topdir)" != "X$(BUILD_DIR)"; then \
+	-TD=$$(cd $(topdir) && pwd -P) ; \
+	BD=$$(cd $(BUILD_DIR) && pwd -P) ; \
+	if test "X$$TD" != "X$$BD"; then \
 		$(RM) $(DIST_DOCS); \
 	fi
 
@@ -278,12 +282,42 @@ install:	installdirs
 		fi ; \
 	fi
 
+install-html:	html
+	-if test -n "${htmldir}" ; then \
+		if test -f readline.html; then \
+			${INSTALL_DATA} readline.html $(DESTDIR)$(htmldir)/readline.html; \
+		else \
+			${INSTALL_DATA} $(srcdir)/readline.html $(DESTDIR)$(htmldir)/readline.html; \
+		fi ; \
+		if test -f history.html; then \
+			${INSTALL_DATA} history.html $(DESTDIR)$(htmldir)/history.html; \
+		else \
+			${INSTALL_DATA} $(srcdir)/history.html $(DESTDIR)$(htmldir)/history.html; \
+		fi ; \
+		if test -f rluserman.html; then \
+			${INSTALL_DATA} rluserman.html $(DESTDIR)$(htmldir)/rluserman.html; \
+		else \
+			${INSTALL_DATA} $(srcdir)/rluserman.html $(DESTDIR)$(htmldir)/rluserman.html; \
+		fi ; \
+	fi
+
+install-dvi:
+install-pdf:
+install-ps:
+
 uninstall:
 	$(RM) $(DESTDIR)$(infodir)/readline.info
 	$(RM) $(DESTDIR)$(infodir)/rluserman.info
 	$(RM) $(DESTDIR)$(infodir)/history.info
 	$(RM) $(DESTDIR)$(man3dir)/readline$(man3ext)
 	$(RM) $(DESTDIR)$(man3dir)/history$(man3ext)
+	-if test -n "${htmldir}" ; then \
+		$(RM) $(DESTDIR)$(htmldir)/readline.html ; \
+		$(RM) $(DESTDIR)$(htmldir)/rluserman.html ; \
+		$(RM) $(DESTDIR)$(htmldir)/history.html ; \
+	fi
+
+uninstall-html:
 	-if test -n "${htmldir}" ; then \
 		$(RM) $(DESTDIR)$(htmldir)/readline.html ; \
 		$(RM) $(DESTDIR)$(htmldir)/rluserman.html ; \

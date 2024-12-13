@@ -170,9 +170,14 @@ rlfe:	force
 
 force:
 
-clean mostlyclean:
+.PHONY: clean maintainer-clean distclean mostlyclean
+
+mostlyclean:
 	$(RM) $(OBJECTS) $(OTHEROBJ)
 	$(RM) $(EXECUTABLES) $(OTHEREXE) *.exe
+	-( cd rlfe && ${MAKE} $@ )
+
+clean: mostlyclean
 	-( cd rlfe && ${MAKE} $@ )
 
 distclean maintainer-clean: clean

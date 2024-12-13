@@ -26,6 +26,8 @@ examples/rlcat
 examples/rlevent
 examples/rltest
 examples/rlversion
+examples/rl-timeout
+examples/rlkeymaps
 
 libhistory.so.*
 libreadline.so.*

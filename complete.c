@@ -153,6 +153,8 @@ static int complete_get_screenwidth (void);
 
 static char *make_quoted_replacement (char *, int, char *);
 
+static void _rl_export_completions (char **, char *, int, int);
+
 /* **************************************************************** */
 /*								    */
 /*	Completion matching, from readline's point of view.	    */
@@ -539,6 +541,18 @@ _rl_complete_sigcleanup (int sig, void *ptr)
 /*				    */
 /************************************/
 
+static inline size_t
+vector_len (char **vector)
+{
+  size_t ret;
+
+  if (vector == 0 || vector[0] == 0)
+    return (size_t)0;
+  for (ret = 0; vector[ret]; ret++)
+    ;
+  return ret;
+}
+
 /* Reset public readline state on a signal or other event. */
 void
 _rl_reset_completion_state (void)
@@ -867,7 +881,8 @@ fnprint (const char *to_print, int prefix_bytes, const char *real_pathname)
      possible completions.  Only cut off prefix_bytes if we're going to be
      printing the ellipsis, which takes precedence over coloring the
      completion prefix (see print_filename() below). */
-  if (_rl_completion_prefix_display_length > 0 && prefix_bytes >= print_len)
+  if (_rl_completion_prefix_display_length > 0 && prefix_bytes >= print_len &&
+      prefix_bytes > _rl_completion_prefix_display_length)
     prefix_bytes = 0;
 
 #if defined (COLOR_SUPPORT)
@@ -886,13 +901,16 @@ fnprint (const char *to_print, int prefix_bytes, const char *real_pathname)
       printed_len = ELLIPSIS_LEN;
     }
 #if defined (COLOR_SUPPORT)
-  else if (prefix_bytes && _rl_colored_completion_prefix > 0)
+  else if (prefix_bytes && _rl_completion_prefix_display_length <= 0 &&
+	   _rl_colored_completion_prefix > 0)
     {
       common_prefix_len = prefix_bytes;
       prefix_bytes = 0;
       /* XXX - print color indicator start here */
       colored_prefix_start ();
     }
+  else
+    common_prefix_len = prefix_bytes = 0;	/* no ellipsis or color */
 #endif
 
   s = to_print + prefix_bytes;
@@ -1301,8 +1319,7 @@ remove_duplicate_matches (char **matches)
   char **temp_array;
 
   /* Sort the items. */
-  for (i = 0; matches[i]; i++)
-    ;
+  i = vector_len (matches);
 
   /* Sort the array without matches[0], since we need it to
      stay in place no matter what. */
@@ -1589,7 +1606,7 @@ rl_display_match_list (char **matches, int len, int max)
       /* check again in case of /usr/src/ */
       temp = rl_filename_completion_desired ? strrchr (t, '/') : 0;
       common_length = temp ? fnwidth (temp) : fnwidth (t);
-      sind = temp ? strlen (temp) : strlen (t);
+      sind = temp ? RL_STRLEN (temp) : RL_STRLEN (t);
       if (common_length > max || sind > max)
 	common_length = sind = 0;
 
@@ -2046,7 +2063,9 @@ compare_match (char *text, const char *match)
    `!' means to do standard completion, and list all possible completions if
    there is more than one.
    `@' means to do standard completion, and list all possible completions if
-   there is more than one and partial completion is not possible. */
+   there is more than one and partial completion is not possible.
+   `$' implements a protocol for exporting completions and information about
+   what is being completed to another process via rl_outstream. */
 int
 rl_complete_internal (int what_to_do)
 {
@@ -2103,9 +2122,11 @@ rl_complete_internal (int what_to_do)
     nontrivial_lcd = matches && strcmp (text, matches[0]) != 0;
   if (what_to_do == '!' || what_to_do == '@')
     tlen = strlen (text);
-  xfree (text);
 
-  if (matches == 0)
+  if (what_to_do != '$')
+    xfree (text);
+
+  if (matches == 0 && what_to_do != '$')	/* we can export no completions */
     {
       rl_ding ();
       FREE (saved_line_buffer);
@@ -2121,7 +2142,7 @@ rl_complete_internal (int what_to_do)
      rl_filename_completion_function does this. */
   i = rl_filename_completion_desired;
 
-  if (postprocess_matches (&matches, i) == 0)
+  if (postprocess_matches (&matches, i) == 0 && what_to_do != '$')	/* we can export no completions */
     {
       rl_ding ();
       FREE (saved_line_buffer);
@@ -2205,6 +2226,11 @@ rl_complete_internal (int what_to_do)
     case '%':			/* used by menu_complete */
     case '|':			/* add this for unconditional display */
       do_display = 1;
+      break;
+
+    case '$':
+      _rl_export_completions (matches, text, start, end);
+      xfree (text);
       break;
 
     default:
@@ -2772,8 +2798,8 @@ rl_old_menu_complete (int count, int invoking_key)
 
       RL_UNSETSTATE(RL_STATE_COMPLETING);
 
-      for (match_list_size = 0; matches[match_list_size]; match_list_size++)
-        ;
+      match_list_size = vector_len (matches);
+
       /* matches[0] is lcd if match_list_size > 1, but the circular buffer
 	 code below should take care of it. */
 
@@ -2907,8 +2933,7 @@ rl_menu_complete (int count, int ignore)
 
       RL_UNSETSTATE(RL_STATE_COMPLETING);
 
-      for (match_list_size = 0; matches[match_list_size]; match_list_size++)
-        ;
+      match_list_size = vector_len (matches);
 
       if (match_list_size == 0) 
 	{
@@ -3006,4 +3031,56 @@ rl_backward_menu_complete (int count, int key)
   /* Positive arguments to backward-menu-complete translate into negative
      arguments for menu-complete, and vice versa. */
   return (rl_menu_complete (-count, key));
+}
+
+/* This implements a protocol to export completions to another process or
+   calling application via rl_outstream.
+
+   MATCHES are the possible completions for TEXT, which is the text between
+   START and END in rl_line_buffer.
+
+   We print:
+   	N - the number of matches
+   	T - the word being completed
+   	S:E - the start and end offsets of T in rl_line_buffer
+   	then each match, one per line
+
+  If there are no matches, MATCHES is NULL, N will be 0, and there will be
+  no output after S:E.
+
+  Since MATCHES[0] can be empty if there is no common prefix of the elements
+  of MATCHES, applications should be prepared to deal with an empty line
+  preceding the matches.
+*/
+
+static void
+_rl_export_completions (char **matches, char *text, int start, int end)
+{
+  size_t len, i;
+
+  len = vector_len (matches);
+
+  if (RL_ISSTATE (RL_STATE_TERMPREPPED))
+    fprintf (rl_outstream, "\r\n");
+  fprintf (rl_outstream, "%zd\n", len);
+  fprintf (rl_outstream, "%s\n", text);
+  fprintf (rl_outstream, "%d:%d\n", start, end);	/* : because it's not a radix character */
+  for (i = 0; i < len; i++)
+    fprintf (rl_outstream, "%s\n", matches[i]);
+  fflush (rl_outstream);
+}
+
+int
+rl_export_completions (int count, int key)
+{
+  rl_complete_internal ('$');
+
+  /* Clear the line buffer, currently requires a count argument. */
+  if (count > 1)
+    {
+      rl_delete_text (0, rl_end);		/* undoable */
+      rl_point = rl_mark = 0;
+    }
+
+  return 0;
 }

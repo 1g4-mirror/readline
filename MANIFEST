@@ -112,8 +112,8 @@ doc/hstech.texi		f
 doc/hsuser.texi		f
 doc/readline.3		f
 doc/history.3		f
-doc/texi2dvi		f
-doc/texi2html		f
+doc/texi2dvi		f	755
+doc/texi2html		f	755
 examples/Makefile.in	f
 examples/excallback.c	f
 examples/fileman.c	f

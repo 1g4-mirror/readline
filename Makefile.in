@@ -171,7 +171,7 @@ all: $(TARGETS)
 everything: all examples
 
 asan:
-	${MAKE} ${MFLAGS} ASAN_CFLAGS='${ASAN_XCFLAGS}' ASAN_LDFLAGS='${ASAN_XLDFLAGS}' everything
+	${MAKE} ASAN_CFLAGS='${ASAN_XCFLAGS}' ASAN_LDFLAGS='${ASAN_XLDFLAGS}' everything
 
 static: $(STATIC_LIBS)
 
@@ -195,7 +195,7 @@ readline: $(OBJECTS) readline.h rldefs.h chardefs.h ./libreadline.a
 	$(CC) $(CCFLAGS) -DREADLINE_LIBRARY -o $@ $(top_srcdir)/examples/rl.c ./libreadline.a ${TERMCAP_LIB}
 
 lint:	force
-	$(MAKE) $(MFLAGS) CCFLAGS='$(GCC_LINT_CFLAGS)' static
+	$(MAKE) CCFLAGS='$(GCC_LINT_CFLAGS)' static
 
 Makefile makefile: config.status $(srcdir)/Makefile.in
 	CONFIG_FILES=Makefile CONFIG_HEADERS= $(SHELL) ./config.status
@@ -220,15 +220,15 @@ stamp-h: config.status $(srcdir)/config.h.in
 
 shared:	force
 	-test -d shlib || mkdir shlib
-	( cd shlib ; ${MAKE} ${MFLAGS} all )
+	( cd shlib ; ${MAKE} all )
 
 documentation: force
 	-test -d doc || mkdir doc
-	-( cd doc && $(MAKE) $(MFLAGS) )
+	-( cd doc && $(MAKE) )
 
 examples: force
 	-test -d examples || mkdir examples
-	-(cd examples && ${MAKE} ${MFLAGS} all )
+	-(cd examples && ${MAKE} all )
 
 force:
 
@@ -272,32 +272,32 @@ installdirs: $(srcdir)/support/mkinstalldirs
 uninstall: uninstall-headers uninstall-doc uninstall-examples uninstall-pc
 	-test -n "$(DESTDIR)$(libdir)" && cd $(DESTDIR)$(libdir) && \
 		${RM} libreadline.a libreadline.old libhistory.a libhistory.old $(SHARED_LIBS)
-	-( cd shlib; ${MAKE} ${MFLAGS} DESTDIR=${DESTDIR} uninstall )
+	-( cd shlib; ${MAKE} DESTDIR=${DESTDIR} uninstall )
 
 install-shared: installdirs install-headers shared install-doc install-pc
-	( cd shlib ; ${MAKE} ${MFLAGS} DESTDIR=${DESTDIR} install )
+	( cd shlib ; ${MAKE} DESTDIR=${DESTDIR} install )
 	
 uninstall-shared: maybe-uninstall-headers maybe-uninstall-pc
-	-( cd shlib; ${MAKE} ${MFLAGS} DESTDIR=${DESTDIR} uninstall )
+	-( cd shlib; ${MAKE} DESTDIR=${DESTDIR} uninstall )
 
 install-examples: installdirs install-headers
-	-( cd examples ; ${MAKE} ${MFLAGS} DESTDIR=${DESTDIR} install )
+	-( cd examples ; ${MAKE} DESTDIR=${DESTDIR} install )
 	
 uninstall-examples: maybe-uninstall-headers
-	-( cd examples; ${MAKE} ${MFLAGS} DESTDIR=${DESTDIR} uninstall )
+	-( cd examples; ${MAKE} DESTDIR=${DESTDIR} uninstall )
 
 install-doc:	installdirs
 	$(INSTALL_DATA) $(OTHER_DOCS) $(DESTDIR)$(docdir)
 	-( if test -d doc ; then \
 		cd doc && \
-		${MAKE} ${MFLAGS} infodir=$(infodir) DESTDIR=${DESTDIR} install; \
+		${MAKE} infodir=$(infodir) DESTDIR=${DESTDIR} install; \
 	  fi )
 
 uninstall-doc:
 	-( cd $(DESTDIR)$(docdir) && ${RM} ${OTHER_INSTALLED_DOCS} )
 	-( if test -d doc ; then \
 		cd doc && \
-		${MAKE} ${MFLAGS} infodir=$(infodir) DESTDIR=${DESTDIR} uninstall; \
+		${MAKE} infodir=$(infodir) DESTDIR=${DESTDIR} uninstall; \
 	  fi )
 
 TAGS:	force
@@ -306,22 +306,24 @@ TAGS:	force
 tags:	force
 	-( cd $(srcdir) && $(CTAGS) $(CSOURCES) $(HSOURCES) )
 
-clean:	force
+.PHONY: clean maintainer-clean distclean mostlyclean
+
+mostlyclean:	force
 	$(RM) $(OBJECTS) $(STATIC_LIBS)
 	$(RM) readline readline.exe
-	( cd shlib && $(MAKE) $(MFLAGS) $@ )
-	-( cd doc && $(MAKE) $(MFLAGS) $@ )
-	-( cd examples && $(MAKE) $(MFLAGS) $@ )
+	( cd shlib && $(MAKE) $@ )
+	-( cd doc && $(MAKE) $@ )
+	-( cd examples && $(MAKE) $@ )
 
-mostlyclean: clean
-	( cd shlib && $(MAKE) $(MFLAGS) $@ )
-	-( cd doc && $(MAKE) $(MFLAGS) $@ )
-	-( cd examples && $(MAKE) $(MFLAGS) $@ )
+clean: mostlyclean
+	( cd shlib && $(MAKE) $@ )
+	-( cd doc && $(MAKE) $@ )
+	-( cd examples && $(MAKE) $@ )
 
 distclean maintainer-clean: clean
-	( cd shlib && $(MAKE) $(MFLAGS) $@ )
-	-( cd doc && $(MAKE) $(MFLAGS) $@ )
-	-( cd examples && $(MAKE) $(MFLAGS) $@ )
+	( cd shlib && $(MAKE) $@ )
+	-( cd doc && $(MAKE) $@ )
+	-( cd examples && $(MAKE) $@ )
 	$(RM) Makefile
 	$(RM) $(CREATED_CONFIGURE)
 	$(RM) $(CREATED_TAGS)
@@ -333,7 +335,7 @@ history.pc:	config.status $(srcdir)/history.pc.in
 	$(SHELL) config.status
 
 info dvi html pdf ps:
-	-( cd doc && $(MAKE) $(MFLAGS) $@ )
+	-( cd doc && $(MAKE) $@ )
 
 install-info:
 install-dvi:

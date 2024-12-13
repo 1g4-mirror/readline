@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This manual describes the end user interface of the GNU Readline Library
-(version 8.3, 15 October 2024), a library which aids in the
+(version 8.3, 29 November 2024), a library which aids in the
 consistency of user interface across discrete programs which provide
 a command line interface.
 
@@ -39,6 +39,7 @@ kbd.kbd {font-style: oblique}
 kbd.key {font-style: normal}
 pre.display-preformatted {font-family: inherit}
 span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
 ul.toc-numbered-mark {list-style: none}
 -->
 </style>
@@ -445,18 +446,18 @@ Typing <kbd class="kbd">C-s</kbd> searches forward through the history.
 The characters present in the value of the <code class="code">isearch-terminators</code> variable
 are used to terminate an incremental search.
 If that variable has not been assigned a value, the <kbd class="key">ESC</kbd> and
-<kbd class="kbd">C-J</kbd> characters will terminate an incremental search.
-<kbd class="kbd">C-g</kbd> will abort an incremental search and restore the original line.
+<kbd class="kbd">C-j</kbd> characters terminate an incremental search.
+<kbd class="kbd">C-g</kbd> aborts an incremental search and restores the original line.
 When the search is terminated, the history entry containing the
 search string becomes the current line.
 </p>
 <p>To find other matching entries in the history list, type <kbd class="kbd">C-r</kbd> or
 <kbd class="kbd">C-s</kbd> as appropriate.
-This will search backward or forward in the history for the next
+This searches backward or forward in the history for the next
 entry matching the search string typed so far.
-Any other key sequence bound to a Readline command will terminate
-the search and execute that command.
-For instance, a <kbd class="key">RET</kbd> will terminate the search and accept
+Any other key sequence bound to a Readline command terminates
+the search and executes that command.
+For instance, a <kbd class="key">RET</kbd> terminates the search and accepts
 the line, thereby executing the command from the history list.
 A movement command will terminate the search, make the last line found
 the current line, and begin editing.
@@ -492,7 +493,7 @@ If that variable is unset, the default is <samp class="file">~/.inputrc</samp>.
 If that file does not exist or cannot be read, Readline looks for
 <samp class="file">/etc/inputrc</samp>.
 </p>
-<p>When a program which uses the Readline library starts up, Readline reads
+<p>When a program that uses the Readline library starts up, Readline reads
 the init file and sets any variables and key bindings it contains.
 </p>
 <p>In addition, the <code class="code">C-x C-r</code> command re-reads this init file, thus
@@ -633,7 +634,7 @@ The default value is <code class="code">&quot;#&quot;</code>.
 when performing completion.
 The value is ignored if it is less than 0 or greater than the terminal
 screen width.
-A value of 0 will cause matches to be displayed one per line.
+A value of 0 causes matches to be displayed one per line.
 The default value is -1.
 </p>
 </dd>
@@ -657,14 +658,17 @@ completions that is displayed without modification.
 When set to a value greater than zero, Readline
 replaces common prefixes longer than this value
 with an ellipsis when displaying possible completions.
+If a completion begins with a period,
+and Readline is completing filenames,
+it uses three underscores instead of an ellipsis.
 </p>
 </dd>
 <dt><a id="index-completion_002dquery_002ditems"></a><span><code class="code">completion-query-items</code><a class="copiable-link" href="#index-completion_002dquery_002ditems"> &para;</a></span></dt>
 <dd><p>The number of possible completions that determines when the user is asked
 whether the list of possibilities should be displayed.
 If the number of possible completions is greater than
-or equal to this value, Readline will ask whether or not
-the user wishes to view them;
+or equal to this value,
+Readline asks whether or not the user wishes to view them;
 otherwise, Readline simply lists the completions.
 This variable must be set to an integer value greater than or equal to zero.
 A zero value means Readline should never ask; negative
@@ -673,11 +677,11 @@ The default limit is <code class="code">100</code>.
 </p>
 </dd>
 <dt><a id="index-convert_002dmeta"></a><span><code class="code">convert-meta</code><a class="copiable-link" href="#index-convert_002dmeta"> &para;</a></span></dt>
-<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will convert characters it reads
+<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline converts characters it reads
 that have the eighth bit set to an <small class="sc">ASCII</small> key sequence by
 clearing the eighth bit and prefixing an <kbd class="key">ESC</kbd> character,
 converting them to a meta-prefixed key sequence.
-The default value is &lsquo;<samp class="samp">on</samp>&rsquo;, but Readline will set it to &lsquo;<samp class="samp">off</samp>&rsquo;
+The default value is &lsquo;<samp class="samp">on</samp>&rsquo;, but Readline sets it to &lsquo;<samp class="samp">off</samp>&rsquo;
 if the locale contains
 characters whose encodings may include bytes with the eighth bit set.
 This variable is dependent on the <code class="code">LC_CTYPE</code> locale category, and
@@ -687,8 +691,8 @@ see the description of <code class="code">force-meta-prefix</code> below.
 </p>
 </dd>
 <dt><a id="index-disable_002dcompletion"></a><span><code class="code">disable-completion</code><a class="copiable-link" href="#index-disable_002dcompletion"> &para;</a></span></dt>
-<dd><p>If set to &lsquo;<samp class="samp">On</samp>&rsquo;, Readline will inhibit word completion.
-Completion characters will be inserted into the line as if they
+<dd><p>If set to &lsquo;<samp class="samp">On</samp>&rsquo;, Readline inhibits word completion.
+Completion characters are inserted into the line as if they
 had been mapped to <code class="code">self-insert</code>.
 The default is &lsquo;<samp class="samp">off</samp>&rsquo;.
 </p>
@@ -746,14 +750,14 @@ The default is &lsquo;<samp class="samp">On</samp>&rsquo;.
 </p>
 </dd>
 <dt><a id="index-enable_002dkeypad"></a><span><code class="code">enable-keypad</code><a class="copiable-link" href="#index-enable_002dkeypad"> &para;</a></span></dt>
-<dd><p>When set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will try to enable the application
+<dd><p>When set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline tries to enable the application
 keypad when it is called.
 Some systems need this to enable the arrow keys.
 The default is &lsquo;<samp class="samp">off</samp>&rsquo;.
 </p>
 </dd>
 <dt><a id="index-enable_002dmeta_002dkey"></a><span><code class="code">enable-meta-key</code><a class="copiable-link" href="#index-enable_002dmeta_002dkey"> &para;</a></span></dt>
-<dd><p>When set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will try to enable any meta
+<dd><p>When set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline tries to enable any meta
 modifier key the terminal claims to support when it is called.
 On many terminals, the Meta key is used to send eight-bit characters;
 this variable checks for the terminal capability that indicates the
@@ -816,10 +820,10 @@ By default, this variable is set to &lsquo;<samp class="samp">off</samp>&rsquo;.
 </dd>
 <dt><a class="index-entry-id" id="index-meta_002dflag"></a>
 <a id="index-input_002dmeta"></a><span><code class="code">input-meta</code><a class="copiable-link" href="#index-input_002dmeta"> &para;</a></span></dt>
-<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will enable eight-bit input (that is, it
-will not clear the eighth bit in the characters it reads),
+<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline enables eight-bit input (that is, it
+does not clear the eighth bit in the characters it reads),
 regardless of what the terminal claims it can support.
-The default value is &lsquo;<samp class="samp">off</samp>&rsquo;, but Readline will set it to &lsquo;<samp class="samp">on</samp>&rsquo;
+The default value is &lsquo;<samp class="samp">off</samp>&rsquo;, but Readline sets it to &lsquo;<samp class="samp">on</samp>&rsquo;
 if the locale contains characters whose encodings may include bytes
 with the eighth bit set.
 This variable is dependent on the <code class="code">LC_CTYPE</code> locale category, and
@@ -831,7 +835,7 @@ The name <code class="code">meta-flag</code> is a synonym for <code class="code"
 <dd><p>The string of characters that should terminate an incremental search without
 subsequently executing the character as a command (see <a class="pxref" href="#Searching">Searching for Commands in the History</a>).
 If this variable has not been given a value, the characters <kbd class="key">ESC</kbd> and
-<kbd class="kbd">C-J</kbd> will terminate an incremental search.
+<kbd class="kbd">C-j</kbd> terminate an incremental search.
 </p>
 </dd>
 <dt><a id="index-keymap"></a><span><code class="code">keymap</code><a class="copiable-link" href="#index-keymap"> &para;</a></span></dt>
@@ -858,14 +862,14 @@ default keymap.
 reading an ambiguous key sequence
 (one that can form a complete key sequence using the input read so far,
 or can take additional input to complete a longer key sequence).
-If Readline doesn&rsquo;t receive any input within the timeout, it will use the
+If Readline doesn&rsquo;t receive any input within the timeout, it uses the
 shorter but complete key sequence.
 Readline uses this value to determine whether or not input is
 available on the current input source (<code class="code">rl_instream</code> by default).
 The value is specified in milliseconds, so a value of 1000 means that
 Readline will wait one second for additional input.
 If this variable is set to a value less than or equal to zero, or to a
-non-numeric value, Readline will wait until another key is pressed to
+non-numeric value, Readline waits until another key is pressed to
 decide which key sequence to complete.
 The default value is <code class="code">500</code>.
 </p>
@@ -876,7 +880,7 @@ The default is &lsquo;<samp class="samp">on</samp>&rsquo;.
 </p>
 </dd>
 <dt><a id="index-mark_002dmodified_002dlines"></a><span><code class="code">mark-modified-lines</code><a class="copiable-link" href="#index-mark_002dmodified_002dlines"> &para;</a></span></dt>
-<dd><p>When this variable is set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will to display an
+<dd><p>When this variable is set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline displays an
 asterisk (&lsquo;<samp class="samp">*</samp>&rsquo;) at the start of history lines which have been modified.
 This variable is &lsquo;<samp class="samp">off</samp>&rsquo; by default.
 </p>
@@ -904,10 +908,10 @@ The default is &lsquo;<samp class="samp">off</samp>&rsquo;.
 </p>
 </dd>
 <dt><a id="index-output_002dmeta"></a><span><code class="code">output-meta</code><a class="copiable-link" href="#index-output_002dmeta"> &para;</a></span></dt>
-<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will display characters with the
+<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline displays characters with the
 eighth bit set directly rather than as a meta-prefixed escape
 sequence.
-The default is &lsquo;<samp class="samp">off</samp>&rsquo;, but Readline will set it to &lsquo;<samp class="samp">on</samp>&rsquo;
+The default is &lsquo;<samp class="samp">off</samp>&rsquo;, but Readline sets it to &lsquo;<samp class="samp">on</samp>&rsquo;
 if the locale contains characters whose encodings may include
 bytes with the eighth bit set.
 This variable is dependent on the <code class="code">LC_CTYPE</code> locale category, and
@@ -915,7 +919,8 @@ its value may change if the locale changes.
 </p>
 </dd>
 <dt><a id="index-page_002dcompletions"></a><span><code class="code">page-completions</code><a class="copiable-link" href="#index-page_002dcompletions"> &para;</a></span></dt>
-<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline uses an internal <code class="code">more</code>-like pager
+<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline uses an internal pager resembling
+<i class="i">more</i>(1)
 to display a screenful of possible completions at a time.
 This variable is &lsquo;<samp class="samp">on</samp>&rsquo; by default.
 </p>
@@ -925,7 +930,7 @@ This variable is &lsquo;<samp class="samp">on</samp>&rsquo; by default.
 </p>
 </dd>
 <dt><code class="code">print-completions-horizontally</code></dt>
-<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline will display completions with matches
+<dd><p>If set to &lsquo;<samp class="samp">on</samp>&rsquo;, Readline displays completions with matches
 sorted horizontally in alphabetical order, rather than down the screen.
 The default is &lsquo;<samp class="samp">off</samp>&rsquo;.
 </p>
@@ -1067,7 +1072,8 @@ expressed on the right hand side (that is, to insert the text
 <var class="var">NEWLINE</var>,
 <var class="var">RET</var>,
 <var class="var">RETURN</var>,
-<var class="var">RUBOUT</var> (a destructive backspace),
+<var class="var">RUBOUT</var>
+(a destructive backspace),
 <var class="var">SPACE</var>,
 <var class="var">SPC</var>,
 and
@@ -1475,10 +1481,12 @@ This may also be bound to the End key on some keyboards.
 </dd>
 <dt><a id="index-forward_002dchar-_0028C_002df_0029"></a><span><code class="code">forward-char (C-f)</code><a class="copiable-link" href="#index-forward_002dchar-_0028C_002df_0029"> &para;</a></span></dt>
 <dd><p>Move forward a character.
+This may also be bound to the right arrow key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-backward_002dchar-_0028C_002db_0029"></a><span><code class="code">backward-char (C-b)</code><a class="copiable-link" href="#index-backward_002dchar-_0028C_002db_0029"> &para;</a></span></dt>
 <dd><p>Move back a character.
+This may also be bound to the left arrow key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-forward_002dword-_0028M_002df_0029"></a><span><code class="code">forward-word (M-f)</code><a class="copiable-link" href="#index-forward_002dword-_0028M_002df_0029"> &para;</a></span></dt>
@@ -1547,10 +1555,12 @@ to its original state.
 </dd>
 <dt><a id="index-previous_002dhistory-_0028C_002dp_0029"></a><span><code class="code">previous-history (C-p)</code><a class="copiable-link" href="#index-previous_002dhistory-_0028C_002dp_0029"> &para;</a></span></dt>
 <dd><p>Move &lsquo;back&rsquo; through the history list, fetching the previous command.
+This may also be bound to the up arrow key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-next_002dhistory-_0028C_002dn_0029"></a><span><code class="code">next-history (C-n)</code><a class="copiable-link" href="#index-next_002dhistory-_0028C_002dn_0029"> &para;</a></span></dt>
 <dd><p>Move &lsquo;forward&rsquo; through the history list, fetching the next command.
+This may also be bound to the down arrow key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-beginning_002dof_002dhistory-_0028M_002d_003c_0029"></a><span><code class="code">beginning-of-history (M-&lt;)</code><a class="copiable-link" href="#index-beginning_002dof_002dhistory-_0028M_002d_003c_0029"> &para;</a></span></dt>
@@ -1968,6 +1978,35 @@ negative argument.
 This command is unbound by default.
 </p>
 </dd>
+<dt><a id="index-export_002dcompletions-_0028_0029"></a><span><code class="code">export-completions ()</code><a class="copiable-link" href="#index-export_002dcompletions-_0028_0029"> &para;</a></span></dt>
+<dd><p>Perform completion on the word before point as described above
+and write the list of possible completions to Readline&rsquo;s output stream
+using the following format, writing information on separate lines:
+</p>
+<ul class="itemize mark-bullet">
+<li>the number of matches <var class="var">N</var>;
+</li><li>the word being completed;
+</li><li><var class="var">S</var>:<var class="var">E</var>,
+where S and E are the start and end offsets of the word
+in the Readline line buffer; then
+</li><li>each match, one per line
+</li></ul>
+
+<p>If there are no matches, the first line will be &ldquo;0&rdquo;,
+and this command does not print any output after the <var class="var">S</var>:<var class="var">E</var>.
+If there is only a single match, this prints a single line containing it.
+If there is more than one match, this prints the common prefix of the
+matches, which may be empty, on the first line after the <var class="var">S</var>:<var class="var">E</var>,
+then the matches on subsequent lines.
+In this case, <var class="var">N</var> will include the first line with the common prefix.
+</p>
+<p>The user or application
+should be able to accommodate the possibility of a blank line.
+The intent is that the user or application reads <var class="var">N</var> lines after
+the line containing <var class="var">S</var>:<var class="var">E</var> to obtain the match list.
+This command is unbound by default.
+</p>
+</dd>
 <dt><a id="index-delete_002dchar_002dor_002dlist-_0028_0029"></a><span><code class="code">delete-char-or-list ()</code><a class="copiable-link" href="#index-delete_002dchar_002dor_002dlist-_0028_0029"> &para;</a></span></dt>
 <dd><p>Deletes the character under the cursor if not at the beginning or
 end of the line (like <code class="code">delete-char</code>).
@@ -2076,12 +2115,14 @@ A negative argument searches for subsequent occurrences.
 <dt><a id="index-skip_002dcsi_002dsequence-_0028_0029"></a><span><code class="code">skip-csi-sequence ()</code><a class="copiable-link" href="#index-skip_002dcsi_002dsequence-_0028_0029"> &para;</a></span></dt>
 <dd><p>Read enough characters to consume a multi-key sequence such as those
 defined for keys like Home and End.
-CSI sequences begin with a Control Sequence Indicator (CSI), usually ESC-[.
+CSI sequences begin with a Control Sequence Indicator (CSI), usually
+<kbd class="kbd">ESC [</kbd>.
 If this sequence is bound to &quot;\e[&quot;,
-keys producing CSI sequences will have no effect
-unless explicitly bound to a Readline command, instead of inserting
-stray characters into the editing buffer.
-This is unbound by default, but usually bound to ESC-[.
+keys producing CSI sequences have no effect
+unless explicitly bound to a Readline command,
+instead of inserting stray characters into the editing buffer.
+This is unbound by default, but usually bound to
+<kbd class="kbd">ESC [</kbd>.
 </p>
 </dd>
 <dt><a id="index-insert_002dcomment-_0028M_002d_0023_0029"></a><span><code class="code">insert-comment (M-#)</code><a class="copiable-link" href="#index-insert_002dcomment-_0028M_002d_0023_0029"> &para;</a></span></dt>

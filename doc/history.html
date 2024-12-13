@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This document describes the GNU History library
-(version 8.3, 15 October 2024),
+(version 8.3, 29 November 2024),
 a programming tool that provides a consistent user interface for
 recalling lines of previously typed input.
 
@@ -327,7 +327,7 @@ For the shell, and many other, applications, this is the command word.
 </dd>
 <dt><code class="code">$</code></dt>
 <dd><p>The last word.
-This is usually the last argument, but will expand to the
+This is usually the last argument, but expands to the
 zeroth word if there is only one word in the line.
 </p>
 </dd>
@@ -407,7 +407,7 @@ Any character may be used as the delimiter in place of &lsquo;<samp class="samp"
 The delimiter may be quoted in <var class="var">old</var> and <var class="var">new</var>
 with a single backslash.
 If &lsquo;<samp class="samp">&amp;</samp>&rsquo; appears in <var class="var">new</var>, it is replaced with <var class="var">old</var>.
-A single backslash will quote the &lsquo;<samp class="samp">&amp;</samp>&rsquo; in <var class="var">old</var> and <var class="var">new</var>.
+A single backslash quotes the &lsquo;<samp class="samp">&amp;</samp>&rsquo; in <var class="var">old</var> and <var class="var">new</var>.
 If <var class="var">old</var> is null, it is set to the last <var class="var">old</var>
 substituted, or, if no previous history substitutions took place,
 the last <var class="var">string</var>
@@ -990,8 +990,8 @@ The default value is 0, meaning that timestamps are not saved.
 </p>
 <p>The current timestamp format uses the value of <var class="var">history_comment_char</var>
 to delimit timestamp entries in the history file.
-If that variable does not have a value (the default), this will not
-write timestamps.
+If that variable does not have a value (the default),
+the history library will not write timestamps.
 </p></dd></dl>
 
 <dl class="first-deftypevr first-deftypevar-alias-first-deftypevr">
@@ -1051,14 +1051,15 @@ The default value is 0.
 <dt class="deftypevr deftypevar-alias-deftypevr" id="index-history_005fquoting_005fstate"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">history_quoting_state</strong><a class="copiable-link" href="#index-history_005fquoting_005fstate"> &para;</a></span></dt>
 <dd><p>An application may set this variable to indicate that the current line
 being expanded is subject to existing quoting.
-If set to &lsquo;<samp class="samp">'</samp>&rsquo;, the
-history expansion function will assume that the line is single-quoted and
+If set to &lsquo;<samp class="samp">'</samp>&rsquo;,
+history expansion assumes that the line is single-quoted and
 inhibit expansion until it reads an unquoted closing single quote;
-if set to &lsquo;<samp class="samp">&quot;</samp>&rsquo;, history expansion will assume the line is
-double quoted until it reads an unquoted closing double quote.
+if set to &lsquo;<samp class="samp">&quot;</samp>&rsquo;,
+history expansion assumes the line is double quoted
+until it reads an unquoted closing double quote.
 If set to 0, the default,
-the history expansion function will assume the line is not quoted and
-treat quote characters within the line as described above.
+history expansion assumes the line is not quoted and
+treats quote characters within the line as described above.
 This is only effective if <var class="var">history_quotes_inhibit_expansion</var> is set.
 This is intended for use by applications like Bash which allow
 quoted strings to span multiple lines.
