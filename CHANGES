@@ -81,6 +81,34 @@ z. Loading very large history files should be much faster.
 aa. Retry opening startup files if the open is interrupted by a signal
     and is not automatically restarted.
 
+bb. Make sure the bracketed-paste input buffer is null-terminated when read
+    returns an error.
+
+cc. Fixed a small memory leak in execute-named-command if the command doesn't
+    exist or the function doesn't return.
+    
+dd. Fix for attempting to change case of invalid multibyte characters.
+
+ee. Fix for possible completions that compare identically when using case-
+    insensitive completion but have different byte lengths.
+    
+ff. Fix to make non-incremental searches use undo lists and set the history
+    position the same way as incremental searches.
+    
+gg. Don't check for signals when handling a received signal.
+   
+hh. Fix off-by-one error when tokenizing words like $((expr)) while performing
+    history expansion.
+   
+ii. Fixes for incremental searches and redisplay in the C locale.
+
+jj. Fixes for some use-after-free of the undo list errors when stacking multiple
+    commands that use rl_maybe_replace_line to save changes to a history entry.
+   
+kk. Fixes to ensure that completion-prefix-display-length and
+    colored-completion-prefix are mutually exclusive.
+
+
 2. New Features in Readline
 
 a. Output a newline if there is no prompt and readline reads an empty line.
@@ -112,6 +140,18 @@ h. execute-named-command: a new bindable command that reads the name of a
 i. Incremental and non-incremental searches now allow ^V/^Q (or, in the former
    case, anything bound to quoted-insert) to quote characters in the search
    string.
+
+j. Documentation has been significantly updated.
+
+k. New `force-meta-prefix' bindable variable, which forces the use of ESC as
+   the meta prefix when using "\M-" in key bindings instead of overloading
+   convert-meta.
+
+l. The default value for `readline-colored-completion-prefix' no longer has a
+   leading `.'; the original report was based on a misunderstanding.
+
+m. There is a new bindable command, `export-completions', which writes the
+   possible completions for a word to the standard output in a defined format.
 
 -------------------------------------------------------------------------------
 This document details the changes between this version, readline-8.2, and

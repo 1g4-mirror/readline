@@ -21,11 +21,15 @@ examples/hist_purgecmd
 examples/histexamp
 examples/rl
 examples/rl-callbacktest
+examples/rl-callbacktest2
+examples/rl-callbacktest3
 examples/rlbasic
 examples/rlcat
 examples/rlevent
 examples/rltest
 examples/rlversion
+examples/rl-timeout
+examples/rlkeymaps
 
 libhistory.so.*
 libreadline.so.*
@@ -33,7 +37,6 @@ libreadline.so.*
 *.dylib
 
 readline.pc
+history.pc
 
 stamp-h
-
-*.orig
