@@ -45,6 +45,8 @@
 
 #undef ssize_t
 
+#undef mode_t
+
 #undef const
 
 #undef volatile
