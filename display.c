@@ -783,7 +783,7 @@ _rl_optimize_redisplay (void)
 
 /* Useful shorthand used by rl_redisplay, update_line, rl_move_cursor_relative */
 #define INVIS_FIRST()	(local_prompt_invis_chars[0])
-#define WRAP_OFFSET(line, offset)  ((line <= prompt_last_screen_line) ? local_prompt_invis_chars[line] : 0)
+#define WRAP_OFFSET(line, offset)  ((line <= prompt_last_screen_line && local_prompt_invis_chars) ? local_prompt_invis_chars[line] : 0)
 
 #define W_OFFSET(line, offset) ((line) == 0 ? offset : 0)
 #define VIS_LLEN(l)	((l) > _rl_vis_botlin ? 0 : (vis_lbreaks[l+1] - vis_lbreaks[l]))
@@ -3143,14 +3143,14 @@ rl_message (const char *format, ...)
 
 #if defined (HAVE_VSNPRINTF)
   bneed = vsnprintf (msg_buf, msg_bufsiz, format, args);
-  if (bneed >= msg_bufsiz - 1)
+  if (bneed > msg_bufsiz - 1)
     {
       msg_bufsiz = bneed + 1;
       msg_buf = xrealloc (msg_buf, msg_bufsiz);
       va_end (args);
 
       va_start (args, format);
-      vsnprintf (msg_buf, msg_bufsiz - 1, format, args);
+      vsnprintf (msg_buf, msg_bufsiz, format, args);
     }
 #else
   vsprintf (msg_buf, format, args);
