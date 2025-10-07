@@ -672,12 +672,25 @@ _rl_block_sigint (void)
 void
 _rl_release_sigint (void)
 {
+  int osig, ostate;
+
   if (sigint_blocked == 0)
     return;
 
   sigint_blocked = 0;
+  osig = _rl_caught_signal;
+  ostate = rl_readline_state;
   if (RL_ISSTATE (RL_STATE_SIGHANDLER) == 0)
     RL_CHECK_SIGNALS ();
+  /* These are basically all the places that call rl_message() */
+  if (osig == SIGINT && (ostate & (RL_STATE_ISEARCH|RL_STATE_NSEARCH|RL_STATE_NUMERICARG|RL_STATE_MOREINPUT|RL_STATE_READSTR)))
+    _rl_abort_internal ();
+}
+
+int
+_rl_sigint_blocked_p (void)
+{
+  return sigint_blocked;
 }
 
 /* Cause SIGWINCH to not be delivered until the corresponding call to
@@ -734,6 +747,12 @@ _rl_release_sigwinch (void)
 #endif /* SIGWINCH */
 
   sigwinch_blocked = 0;
+}
+
+int
+_rl_sigwinch_blocked_p (void)
+{
+  return sigwinch_blocked;
 }
 
 /* **************************************************************** */

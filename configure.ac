@@ -5,7 +5,7 @@ dnl report bugs to chet@po.cwru.edu
 dnl
 dnl Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 1987-2024 Free Software Foundation, Inc.
+# Copyright (C) 1987-2025 Free Software Foundation, Inc.
 
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ dnl Process this file with autoconf to produce a configure script.
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_REVISION([for Readline 8.3, version 2.103])
+AC_REVISION([for Readline 8.3, version 2.104])
 
 AC_INIT(readline, 8.3, bug-readline@gnu.org)
 
@@ -154,7 +154,8 @@ AC_TYPE_MODE_T
 AC_HEADER_STAT
 AC_HEADER_DIRENT
 
-AC_CHECK_FUNCS(fcntl gettimeofday kill lstat pselect readlink select setitimer)
+AC_CHECK_FUNCS(clock_gettime fcntl gettimeofday \
+		kill lstat pselect readlink select setitimer)
 AC_CHECK_FUNCS(fnmatch memmove putenv setenv setlocale strcasecmp \
 		strpbrk sysconf tcgetattr tcgetwinsize tcsetwinsize \
 		vsnprintf)

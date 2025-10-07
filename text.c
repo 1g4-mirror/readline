@@ -39,6 +39,7 @@
 #  include <locale.h>
 #endif
 
+#include <signal.h>
 #include <stdio.h>
 
 /* System-specific feature definitions and include files. */
@@ -1047,7 +1048,7 @@ _rl_insert_next (int count)
   if (c < 0)
     return 1;
 
-  if (RL_ISSTATE (RL_STATE_MACRODEF))
+  if (RL_ISSTATE (RL_STATE_MACRODEF) && RL_ISSTATE (RL_STATE_MACROINPUT) == 0)
     _rl_add_macro_char (c);
 
 #if defined (HANDLE_SIGNALS)
@@ -1793,7 +1794,7 @@ _rl_char_search (int count, int fdir, int bdir)
   if (mb_len <= 0)
     return 1;
 
-  if (RL_ISSTATE (RL_STATE_MACRODEF))
+  if (RL_ISSTATE (RL_STATE_MACRODEF) && RL_ISSTATE (RL_STATE_MACROINPUT) == 0)
     for (i = 0; i < mb_len; i++)
       _rl_add_macro_char (mbchar[i]);
 
@@ -1813,7 +1814,7 @@ _rl_char_search (int count, int fdir, int bdir)
   if (c < 0)
     return 1;
 
-  if (RL_ISSTATE (RL_STATE_MACRODEF))
+  if (RL_ISSTATE (RL_STATE_MACRODEF) && RL_ISSTATE (RL_STATE_MACROINPUT) == 0)
     _rl_add_macro_char (c);
 
   if (count < 0)
@@ -2026,13 +2027,13 @@ _rl_readstr_init (int pchar, int flags)
   rl_end = rl_point = 0;
 
   p = _rl_make_prompt_for_search (pchar ? pchar : '@');
-  cxt->flags |= READSTR_FREEPMT;
-  rl_message ("%s", p);
-  xfree (p);
 
   RL_SETSTATE (RL_STATE_READSTR);
-
+  cxt->flags |= READSTR_FREEPMT;
   _rl_rscxt = cxt;  
+
+  rl_message ("%s", p);
+  xfree (p);
 
   return cxt;
 }
@@ -2081,13 +2082,16 @@ _rl_readstr_getchar (_rl_readstr_cxt *cxt)
   RL_SETSTATE(RL_STATE_MOREINPUT);
   c = cxt->lastc = rl_read_key ();
   RL_UNSETSTATE(RL_STATE_MOREINPUT);
-	          
+
 #if defined (HANDLE_MULTIBYTE)
   /* This ends up with C (and LASTC) being set to the last byte of the
      multibyte character.  In most cases c == lastc == mb[0] */
   if (c >= 0 && MB_CUR_MAX > 1 && rl_byte_oriented == 0)
     c = cxt->lastc = _rl_read_mbstring (cxt->lastc, cxt->mb, MB_LEN_MAX);
 #endif
+
+  if (_rl_caught_signal == SIGINT)	/* XXX maybe more signals here */
+    c = -1;
 
   RL_CHECK_SIGNALS ();
   return c;
@@ -2331,6 +2335,8 @@ _rl_read_command_name ()
 
       if (c < 0)
 	{
+	  if (_rl_rscxt == 0)		/* signal */
+	    _rl_abort_internal ();
 	  _rl_readstr_restore (cxt);
 	  _rl_readstr_cleanup (cxt, r);
 	  return NULL;
