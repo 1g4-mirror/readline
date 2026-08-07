@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- This manual describes the end user interface of the GNU Readline Library
-(version 8.3, 30 December 2024), a library which aids in the
+(version 8.3, 25 August 2025), a library which aids in the
 consistency of user interface across discrete programs which provide
 a command line interface.
 
@@ -74,43 +74,43 @@ The Readline home page is <a class="url" href="http://www.gnu.org/software/readl
 
 
 
-<div class="element-contents" id="SEC_Contents">
+<div class="region-contents" id="SEC_Contents">
 <h2 class="contents-heading">Table of Contents</h2>
 
 <div class="contents">
 
 <ul class="toc-numbered-mark">
-  <li><a id="toc-Command-Line-Editing-1" href="#Command-Line-Editing">1 Command Line Editing</a>
+  <li><a id="toc-Command-Line-Editing" href="#Command-Line-Editing">1 Command Line Editing</a>
   <ul class="toc-numbered-mark">
     <li><a id="toc-Introduction-to-Line-Editing" href="#Introduction-and-Notation">1.1 Introduction to Line Editing</a></li>
-    <li><a id="toc-Readline-Interaction-1" href="#Readline-Interaction">1.2 Readline Interaction</a>
+    <li><a id="toc-Readline-Interaction" href="#Readline-Interaction">1.2 Readline Interaction</a>
     <ul class="toc-numbered-mark">
-      <li><a id="toc-Readline-Bare-Essentials-1" href="#Readline-Bare-Essentials">1.2.1 Readline Bare Essentials</a></li>
-      <li><a id="toc-Readline-Movement-Commands-1" href="#Readline-Movement-Commands">1.2.2 Readline Movement Commands</a></li>
-      <li><a id="toc-Readline-Killing-Commands-1" href="#Readline-Killing-Commands">1.2.3 Readline Killing Commands</a></li>
-      <li><a id="toc-Readline-Arguments-1" href="#Readline-Arguments">1.2.4 Readline Arguments</a></li>
+      <li><a id="toc-Readline-Bare-Essentials" href="#Readline-Bare-Essentials">1.2.1 Readline Bare Essentials</a></li>
+      <li><a id="toc-Readline-Movement-Commands" href="#Readline-Movement-Commands">1.2.2 Readline Movement Commands</a></li>
+      <li><a id="toc-Readline-Killing-Commands" href="#Readline-Killing-Commands">1.2.3 Readline Killing Commands</a></li>
+      <li><a id="toc-Readline-Arguments" href="#Readline-Arguments">1.2.4 Readline Arguments</a></li>
       <li><a id="toc-Searching-for-Commands-in-the-History" href="#Searching">1.2.5 Searching for Commands in the History</a></li>
     </ul></li>
-    <li><a id="toc-Readline-Init-File-1" href="#Readline-Init-File">1.3 Readline Init File</a>
+    <li><a id="toc-Readline-Init-File" href="#Readline-Init-File">1.3 Readline Init File</a>
     <ul class="toc-numbered-mark">
-      <li><a id="toc-Readline-Init-File-Syntax-1" href="#Readline-Init-File-Syntax">1.3.1 Readline Init File Syntax</a></li>
-      <li><a id="toc-Conditional-Init-Constructs-1" href="#Conditional-Init-Constructs">1.3.2 Conditional Init Constructs</a></li>
-      <li><a id="toc-Sample-Init-File-1" href="#Sample-Init-File">1.3.3 Sample Init File</a></li>
+      <li><a id="toc-Readline-Init-File-Syntax" href="#Readline-Init-File-Syntax">1.3.1 Readline Init File Syntax</a></li>
+      <li><a id="toc-Conditional-Init-Constructs" href="#Conditional-Init-Constructs">1.3.2 Conditional Init Constructs</a></li>
+      <li><a id="toc-Sample-Init-File" href="#Sample-Init-File">1.3.3 Sample Init File</a></li>
     </ul></li>
-    <li><a id="toc-Bindable-Readline-Commands-1" href="#Bindable-Readline-Commands">1.4 Bindable Readline Commands</a>
+    <li><a id="toc-Bindable-Readline-Commands" href="#Bindable-Readline-Commands">1.4 Bindable Readline Commands</a>
     <ul class="toc-numbered-mark">
-      <li><a id="toc-Commands-For-Moving-1" href="#Commands-For-Moving">1.4.1 Commands For Moving</a></li>
+      <li><a id="toc-Commands-For-Moving" href="#Commands-For-Moving">1.4.1 Commands For Moving</a></li>
       <li><a id="toc-Commands-For-Manipulating-The-History" href="#Commands-For-History">1.4.2 Commands For Manipulating The History</a></li>
       <li><a id="toc-Commands-For-Changing-Text" href="#Commands-For-Text">1.4.3 Commands For Changing Text</a></li>
       <li><a id="toc-Killing-And-Yanking" href="#Commands-For-Killing">1.4.4 Killing And Yanking</a></li>
       <li><a id="toc-Specifying-Numeric-Arguments" href="#Numeric-Arguments">1.4.5 Specifying Numeric Arguments</a></li>
       <li><a id="toc-Letting-Readline-Type-For-You" href="#Commands-For-Completion">1.4.6 Letting Readline Type For You</a></li>
-      <li><a id="toc-Keyboard-Macros-1" href="#Keyboard-Macros">1.4.7 Keyboard Macros</a></li>
+      <li><a id="toc-Keyboard-Macros" href="#Keyboard-Macros">1.4.7 Keyboard Macros</a></li>
       <li><a id="toc-Some-Miscellaneous-Commands" href="#Miscellaneous-Commands">1.4.8 Some Miscellaneous Commands</a></li>
     </ul></li>
-    <li><a id="toc-Readline-vi-Mode-1" href="#Readline-vi-Mode">1.5 Readline vi Mode</a></li>
+    <li><a id="toc-Readline-vi-Mode" href="#Readline-vi-Mode">1.5 Readline vi Mode</a></li>
   </ul></li>
-  <li><a id="toc-GNU-Free-Documentation-License-1" href="#GNU-Free-Documentation-License">Appendix A GNU Free Documentation License</a></li>
+  <li><a id="toc-GNU-Free-Documentation-License" href="#GNU-Free-Documentation-License">Appendix A GNU Free Documentation License</a></li>
 </ul>
 </div>
 </div>
@@ -144,11 +144,11 @@ Next: <a href="#Readline-Interaction" accesskey="n" rel="next">Readline Interact
 <p>The following paragraphs use Emacs style to
 describe the notation used to represent keystrokes.
 </p>
-<p>The text <kbd class="kbd">C-k</kbd> is read as &lsquo;Control-K&rsquo; and describes the character
+<p>The text <kbd class="kbd">C-k</kbd> is read as &ldquo;Control-K&rdquo; and describes the character
 produced when the <kbd class="key">k</kbd> key is pressed while the Control key
 is depressed.
 </p>
-<p>The text <kbd class="kbd">M-k</kbd> is read as &lsquo;Meta-K&rsquo; and describes the character
+<p>The text <kbd class="kbd">M-k</kbd> is read as &ldquo;Meta-K&rdquo; and describes the character
 produced when the Meta key (if you have one) is depressed, and the <kbd class="key">k</kbd>
 key is pressed (a <em class="dfn">meta character</em>), then both are released.
 The Meta key is labeled <kbd class="key">ALT</kbd> or <kbd class="key">Option</kbd> on many keyboards.
@@ -179,7 +179,7 @@ you can make <kbd class="kbd">M-key</kbd> key bindings you specify
 (see <code class="code">Key Bindings</code> in <a class="ref" href="#Readline-Init-File-Syntax">Readline Init File Syntax</a>)
 do the same thing by setting the <code class="code">force-meta-prefix</code> variable.
 </p>
-<p>The text <kbd class="kbd">M-C-k</kbd> is read as &lsquo;Meta-Control-k&rsquo; and describes the
+<p>The text <kbd class="kbd">M-C-k</kbd> is read as &ldquo;Meta-Control-k&rdquo; and describes the
 character produced by metafying <kbd class="kbd">C-k</kbd>.
 </p>
 <p>In addition, several keys have their own names.
@@ -248,10 +248,10 @@ and then correct your mistake.
 Afterwards, you can move the cursor to the right with <kbd class="kbd">C-f</kbd>.
 </p>
 <p>When you add text in the middle of a line, you will notice that characters
-to the right of the cursor are &lsquo;pushed over&rsquo; to make room for the text
+to the right of the cursor are &ldquo;pushed over&rdquo; to make room for the text
 that you have inserted.
 Likewise, when you delete text behind the cursor,
-characters to the right of the cursor are &lsquo;pulled back&rsquo; to fill in the
+characters to the right of the cursor are &ldquo;pulled back&rdquo; to fill in the
 blank space created by the removal of the text.
 These are the bare
 essentials for editing the text of an input line:
@@ -336,9 +336,9 @@ Next: <a href="#Readline-Arguments" accesskey="n" rel="next">Readline Arguments<
 <p><em class="dfn">Killing</em> text means to delete the text from the line, but to save
 it away for later use, usually by <em class="dfn">yanking</em> (re-inserting)
 it back into the line.
-(&lsquo;Cut&rsquo; and &lsquo;paste&rsquo; are more recent jargon for &lsquo;kill&rsquo; and &lsquo;yank&rsquo;.)
+(&ldquo;Cut&rdquo; and &ldquo;paste&rdquo; are more recent jargon for &ldquo;kill&rdquo; and &ldquo;yank&rdquo;.)
 </p>
-<p>If the description for a command says that it &lsquo;kills&rsquo; text, then you can
+<p>If the description for a command says that it &ldquo;kills&rdquo; text, then you can
 be sure that you can get the text back in a different (or the same)
 place later.
 </p>
@@ -411,9 +411,10 @@ act in a backward direction.
 For example, to kill text back to the
 start of the line, you might type &lsquo;<samp class="samp">M-- C-k</samp>&rsquo;.
 </p>
-<p>The general way to pass numeric arguments to a command is to type meta
-digits before the command.
-If the first &lsquo;digit&rsquo; typed is a minus
+<p>The general way to pass numeric arguments to a command is to type
+the Meta key and then digits (&ldquo;meta digits&rdquo;)
+before the command.
+If the first &ldquo;digit&rdquo; typed is a minus
 sign (&lsquo;<samp class="samp">-</samp>&rsquo;), then the sign of the argument will be negative.
 Once you have typed one meta digit to get the argument started, you can
 type the remainder of the digits, and then the command.
@@ -597,6 +598,10 @@ Readline equivalents.
 These override the default Readline bindings described here.
 Type &lsquo;<samp class="samp">stty -a</samp>&rsquo; at a Bash prompt to see your current terminal settings,
 including the special control characters (usually <code class="code">cchars</code>).
+This binding takes place on each call to <code class="code">readline()</code>,
+so changes made by
+&lsquo;<samp class="samp">stty</samp>&rsquo;
+can take effect.
 </p>
 </dd>
 <dt><a id="index-blink_002dmatching_002dparen"></a><span><code class="code">blink-matching-paren</code><a class="copiable-link" href="#index-blink_002dmatching_002dparen"> &para;</a></span></dt>
@@ -1560,12 +1565,12 @@ to its original state.
 </p>
 </dd>
 <dt><a id="index-previous_002dhistory-_0028C_002dp_0029"></a><span><code class="code">previous-history (C-p)</code><a class="copiable-link" href="#index-previous_002dhistory-_0028C_002dp_0029"> &para;</a></span></dt>
-<dd><p>Move &lsquo;back&rsquo; through the history list, fetching the previous command.
+<dd><p>Move &ldquo;back&rdquo; through the history list, fetching the previous command.
 This may also be bound to the up arrow key on some keyboards.
 </p>
 </dd>
 <dt><a id="index-next_002dhistory-_0028C_002dn_0029"></a><span><code class="code">next-history (C-n)</code><a class="copiable-link" href="#index-next_002dhistory-_0028C_002dn_0029"> &para;</a></span></dt>
-<dd><p>Move &lsquo;forward&rsquo; through the history list, fetching the next command.
+<dd><p>Move &ldquo;forward&rdquo; through the history list, fetching the next command.
 This may also be bound to the down arrow key on some keyboards.
 </p>
 </dd>
@@ -1579,28 +1584,29 @@ being entered.
 </p>
 </dd>
 <dt><a id="index-reverse_002dsearch_002dhistory-_0028C_002dr_0029"></a><span><code class="code">reverse-search-history (C-r)</code><a class="copiable-link" href="#index-reverse_002dsearch_002dhistory-_0028C_002dr_0029"> &para;</a></span></dt>
-<dd><p>Search backward starting at the current line and moving &lsquo;up&rsquo; through
+<dd><p>Search backward starting at the current line and moving &ldquo;up&rdquo; through
 the history as necessary.
 This is an incremental search.
 This command sets the region to the matched text and activates the region.
 </p>
 </dd>
 <dt><a id="index-forward_002dsearch_002dhistory-_0028C_002ds_0029"></a><span><code class="code">forward-search-history (C-s)</code><a class="copiable-link" href="#index-forward_002dsearch_002dhistory-_0028C_002ds_0029"> &para;</a></span></dt>
-<dd><p>Search forward starting at the current line and moving &lsquo;down&rsquo; through
+<dd><p>Search forward starting at the current line and moving &ldquo;down&rdquo; through
 the history as necessary.
 This is an incremental search.
 This command sets the region to the matched text and activates the region.
 </p>
 </dd>
 <dt><a id="index-non_002dincremental_002dreverse_002dsearch_002dhistory-_0028M_002dp_0029"></a><span><code class="code">non-incremental-reverse-search-history (M-p)</code><a class="copiable-link" href="#index-non_002dincremental_002dreverse_002dsearch_002dhistory-_0028M_002dp_0029"> &para;</a></span></dt>
-<dd><p>Search backward starting at the current line and moving &lsquo;up&rsquo;
-through the history as necessary using a non-incremental search
+<dd><p>Search backward starting at the current line and moving &ldquo;up&rdquo;
+</p>
+<p>through the history as necessary using a non-incremental search
 for a string supplied by the user.
 The search string may match anywhere in a history line.
 </p>
 </dd>
 <dt><a id="index-non_002dincremental_002dforward_002dsearch_002dhistory-_0028M_002dn_0029"></a><span><code class="code">non-incremental-forward-search-history (M-n)</code><a class="copiable-link" href="#index-non_002dincremental_002dforward_002dsearch_002dhistory-_0028M_002dn_0029"> &para;</a></span></dt>
-<dd><p>Search forward starting at the current line and moving &lsquo;down&rsquo;
+<dd><p>Search forward starting at the current line and moving &ldquo;down&rdquo;
 through the history as necessary using a non-incremental search
 for a string supplied by the user.
 The search string may match anywhere in a history line.
@@ -1736,7 +1742,7 @@ This is how to insert key sequences like <kbd class="kbd">C-q</kbd>, for example
 <dd><p>Insert a tab character.
 </p>
 </dd>
-<dt><a id="index-self_002dinsert-_0028a_002c-b_002c-A_002c-1_002c-_0021_002c-_2026_0029"></a><span><code class="code">self-insert (a, b, A, 1, !, &hellip;)</code><a class="copiable-link" href="#index-self_002dinsert-_0028a_002c-b_002c-A_002c-1_002c-_0021_002c-_2026_0029"> &para;</a></span></dt>
+<dt><a id="index-self_002dinsert-_0028a_002c-b_002c-A_002c-1_002c-_0021_002c-_002e_002e_002e_0029"></a><span><code class="code">self-insert (a, b, A, 1, !, &hellip;)</code><a class="copiable-link" href="#index-self_002dinsert-_0028a_002c-b_002c-A_002c-1_002c-_0021_002c-_002e_002e_002e_0029"> &para;</a></span></dt>
 <dd><p>Insert the character typed.
 </p>
 </dd>
@@ -1911,7 +1917,7 @@ Next: <a href="#Commands-For-Completion" accesskey="n" rel="next">Letting Readli
 </div>
 <h4 class="subsection" id="Specifying-Numeric-Arguments"><span>1.4.5 Specifying Numeric Arguments<a class="copiable-link" href="#Specifying-Numeric-Arguments"> &para;</a></span></h4>
 <dl class="ftable">
-<dt><a id="index-digit_002dargument-_0028M_002d0_002c-M_002d1_002c-_2026-M_002d_002d_0029"></a><span><code class="code">digit-argument (<kbd class="kbd">M-0</kbd>, <kbd class="kbd">M-1</kbd>, &hellip; <kbd class="kbd">M--</kbd>)</code><a class="copiable-link" href="#index-digit_002dargument-_0028M_002d0_002c-M_002d1_002c-_2026-M_002d_002d_0029"> &para;</a></span></dt>
+<dt><a id="index-digit_002dargument-_0028M_002d0_002c-M_002d1_002c-_002e_002e_002e-M_002d_002d_0029"></a><span><code class="code">digit-argument (<kbd class="kbd">M-0</kbd>, <kbd class="kbd">M-1</kbd>, &hellip; <kbd class="kbd">M--</kbd>)</code><a class="copiable-link" href="#index-digit_002dargument-_0028M_002d0_002c-M_002d1_002c-_002e_002e_002e-M_002d_002d_0029"> &para;</a></span></dt>
 <dd><p>Add this digit to the argument already accumulating, or start a new
 argument.
 <kbd class="kbd">M--</kbd> starts a negative argument.
@@ -2072,7 +2078,7 @@ ring the terminal&rsquo;s bell (subject to the setting of
 <code class="code">bell-style</code>).
 </p>
 </dd>
-<dt><a id="index-do_002dlowercase_002dversion-_0028M_002dA_002c-M_002dB_002c-M_002dx_002c-_2026_0029"></a><span><code class="code">do-lowercase-version (M-A, M-B, M-<var class="var">x</var>, &hellip;)</code><a class="copiable-link" href="#index-do_002dlowercase_002dversion-_0028M_002dA_002c-M_002dB_002c-M_002dx_002c-_2026_0029"> &para;</a></span></dt>
+<dt><a id="index-do_002dlowercase_002dversion-_0028M_002dA_002c-M_002dB_002c-M_002dx_002c-_002e_002e_002e_0029"></a><span><code class="code">do-lowercase-version (M-A, M-B, M-<var class="var">x</var>, &hellip;)</code><a class="copiable-link" href="#index-do_002dlowercase_002dversion-_0028M_002dA_002c-M_002dB_002c-M_002dx_002c-_002e_002e_002e_0029"> &para;</a></span></dt>
 <dd><p>If the metafied character <var class="var">x</var> is upper case, run the command
 that is bound to the corresponding metafied lower case character.
 The behavior is undefined if <var class="var">x</var> is already lower case.
@@ -2213,8 +2219,8 @@ when in <code class="code">vi</code> mode and to vi-editing-mode in <code class=
 The Readline default is <code class="code">emacs</code> mode.
 </p>
 <p>When you enter a line in <code class="code">vi</code> mode, you are already placed in
-&lsquo;insertion&rsquo; mode, as if you had typed an &lsquo;<samp class="samp">i</samp>&rsquo;.  Pressing <kbd class="key">ESC</kbd>
-switches you into &lsquo;command&rsquo; mode, where you can edit the text of the
+&ldquo;insertion&rdquo; mode, as if you had typed an &lsquo;<samp class="samp">i</samp>&rsquo;.  Pressing <kbd class="key">ESC</kbd>
+switches you into &ldquo;command&rdquo; mode, where you can edit the text of the
 line with the standard <code class="code">vi</code> movement keys, move to previous
 history lines with &lsquo;<samp class="samp">k</samp>&rsquo; and subsequent lines with &lsquo;<samp class="samp">j</samp>&rsquo;, and
 so forth.

@@ -1,9 +1,9 @@
-This is history.info, produced by makeinfo version 7.1 from
+This is history.info, produced by makeinfo version 7.2 from
 history.texi.
 
-This document describes the GNU History library (version 8.3, 30
-December 2024), a programming tool that provides a consistent user
-interface for recalling lines of previously typed input.
+This document describes the GNU History library (version 8.3, 25 August
+2025), a programming tool that provides a consistent user interface for
+recalling lines of previously typed input.
 
    Copyright © 1988-2025 Free Software Foundation, Inc.
 
@@ -1427,31 +1427,30 @@ Appendix C Function and Variable Index
 * write_history:                         Managing the History File.
                                                                (line 28)
 
-
 
 Tag Table:
-Node: Top848
-Node: Using History Interactively1493
-Node: History Interaction2001
-Node: Event Designators4715
-Node: Word Designators6217
-Node: Modifiers8612
-Node: Programming with GNU History10259
-Node: Introduction to History11002
-Node: History Storage12734
-Node: History Functions13914
-Node: Initializing History and State Management14903
-Node: History List Management15706
-Node: Information About the History List18137
-Node: Moving Around the History List19750
-Node: Searching the History List20830
-Node: Managing the History File22776
-Node: History Expansion25246
-Node: History Variables27219
-Node: History Programming Example31334
-Node: GNU Free Documentation License33988
-Node: Concept Index59163
-Node: Function and Variable Index59868
+Node: Top846
+Node: Using History Interactively1491
+Node: History Interaction1999
+Node: Event Designators4713
+Node: Word Designators6215
+Node: Modifiers8610
+Node: Programming with GNU History10257
+Node: Introduction to History11000
+Node: History Storage12732
+Node: History Functions13912
+Node: Initializing History and State Management14901
+Node: History List Management15704
+Node: Information About the History List18135
+Node: Moving Around the History List19748
+Node: Searching the History List20828
+Node: Managing the History File22774
+Node: History Expansion25244
+Node: History Variables27217
+Node: History Programming Example31332
+Node: GNU Free Documentation License33986
+Node: Concept Index59161
+Node: Function and Variable Index59866
 
 End Tag Table
 

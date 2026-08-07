@@ -55,6 +55,7 @@ TEXINPUTDIR = $(srcdir)
 MAKEINFO    = LANGUAGE= makeinfo
 TEXI2DVI    = $(srcdir)/texi2dvi
 TEXI2HTML   = $(srcdir)/texi2html
+MAN2HTML    = ${GROFF} -Thtml -man
 QUIETPS     = #set this to -q to shut up dvips
 PAPERSIZE   = letter
 PSDPI       = 600

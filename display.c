@@ -1,6 +1,6 @@
 /* display.c -- readline redisplay facility. */
 
-/* Copyright (C) 1987-2025 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2026 Free Software Foundation, Inc.
 
    This file is part of the GNU Readline Library (Readline), a library    
    for reading lines of text with interactive input and history editing.
@@ -1024,6 +1024,7 @@ rl_redisplay (void)
       while (local_prompt_newlines[newlines+1] != -1)
 	{
 	  temp = local_prompt_newlines[newlines+1];
+	  CHECK_INV_LBREAKS ();
 	  inv_lbreaks[++newlines] = temp;
 	}  
 
@@ -1064,7 +1065,9 @@ rl_redisplay (void)
   for (in = 0; in < rl_end; in++)
 #endif
     {
-      if (in == hl_begin)
+      if (hl_begin == hl_end)
+	cur_face = FACE_NORMAL;			/* zero-length region/paste */
+      else if (in == hl_begin)
 	cur_face = FACE_STANDOUT;
       else if (in == hl_end)
 	cur_face = FACE_NORMAL;
@@ -1497,7 +1500,6 @@ rl_redisplay (void)
 	     the characters from the current cursor position.  But we
 	     only need to reprint it if the cursor is before the last
 	     invisible character in the prompt string. */
-	  /* XXX - why not use local_prompt_len? */
 	  nleft = prompt_visible_length + wrap_offset;
 	  if (cursor_linenum == prompt_last_screen_line)
 	    {
@@ -1509,11 +1511,7 @@ rl_redisplay (void)
 	         on the current screen line begins in the buffer. It is a
 	         buffer position, an index into curline
 	         (local_prompt + pmt_offset) */
-	      cursor_bufpos = pmt_offset;
-	      if (mb_cur_max == 1 || rl_byte_oriented)
-		cursor_bufpos += _rl_last_c_pos;
-	      else
-		cursor_bufpos += _rl_last_c_pos + curline_invchars;
+	      cursor_bufpos = pmt_offset + local_prompt_len;
 
 	      if (local_prompt && local_prompt_invis_chars[cursor_linenum] &&
 		    _rl_last_c_pos > 0 &&
@@ -2223,6 +2221,9 @@ update_line (char *old, char *old_face, char *new, char *new_face, int current_l
 	 can't directly check it) is still on the visible line because we
 	 haven't overwritten it yet. We guess that there aren't any invisible
 	 characters in any of the prompts we put in with rl_message */
+      /* This is wrong if the prompt is switching between two variants, both
+	 with invisible characters (e.g., when using mode strings with terminal
+	 escape sequences). */
       else if (current_line == 0 && local_prompt && new[0] == local_prompt[0] &&
 		 (memcmp (new, local_prompt, local_prompt_len) == 0) &&
 		 (memcmp (old, local_prompt, local_prompt_len) != 0))
@@ -2266,11 +2267,12 @@ update_line (char *old, char *old_face, char *new, char *new_face, int current_l
   od = ofd - old;	/* index of first difference in visible line */
   nd = nfd - new;	/* nd, od are buffer indexes */
   if (current_line == 0 && !_rl_horizontal_scroll_mode &&
-      _rl_term_cr && lendiff > prompt_visible_length && _rl_last_c_pos > 0 &&
+      _rl_term_cr && lendiff > prompt_visible_length && _rl_last_c_pos >= 0 &&
       (((od > 0 || nd > 0) && (od <= prompt_last_invisible || nd <= prompt_last_invisible)) ||
 		((od >= lendiff) && _rl_last_c_pos < PROMPT_ENDING_INDEX)))
     {
-      _rl_cr ();
+      if (_rl_last_c_pos > 0)
+	_rl_cr ();
       if (modmark)
 	_rl_output_some_chars ("*", 1);
       _rl_output_some_chars (local_prompt, lendiff);
@@ -3525,8 +3527,9 @@ _rl_redisplay_after_sigwinch (void)
   else
     rl_crlf ();
 
-  if (_rl_screenwidth < prompt_visible_length)
-    _rl_reset_prompt ();		/* update local_prompt_newlines array */
+  /* Let expand_prompt() update local_prompt_newlines and local_prompt_invis_chars
+    arrays */
+  _rl_reset_prompt ();
 
   /* Redraw only the last line of a multi-line prompt. */
   t = strrchr (rl_display_prompt, '\n');
